@@ -13,7 +13,7 @@ class Grant
   after_save :decache
 
   def self.new_with_defaults(attributes={})
-    grant.new({
+    Grant.new({
       name: "",
       title: "",
       grant_type_code: "",
