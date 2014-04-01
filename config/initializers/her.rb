@@ -4,7 +4,9 @@ require 'dalli-elasticache'
 require 'faraday_middleware/response/caching'
 
 Settings.cdb[:protocol] ||= 'http'
-Settings.cdb[:port] ||= '80'
+Settings.cdb[:api_host] ||= Settings.cdb[:host] || 'localhost'
+Settings.cdb[:api_port] ||= Settings.cdb[:port] || 8002
+
 Settings[:memcached] ||= {}
 Settings.memcached[:endpoint] ||= nil
 Settings.memcached[:host] ||= nil
@@ -20,7 +22,7 @@ elsif Settings.memcached.host
 end
 
 CDB = Her::API.new
-CDB.setup url: "#{Settings.cdb.protocol}://#{Settings.cdb.host}:#{Settings.cdb.port}" do |c|
+CDB.setup url: "#{Settings.cdb.protocol}://#{Settings.cdb.api_host}:#{Settings.cdb.api_port}" do |c|
   # Request
   c.use FaradayMiddleware::Caching, $cache.clone if $cache
   c.use Faraday::Request::UrlEncoded
