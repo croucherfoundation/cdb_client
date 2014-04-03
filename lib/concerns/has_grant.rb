@@ -28,6 +28,10 @@ module HasGrant
     grant.grant_type if grant
   end
   
+  def grant_type_name
+    grant_type.name if grant_type
+  end
+  
   def institutions
     grant.institutions if grant
   end
