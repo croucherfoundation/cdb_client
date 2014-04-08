@@ -29,6 +29,7 @@ class Grant
       begin_date: "",
       extension: "",
       duration: "",
+      person_uids: "",
       year: Date.today.year
     }.merge(attributes))
   end
