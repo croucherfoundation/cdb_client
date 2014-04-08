@@ -17,6 +17,8 @@ class Grant
     Grant.new({
       name: "",
       title: "",
+      field: "",
+      field_chinese: "",
       grant_type_code: "",
       category_code: "",
       country_code: "",
@@ -45,7 +47,7 @@ class Grant
   end
   
   def institutions
-    [institution, second_institution].compact
+    [institution.fetch, second_institution.fetch].compact
   end
 
   protected
