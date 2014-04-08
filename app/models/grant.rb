@@ -6,9 +6,10 @@ class Grant
   belongs_to :grant_type, foreign_key: :grant_type_code
   belongs_to :country, foreign_key: :country_code
   belongs_to :category, foreign_key: :category_code
+  belongs_to :institution, foreign_key: :institution_code
+  belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
 
   has_many :people
-  has_many :institutions
 
   after_save :decache
 
@@ -41,6 +42,10 @@ class Grant
       expected_end_date += extension.months if extended? && extension
     end
     expected_end_date
+  end
+  
+  def institutions
+    [institution, second_institution].compact
   end
 
   protected
