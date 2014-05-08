@@ -5,6 +5,7 @@ module HasGrant
 
   included do
     scope :without_grant, -> { where('grant_id IS NULL OR grant_id = ""') }
+    scope :for_grants, -> grant_ids { where(grant_id: grant_ids) }
   end
 
   def grant
