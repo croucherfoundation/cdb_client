@@ -3,11 +3,12 @@ class Award
   use_api CDB
   collection_path "/api/awards"
 
-  belongs_to :institution, foreign_key: :institution_code
   belongs_to :category, foreign_key: :category_code
   belongs_to :award_type, foreign_key: :award_type_code
   belongs_to :country, foreign_key: :country_code
   belongs_to :person, foreign_key: :person_uid
+  belongs_to :institution, foreign_key: :institution_code
+  belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
 
   after_save :decache
 
@@ -19,6 +20,12 @@ class Award
       category_code: "",
       country_code: "",
       institution_code: "",
+      second_institution_code: "",
+      institution_name: "",
+      second_institution_name: "",
+      begin_date: "",
+      extension: "",
+      duration: "",
       year: Date.today.year
     }.merge(attributes))
   end
@@ -41,15 +48,23 @@ class Award
     end
   end
 
-  protected
-  
-  def decache(and_associates=true)
-    if $cache
-      path = self.class.collection_path
-      $cache.delete path
-      $cache.delete "#{path}/#{self.to_param}"
-      self.person.send(:decache, false) if and_associates && self.person
+  ## Duration and extension
+  #
+  #
+  def expected_end_date
+    if end_date
+      expected_end_date = Date.parse(end_date)
+    elsif begin_date && duration
+      expected_end_date = Date.parse(begin_date) + (duration * 12).to_i.months
+      expected_end_date += extension.months if extended? && extension
     end
+    expected_end_date
+  end
+
+  protected
+
+  def decache
+    $cache.flush_all if $cache
   end
 
 end

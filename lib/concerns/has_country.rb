@@ -8,7 +8,11 @@ module HasCountry
   end
 
   def country
-    Country.find(country_code)
+    Country.find(country_code) if country_code?
+  end
+  
+  def country?
+    country_code? && !!country
   end
   
   def country=(country)

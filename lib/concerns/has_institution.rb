@@ -4,7 +4,6 @@ module HasInstitution
   extend ActiveSupport::Concern
 
   included do
-    after_save :find_or_create_named_institution
     scope :without_institution, -> { where('institution_code IS NULL OR institution_code = ""') }
   end
 
@@ -12,29 +11,29 @@ module HasInstitution
     Institution.find(institution_code) if institution_code?
   end
   
+  def institution?
+    institution_code? && institution
+  end
+  
   def institution_name
     if @institution_name.present?
       @institution_name
-    elsif institution
+    elsif institution?
       institution.name
     end
   end
   
   def institution_name=(name)
-    @institution_name = name
-  end
-  
-  protected
-
-  def find_or_create_named_institution
-    if @institution_name.present?
-      if existing = Institution.where(name: @institution_name, country_code: country_code).first
-        self.update_column :institution_code, existing.code
+    if name.present?
+      country_code = respond_to?(:from_country_code) ? from_country_code : country_code
+      if existing = Institution.where(name: name, country_code: country_code).first
+        self.institution_code = existing.code
       else
-        created = Institution.create(name: @institution_name, country_code: country_code)
-        self.update_column :institution_code, created.code
+        created = Institution.create(name: name, country_code: country_code)
+        self.institution_code = created.code
+        $cache.flush_all #rough!
       end
     end
   end
-    
+
 end

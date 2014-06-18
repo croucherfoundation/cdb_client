@@ -6,9 +6,11 @@ class Person
   primary_key :uid
 
   has_many :awards
+  has_many :grants
   has_many :tags
   has_many :notes
   belongs_to :country, foreign_key: :country_code
+  belongs_to :institution, foreign_key: :institution_code
   belongs_to :graduated_from, foreign_key: :graduated_from_code, class_name: "Institution"
 
   after_save :decache
@@ -20,7 +22,7 @@ class Person
   
     def new_with_defaults
       Person.new({
-        uid: "",
+        uid: nil,
         title: "",
         family_name: "",
         given_name: "",
@@ -30,7 +32,9 @@ class Person
         dob: nil,
         post: "",
         department: "",
+        institution_code: "",
         employer: "",
+        employer_address: "",
         country_code: "HKG",
         email: "",
         phone: "",
@@ -42,15 +46,16 @@ class Person
         graduated_year: "",
         msc_year: "", 
         mphil_year: "",
-        phd_year: ""
+        phd_year: "",
+        page_id: ""
       })
     end
   end
-  
+
   def invitable?
     email?
   end
-  
+
   def to_param
     uid
   end
@@ -64,10 +69,10 @@ class Person
   end
 
   def status
-    if ias?
-      "ias"
-    elsif srf?
+    if srf?
       "srf"
+    elsif ias?
+      "ias"
     else
       "scholar"
     end
@@ -92,20 +97,32 @@ class Person
       I18n.t(:he)
     end
   end
+  
+  def whereabouts_explanation
+    case whereabouts
+    when "D" then "Due to start"
+    when "S" then "Studying"
+    when "C" then "Continued"
+    when "K" then "Known"
+    when "U" then "Unknown"
+    else ""
+    end
+  end
+  
+  def self.whereabouts_options
+    [
+      ["Due to start", "D"],
+      ["Studying", "S"],
+      ["Continued", "C"],
+      ["Known", "K"],
+      ["Unknown","U"]
+    ]
+  end
 
   protected
   
-  def decache(and_associates=true)
-    if $cache
-      path = self.class.collection_path
-      $cache.delete path
-      $cache.delete "#{path}/#{self.to_param}"
-      if and_associates
-        self.awards.each do |a|
-          a.send(:decache, false)
-        end
-      end
-    end
+  def decache
+    $cache.flush_all if $cache
   end
   
 end

@@ -12,11 +12,19 @@ class Country
   end
 
   def self.likely_for_selection
-    self.where(likely: true).map{|c| [c.name, c.code] }
+    likely.map{|c| [c.name, c.code] }
   end
 
   def self.active_for_selection
-    self.where(active: true).map{|c| [c.name, c.code] }
+    active.map{|c| [c.name, c.code] }
+  end
+  
+  def self.active
+    self.where(active: true)
+  end
+
+  def self.likely
+    self.where(likely: true)
   end
 
   def likely?
