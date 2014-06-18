@@ -52,13 +52,17 @@ class Award
   #
   #
   def expected_end_date
-    if end_date
+    if completed && end_date
       expected_end_date = Date.parse(end_date)
     elsif begin_date && duration
       expected_end_date = Date.parse(begin_date) + (duration * 12).to_i.months
-      expected_end_date += extension.months if extended? && extension
+      expected_end_date += extension.months if extended && extension
     end
     expected_end_date
+  end
+  
+  def extended?
+    
   end
 
   protected
