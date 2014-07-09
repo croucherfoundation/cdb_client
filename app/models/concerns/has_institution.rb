@@ -23,6 +23,14 @@ module HasInstitution
     end
   end
   
+  def institution_or_employer
+    institution_name || employer
+  end
+
+  def short_institution_or_employer
+    institution? ? institution.short_name : employer
+  end
+  
   def institution_name=(name)
     if name.present?
       country_code = respond_to?(:from_country_code) ? from_country_code : country_code
