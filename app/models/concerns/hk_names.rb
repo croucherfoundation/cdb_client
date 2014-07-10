@@ -94,5 +94,5 @@ module HkNames
     chinese, english = given_name.split(/,\s*/)
     [family_name, chinese].join(' ')
   end
-
+  
 end

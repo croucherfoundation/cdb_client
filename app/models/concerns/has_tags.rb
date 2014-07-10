@@ -41,12 +41,10 @@ module HasTags
   end
 
   def tags=(tags)
-    p "#{self} tags = #{tags}"
     self.tag_ids = tags.map(&:id)
   end
   
   def tag_ids=(tag_ids=[])
-    p "#{self} tag_ids = #{tag_ids}"
     if new_record?
       self.tag_ids_to_save = tag_ids
     else
@@ -56,6 +54,10 @@ module HasTags
         taggings.create(tag_id: id) if id.present?
       end
     end
+  end
+  
+  def tag_names=(terms=[])
+    self.tags = Tag.from_terms(terms)
   end
   
   def tagged?

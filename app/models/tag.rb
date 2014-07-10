@@ -11,6 +11,10 @@ class Tag
     all.map{ |t| [t.term, t.id] }
   end
   
+  def self.from_terms(terms)
+    where(terms: terms)
+  end
+  
   def self.all_terms
     all.map(&:term)
   end

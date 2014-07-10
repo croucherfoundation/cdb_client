@@ -19,6 +19,7 @@ class Grant
       title: "",
       field: "",
       field_chinese: "",
+      application_id: nil,
       grant_type_code: "",
       category_code: "",
       country_code: "",
