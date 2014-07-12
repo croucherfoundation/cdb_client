@@ -12,7 +12,11 @@ class Tag
   end
   
   def self.from_terms(terms)
-    where(terms: terms)
+    if terms && terms.any?
+      where(terms: terms)
+    else
+      []
+    end
   end
   
   def self.all_terms
