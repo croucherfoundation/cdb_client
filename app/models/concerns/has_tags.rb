@@ -16,7 +16,7 @@ module HasTags
 
     scope :with_tags_like, -> tags {
       cluster_ids = Tag.cluster_around(tags)
-      joins(:taggings).select("#{table_name}.*, count(taggings.id) as tagging_count").where(taggings: {tag_id: cluster_ids}).group("#{table_name}.id").having('tagging_count > 0').order("tagging_count DESC")
+      joins(:taggings).select("#{table_name}.*, count(taggings.id) as tagging_count").where(taggings: {tag_id: cluster_ids}).group("#{table_name}.id").having('count(taggings.id) > 0').order("tagging_count DESC")
     }
   end
 
@@ -38,6 +38,14 @@ module HasTags
   
   def tag_names
     tags.map(&:term)
+  end
+  
+  def add_tags(tags)
+    self.tags = self.tags + [tags].flatten
+  end
+
+  def remove_tags(tags)
+    self.tags = self.tags - [tags].flatten
   end
 
   def tags=(tags)
