@@ -50,9 +50,19 @@ class Award
       "Unknown award type (#{id})"
     end
   end
-
-  ## Duration and extension
+  
+  
+  ## Tags are delivered from cdb as ids.
   #
+  def tags
+    Tag.find_list(tag_ids)
+  end
+  
+  def tags=(tags)
+    tag_ids = tags.map(&:id)
+  end
+  
+  ## Duration and extension
   #
   def expected_end_date
     if completed && end_date

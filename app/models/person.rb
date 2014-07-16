@@ -14,7 +14,7 @@ class Person
   belongs_to :graduated_from, foreign_key: :graduated_from_code, class_name: "Institution"
 
   after_save :decache
-
+  
   class << self
     def for_selection
       Person.all.sort_by(&:name).map{|p| [p.name, p.uid] }

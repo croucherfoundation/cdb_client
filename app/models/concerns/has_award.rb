@@ -18,5 +18,9 @@ module HasAward
   def award_type
     award.award_type if award
   end
+  
+  def award=(award)
+    self.award_id = award.id
+  end
 
 end

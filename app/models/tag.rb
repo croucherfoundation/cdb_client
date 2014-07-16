@@ -28,7 +28,8 @@ class Tag
   end
   
   def self.find_list(ids)
-    where(ids: ids)
+    # where(ids: ids)
+    find(ids)
   end
   
   #TODO: try various cluster rules to find something simple that works most of the time.
