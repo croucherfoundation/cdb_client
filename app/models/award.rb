@@ -51,6 +51,22 @@ class Award
     end
   end
   
+  def institution?
+    institution_code? && institution
+  end
+  
+  def institution_name
+    institution.name if institution?
+  end
+
+  def second_institution?
+    second_institution_code? && second_institution
+  end
+
+  def second_institution_name
+    second_institution.name if second_institution?
+  end
+  
   
   ## Tags are delivered from cdb as ids.
   #
