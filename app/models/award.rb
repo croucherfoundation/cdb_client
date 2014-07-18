@@ -51,6 +51,22 @@ class Award
     end
   end
   
+  def category?
+    category_code? && category
+  end
+
+  def category_name
+    category.name if category?
+  end
+  
+  def country_name
+    country.name if country?
+  end
+  
+  def country?
+    country_code && country
+  end
+  
   def institution?
     institution_code? && institution
   end
@@ -70,12 +86,20 @@ class Award
   
   ## Tags are delivered from cdb as ids.
   #
-  def tags
-    Tag.find_list(tag_ids)
+  def scientific_tags
+    Tag.find_list(scientific_tag_ids)
   end
   
-  def tags=(tags)
-    tag_ids = tags.map(&:id)
+  def scientific_tags=(tags)
+    scientific_tag_ids = tags.map(&:id)
+  end
+
+  def admin_tags
+    Tag.find_list(admin_tag_ids)
+  end
+  
+  def admin_tags=(tags)
+    admin_tag_ids = tags.map(&:id)
   end
   
   ## Duration and extension

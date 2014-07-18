@@ -10,6 +10,22 @@ class Tag
   def self.for_selection
     all.map{ |t| [t.term, t.id] }
   end
+
+  def self.scientific
+    where(tag_type: "LCSH")
+  end
+
+  def self.scientific_selection
+    scientific.map{ |t| [t.term, t.id] }
+  end
+
+  def self.administrative
+    where(tag_type: "admin")
+  end
+
+  def self.administrative_selection
+    administrative.map{ |t| [t.term, t.id] }
+  end
   
   def self.from_terms(terms)
     if terms && terms.any?
