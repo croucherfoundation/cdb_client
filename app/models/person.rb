@@ -17,7 +17,7 @@ class Person
   
   class << self
     def for_selection
-      Person.all.sort_by(&:name).map{|p| [p.name, p.uid] }
+      Person.all(show: "all").sort_by(&:name).map{|p| [p.name, p.uid] }
     end
   
     def new_with_defaults

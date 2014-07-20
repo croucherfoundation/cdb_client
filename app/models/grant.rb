@@ -9,8 +9,6 @@ class Grant
   belongs_to :institution, foreign_key: :institution_code
   belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
 
-  has_many :people
-
   after_save :decache
 
   def self.new_with_defaults(attributes={})
@@ -30,7 +28,7 @@ class Grant
       begin_date: "",
       extension: "",
       duration: "",
-      person_uids: "",
+      person_uids: [],
       year: Date.today.year
     }.merge(attributes))
   end
@@ -50,6 +48,32 @@ class Grant
   
   def institutions
     [institution.fetch, second_institution.fetch].compact
+  end
+
+  def people
+    Person.find(person_uids)
+  end
+  
+  def people=(people)
+    self.person_uids = people.map(&:uid)
+  end
+  
+  ## Tags are delivered from cdb as ids.
+  #
+  def scientific_tags
+    Tag.find_list(scientific_tag_ids)
+  end
+  
+  def scientific_tags=(tags)
+    scientific_tag_ids = tags.map(&:id)
+  end
+
+  def admin_tags
+    Tag.find_list(admin_tag_ids)
+  end
+  
+  def admin_tags=(tags)
+    admin_tag_ids = tags.map(&:id)
   end
 
   protected
