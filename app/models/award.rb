@@ -1,3 +1,5 @@
+require 'csv'
+
 class Award
   include PaginatedHer::Model
   use_api CDB
@@ -33,6 +35,12 @@ class Award
     }.merge(attributes))
   end
 
+
+  ## Helpers
+  #
+  # shortcut some of the if country then country.name boilerplate, which gets onerous
+  # as here when everything is a string.
+  #
   def summary
     "##{record_no}: #{name} to #{person.name}"
   end
@@ -52,23 +60,23 @@ class Award
   end
   
   def category?
-    category_code? && category
+    category_code? && !!category
   end
 
   def category_name
     category.name if category?
   end
   
+  def country?
+    country_code && !!country
+  end
+  
   def country_name
     country.name if country?
   end
   
-  def country?
-    country_code && country
-  end
-  
   def institution?
-    institution_code? && institution
+    institution_code? && !!institution
   end
   
   def institution_name
@@ -76,11 +84,27 @@ class Award
   end
 
   def second_institution?
-    second_institution_code? && second_institution
+    second_institution_code? && !!second_institution
   end
 
   def second_institution_name
     second_institution.name if second_institution?
+  end
+  
+  def person?
+    person_uid && !!person
+  end
+  
+  def person_name
+    person.colloquial_name if person?
+  end
+
+  def award_type?
+    award_type_code && !!award_type
+  end
+  
+  def award_type_name
+    award_type.name if award_type?
   end
   
   
@@ -107,6 +131,18 @@ class Award
   def extended?
     
   end
+  
+  ## CSV export
+  
+  def to_csv
+    self.class.csv_columns.map {|col| self.send col.to_sym}
+  end
+
+  def self.csv_columns
+    # %w{id record_no person_name year}
+    %w{id record_no person_name year application_id award_type_name institution_name second_institution_name category_name country_name name field field_chinese description title person_uid supervisor supervisor_email supervisor_address department degree duration value expected_value uk begin_date expected_end_date completed end_date terminated terminated_date returned returned_date duration extended extension extension_end_date remarks payments bank green_form job_form progress_report_received progress_reports thesis_submitted thesis_url conference_grant_given conference_grant conference_report_received conference_report final_report_received final_report spouse_fee no_children leave}
+  end
+
 
   protected
 
