@@ -120,7 +120,7 @@ class Person
   end
   
   def graduated_from_name
-    graduated_from.name if graduated_from_code?
+    graduated_from.name if graduated_from
   end
 
   protected
