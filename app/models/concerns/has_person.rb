@@ -14,8 +14,9 @@ module HasPerson
     person_uid? && person
   end
   
-  def person=(person)
-    self.person = person.uid
+  def person=(uid)
+    uid = uid.uid if uid.is_a? Person
+    self.person_uid = uid
   end
 
 end
