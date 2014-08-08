@@ -11,12 +11,21 @@ module HasPerson
   end
   
   def person?
-    person_uid? && person
+    person_uid? && !!person
   end
   
   def person=(uid)
     uid = uid.uid if uid.is_a? Person
     self.person_uid = uid
+  end
+
+  # nested attribute support for our remote person object
+  #
+  def person_attributes=(attributes={})
+    if person?
+      person.assign_attributes(attributes)
+      person.save
+    end
   end
 
 end
