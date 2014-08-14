@@ -22,9 +22,11 @@ module HasPerson
   # nested attribute support for our remote person object
   #
   def person_attributes=(attributes={})
+    Rails.logger.warn ">> person_attributes=(#{attributes.inspect})"
     if person?
-      person.update_attributes(attributes)
-      person.save
+      Rails.logger.warn ">> saving person"
+      Person.save_existing(person.id, attributes)
+      $cache.flush_all
     end
   end
 
