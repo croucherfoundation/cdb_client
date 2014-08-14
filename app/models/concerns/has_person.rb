@@ -23,7 +23,7 @@ module HasPerson
   #
   def person_attributes=(attributes={})
     if person?
-      person.assign_attributes(attributes)
+      person.update_attributes(attributes)
       person.save
     end
   end
