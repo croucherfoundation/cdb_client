@@ -27,6 +27,10 @@ module HasInstitution
     institution_name || employer
   end
 
+  def institution_or_employer?
+    institution? || employer?
+  end
+
   def short_institution_or_employer
     institution? ? institution.short_name : employer
   end

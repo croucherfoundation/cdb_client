@@ -7,8 +7,9 @@ class Tag
     parent_ids + child_ids
   end
 
-  def self.for_selection
-    all.map{ |t| [t.term, t.id] }
+  def self.for_selection(count=nil)
+    tags = count ? all(show: count) : all
+    tags.map{ |t| [t.term, t.id] }
   end
 
   def self.scientific
