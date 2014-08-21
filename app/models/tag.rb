@@ -15,7 +15,7 @@ class Tag
   def self.scientific
     where(tag_type: "LCSH")
   end
-
+  
   def self.scientific_selection
     scientific.map{ |t| [t.term, t.id] }
   end
@@ -45,14 +45,77 @@ class Tag
   end
   
   def self.find_list(ids)
-    # where(ids: ids)
     find(ids)
   end
   
-  #TODO: try various cluster rules to find something simple that works most of the time.
+  #TODO: try various clustering rules to find something simple that works most of the time.
   #
   def self.cluster_around(tags)
     tags.map {|t| [t.id] + t.parent_ids + t.child_ids }.flatten
   end
   
+  # Tree construction and traversal
+  
+  def self.tree_from(tag)
+    json = tag.as_json
+    json[:family_size] = 1
+    children = collected_children[tag.id]
+    if children && children.any?
+      json[:children] = []
+      children.each do |child|
+        child_json = tree_from(child)
+        json[:children].push child_json
+        json[:family_size] += child_json[:family_size]
+      end
+    end
+    json
+  end
+  
+  def self.root
+    where(term: "science").first
+  end
+
+  def self.tree
+    tree_from(root)
+  end
+  
+  def as_json(options={})
+    json = {
+      id: id,
+      term: term,
+      omitted: omitted?,
+      branch_use: weight,
+      use: taggings_count
+    }
+    json
+  end
+  
+  # Tree manipulation
+  # ...pretty basic to start with
+  
+  def omit!
+    self.update_column(:omitted, true)
+    self.children.map(&:omit!)
+  end
+  
+  
+  protected
+  
+  # For tree-building and other assembly operations it's much more efficient to preload all the tags
+  # and their links.
+  #
+  
+  def self.collected_tags
+    @tag_lookup ||= Tag.all.each_with_object({}) do |tag, hash|
+      hash[tag.id] = tag
+    end
+  end
+
+  def self.collected_children
+    @children_lookup ||= TagLink.all.each_with_object({}) do |tag_link, hash|
+      hash[tag_link.parent_id] ||= []
+      hash[tag_link.parent_id].push collected_tags[tag_link.child_id] if collected_tags[tag_link.child_id]
+    end
+  end
+
 end
