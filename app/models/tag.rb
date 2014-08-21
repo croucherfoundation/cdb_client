@@ -2,6 +2,7 @@ class Tag
   include PaginatedHer::Model
   use_api CDB
   collection_path "/api/tags"
+  after_save :decache
 
   def relative_ids
     parent_ids + child_ids
@@ -59,13 +60,17 @@ class Tag
   def self.tree_from(tag)
     json = tag.as_json
     json[:family_size] = 1
-    children = collected_children[tag.id]
-    if children && children.any?
-      json[:children] = []
-      children.each do |child|
-        child_json = tree_from(child)
-        json[:children].push child_json
-        json[:family_size] += child_json[:family_size]
+    if tag.child_ids.any?
+      children = collected_tags.values_at(*tag.child_ids)
+      if children && children.any?
+        json[:children] = []
+        children.each do |child|
+          if child
+            child_json = tree_from(child)
+            json[:children].push child_json
+            json[:family_size] += child_json[:family_size]
+          end
+        end
       end
     end
     json
@@ -94,10 +99,14 @@ class Tag
   # ...pretty basic to start with
   
   def omit!
-    self.update_column(:omitted, true)
-    self.children.map(&:omit!)
+    self.omitted = true
+    self.save
   end
   
+  def omit_children!
+    self.omit_children = true
+    self.save
+  end
   
   protected
   
@@ -111,11 +120,8 @@ class Tag
     end
   end
 
-  def self.collected_children
-    @children_lookup ||= TagLink.all.each_with_object({}) do |tag_link, hash|
-      hash[tag_link.parent_id] ||= []
-      hash[tag_link.parent_id].push collected_tags[tag_link.child_id] if collected_tags[tag_link.child_id]
-    end
+  def decache
+    $cache.flush_all if $cache
   end
 
 end
