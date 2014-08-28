@@ -24,7 +24,7 @@ end
 CDB = Her::API.new
 CDB.setup url: "#{Settings.cdb.protocol}://#{Settings.cdb.api_host}:#{Settings.cdb.api_port}" do |c|
   # Request
-  c.use FaradayMiddleware::Caching, $cache.clone if $cache
+  # c.use FaradayMiddleware::Caching, $cache.clone if $cache
   c.use Faraday::Request::UrlEncoded
 
   # Response
