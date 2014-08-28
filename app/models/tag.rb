@@ -2,7 +2,6 @@ class Tag
   include PaginatedHer::Model
   use_api CDB
   collection_path "/api/tags"
-  after_save :decache
 
   def relative_ids
     parent_ids + child_ids
@@ -118,10 +117,6 @@ class Tag
     @tag_lookup ||= Tag.all.each_with_object({}) do |tag, hash|
       hash[tag.id] = tag
     end
-  end
-
-  def decache
-    $cache.flush_all if $cache
   end
 
 end

@@ -43,7 +43,6 @@ module HasInstitution
       else
         created = Institution.create(name: name, country_code: country_code)
         self.institution_code = created.code
-        $cache.flush_all #rough!
       end
     end
   end

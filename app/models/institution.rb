@@ -5,8 +5,6 @@ class Institution
 
   belongs_to :country, foreign_key: :country_code
 
-  after_save :decache
-
   # *for_selection* returns a set of [name, id] pairs suitable for use as select options.
   def self.for_selection(country_code=nil)
     if country_code.present?
@@ -64,12 +62,6 @@ class Institution
 
   def icon
     images[:icon]
-  end
-
-  protected
-
-  def decache
-    $cache.flush_all if $cache
   end
 
 end

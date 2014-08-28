@@ -9,8 +9,6 @@ class Grant
   belongs_to :institution, foreign_key: :institution_code
   belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
 
-  after_save :decache
-
   def self.new_with_defaults(attributes={})
     Grant.new({
       name: "",
@@ -74,12 +72,6 @@ class Grant
   
   def admin_tags=(tags)
     admin_tag_ids = tags.map(&:id)
-  end
-
-  protected
-
-  def decache
-    $cache.flush_all if $cache
   end
 
 end

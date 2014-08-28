@@ -7,7 +7,7 @@ module HasPerson
   end
 
   def person
-    Person.find(person_uid) if person_uid?
+    @person ||= Person.find(person_uid) if person_uid?
   end
   
   def person?
@@ -17,16 +17,14 @@ module HasPerson
   def person=(uid)
     uid = uid.uid if uid.is_a? Person
     self.person_uid = uid
+    @person = nil
   end
 
   # nested attribute support for our remote person object
   #
   def person_attributes=(attributes={})
-    Rails.logger.warn ">> person_attributes=(#{attributes.inspect})"
     if person?
-      Rails.logger.warn ">> saving person"
       Person.save_existing(person.id, attributes)
-      $cache.flush_all
     end
   end
 

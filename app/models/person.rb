@@ -12,8 +12,6 @@ class Person
   belongs_to :country, foreign_key: :country_code
   belongs_to :institution, foreign_key: :institution_code
   belongs_to :graduated_from, foreign_key: :graduated_from_code, class_name: "Institution"
-
-  after_save :decache
   
   class << self
     def for_selection
@@ -123,10 +121,4 @@ class Person
     graduated_from.name if graduated_from_code && graduated_from.fetch
   end
 
-  protected
-  
-  def decache
-    $cache.flush_all if $cache
-  end
-  
 end
