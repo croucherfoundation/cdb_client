@@ -32,6 +32,7 @@ class Institution
       Institution.new({
         name: "",
         code: "",
+        abbreviation: "",
         ugc_code: "",
         country_code: "",
         address: "",
