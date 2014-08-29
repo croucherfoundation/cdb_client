@@ -2,6 +2,7 @@ class Country
   include PaginatedHer::Model
   use_api CDB
   collection_path "/api/countries"
+  primary_key :code
 
   def self.for_selection
     countries = self.all.sort_by(&:name)
