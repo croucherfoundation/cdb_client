@@ -5,25 +5,40 @@ class Institution
 
   belongs_to :country, foreign_key: :country_code
 
-  # *for_selection* returns a set of [name, id] pairs suitable for use as select options.
-  def self.for_selection(country_code=nil)
-    if country_code.present?
-      insts = self.where(:country_code => country_code)
-    else
-      insts = self.all
-    end
-    insts.sort_by(&:normalized_name).map{|inst| [inst.normalized_name, inst.code] }
-  end
+  class << self
 
-  def self.active_for_selection(country_code=nil)
-    active(country_code).sort_by(&:normalized_name).map{|inst| [inst.colloquial_name, inst.code] }
-  end
+    def for_selection(country_code=nil)
+      if country_code.present?
+        insts = self.where(:country_code => country_code)
+      else
+        insts = self.all
+      end
+      insts.sort_by(&:normalized_name).map{|inst| [inst.normalized_name, inst.code] }
+    end
+
+    def active_for_selection(country_code=nil)
+      active(country_code).sort_by(&:normalized_name).map{|inst| [inst.colloquial_name, inst.code] }
+    end
   
-  def self.active(country_code=nil)
-    if country_code.present?
-      self.where(:country_code => country_code, active: true)
-    else
-      self.where(active: true)
+    def active(country_code=nil)
+      if country_code.present?
+        self.where(:country_code => country_code, active: true)
+      else
+        self.where(active: true)
+      end
+    end
+  
+    def new_with_defaults
+      Institution.new({
+        name: "",
+        code: "",
+        ugc_code: "",
+        country_code: "",
+        address: "",
+        lat: "",
+        lng: "",
+        location_given: false
+      })
     end
   end
   

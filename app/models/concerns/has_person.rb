@@ -14,10 +14,9 @@ module HasPerson
     person_uid? && !!person
   end
   
-  def person=(uid)
-    uid = uid.uid if uid.is_a? Person
-    self.person_uid = uid
-    @person = nil
+  def person=(person)
+    self.person_uid = person.uid
+    @person = person
   end
 
   # nested attribute support for our remote person object
