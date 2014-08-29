@@ -38,6 +38,7 @@ class Institution
         address: "",
         lat: "",
         lng: "",
+        london: false,
         location_given: false
       })
     end
