@@ -37,11 +37,14 @@ module HasInstitution
   
   def institution_name=(name)
     if name.present?
-      country_code = respond_to?(:from_country_code) ? from_country_code : country_code
-      if existing = Institution.where(name: name, country_code: country_code).first
+      ccode = respond_to?(:from_country_code) ? from_country_code : country_code
+      Rails.logger.warn ">> country_code: #{ccode})"
+      
+      if existing = Institution.where(name: name, country_code: ccode).first
         self.institution_code = existing.code
       else
-        created = Institution.create(name: name, country_code: country_code)
+        Rails.logger.warn ">> Institution.create(name: #{name}, country_code: #{ccode})"
+        created = Institution.create(name: name, country_code: ccode)
         self.institution_code = created.code
       end
     end

@@ -18,7 +18,7 @@ class Institution
     end
 
     def active_for_selection(country_code=nil)
-      active(country_code).sort_by(&:normalized_name).map{|inst| [inst.colloquial_name, inst.code] }
+      active(country_code).sort_by(&:normalized_name).map{|inst| [inst.normalized_name, inst.code] }
     end
   
     def active(country_code=nil)
