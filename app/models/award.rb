@@ -127,7 +127,7 @@ class Award
   ## Duration and extension
   #  
   def extended?
-    
+    extended && extension?
   end
   
   ## CSV export
