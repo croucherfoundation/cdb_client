@@ -8,7 +8,8 @@ module HasInstitution
   end
 
   def institution
-    Institution.find(institution_code) if institution_code?
+    # here we guess that it's probably going to be cheaper to get everything than to retrieve one at a time
+    Institution.preloaded(institution_code) if institution_code?
   end
   
   def institution?

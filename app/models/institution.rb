@@ -8,6 +8,13 @@ class Institution
 
   class << self
 
+    def preloaded(code)
+      @institutions ||= self.all.each_with_object({}) do |inst, h|
+        h[inst.code] = inst
+      end
+      @institutions[code]
+    end
+
     def for_selection(country_code=nil)
       if country_code.present?
         insts = self.where(:country_code => country_code)
