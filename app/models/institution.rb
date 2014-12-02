@@ -23,6 +23,11 @@ class Institution
       end
       insts.sort_by(&:normalized_name).map{|inst| [inst.normalized_name, inst.code] }
     end
+    
+    def hk_for_selection
+      insts = self.where(hk: true)
+      insts.sort_by(&:normalized_name).map{|inst| [inst.normalized_name, inst.code] }
+    end
 
     def active_for_selection(country_code=nil)
       active(country_code).sort_by(&:normalized_name).map{|inst| [inst.normalized_name, inst.code] }

@@ -24,6 +24,11 @@ module HasInstitution
     end
   end
   
+  def institution=(code)
+    code = code.code if code.is_a? Institution
+    self.institution_code = code
+  end
+  
   def institution_or_employer
     institution_name || employer
   end
