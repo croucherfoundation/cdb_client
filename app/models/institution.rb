@@ -94,4 +94,14 @@ class Institution
     images[:icon]
   end
 
+  def self.extract_salient(string)
+    string.gsub!(/\b(a|an|the)\b\s+/i, '')
+    string.gsub!(/U\s+of\s+/i, '')
+    string.gsub!(/University\s+of\s+/i, '')
+    string.gsub!(/\s+University/i, '')
+    string.gsub!(/\s+U$/i, '')
+    string.gsub!(/\s+College/i, '')
+    string
+  end
+
 end
