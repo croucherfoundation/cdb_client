@@ -16,4 +16,8 @@ class GrantType
     }.merge(attributes))
   end
   
+  def event_based?
+    !!event_based
+  end
+
 end
