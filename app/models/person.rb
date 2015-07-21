@@ -12,6 +12,7 @@ class Person
   belongs_to :country, foreign_key: :country_code
   belongs_to :institution, foreign_key: :institution_code
   belongs_to :graduated_from, foreign_key: :graduated_from_code, class_name: "Institution"
+  has_many :grant_people, foreign_key: :person_uid
   
   class << self
     def for_selection
