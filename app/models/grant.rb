@@ -17,7 +17,6 @@ class Grant
       field_chinese: "",
       application_id: nil,
       grant_type_code: "",
-      category_code: "",
       country_code: "",
       institution_code: "",
       second_institution_code: "",
@@ -26,9 +25,20 @@ class Grant
       begin_date: "",
       extension: "",
       duration: "",
+      approved_at: nil,
+      approved_by_uid: nil,
       grant_person_attributes: [],
       year: Date.today.year
     }.merge(attributes))
+  end
+
+  def approved?
+    approved_at.present?
+  end
+  
+  def approve!(user=nil)
+    self.approved_at ||= Time.now
+    self.approved_by_uid ||= user.uid if user
   end
 
   ## Duration and extension

@@ -5,7 +5,6 @@ class Award
   use_api CDB
   collection_path "/api/awards"
 
-  belongs_to :category, foreign_key: :category_code
   belongs_to :award_type, foreign_key: :award_type_code
   belongs_to :country, foreign_key: :country_code
   belongs_to :person, foreign_key: :person_uid
@@ -20,7 +19,6 @@ class Award
       record_code: "",
       application_id: nil,
       award_type_code: "",
-      category_code: "",
       country_code: "",
       institution_code: "",
       second_institution_code: "",
@@ -29,8 +27,19 @@ class Award
       begin_date: "",
       extension: "",
       duration: "",
+      approved_at: nil,
+      approved_by_uid: nil,
       year: Date.today.year
     }.merge(attributes))
+  end
+
+  def approved?
+    approved_at.present?
+  end
+  
+  def approve!(user=nil)
+    self.approved_at ||= Time.now
+    self.approved_by_uid ||= user.uid if user
   end
 
 
@@ -56,15 +65,7 @@ class Award
       "Unknown award type (#{id})"
     end
   end
-  
-  def category?
-    category_code? && !!category
-  end
 
-  def category_name
-    category.name if category?
-  end
-  
   def country?
     country_code && !!country
   end
@@ -125,7 +126,7 @@ class Award
   end
   
   ## Duration and extension
-  #  
+  #
   def extended?
     extended && extension?
   end
@@ -138,7 +139,7 @@ class Award
 
   def self.csv_columns
     # %w{id record_no person_name year}
-    %w{id record_no person_name year application_id award_type_name institution_name second_institution_name category_name country_name name field field_chinese description title person_uid supervisor supervisor_email supervisor_address department degree duration value expected_value uk begin_date expected_end_date completed end_date terminated terminated_date returned returned_date duration extended extension extension_end_date remarks payments bank green_form job_form progress_report_received progress_reports thesis_submitted thesis_url conference_grant_given conference_grant conference_report_received conference_report final_report_received final_report spouse_fee no_children leave}
+    %w{id record_no person_name year application_id award_type_name institution_name second_institution_name country_name name field field_chinese description title person_uid supervisor supervisor_email supervisor_address department degree duration value expected_value uk begin_date expected_end_date completed end_date terminated terminated_date returned returned_date duration extended extension extension_end_date remarks payments bank green_form job_form progress_report_received progress_reports thesis_submitted thesis_url conference_grant_given conference_grant conference_report_received conference_report final_report_received final_report spouse_fee no_children leave}
   end
 
 end
