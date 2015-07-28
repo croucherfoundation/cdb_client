@@ -1,6 +1,7 @@
 - institution ||= nil
 - only_likely_countries ||= false
 - default_country_code ||= 'HKG'
+- required ||= false
 
 - if institution.present?
   - country_code = institution.country_code
@@ -11,6 +12,7 @@
 - institution_code_field ||= :institution_code
 - institution_name_field ||= :institution_name
 - institution_name_placeholder ||= t('placeholders.institution_name')
+- label_class = required ? "required" : ""
 
 - if only_likely_countries
   - country_options = Country.likely_for_selection
@@ -18,11 +20,14 @@
   - country_options = Country.for_selection
 
 
-%fieldset.institution{data: {role: "institution"}}
+%fieldset.institution{data: {role: "institution", required: required}}
   %p.twocol.unequal
     %span.col>
+      = f.label institution_code_field, class: label_class
+      %br
       = select_tag country_code_field, options_for_select(country_options, country_code), data: {role: 'countrypicker'}
     %span.col.last>
+      %br
       = f.select institution_code_field, Institution.for_selection(country_code), {prompt: t("placeholders.please_choose")}, {data: {role: 'institutionpicker'}}
       = f.text_field institution_name_field, placeholder: institution_name_placeholder, value: ""
       %br

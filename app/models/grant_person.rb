@@ -7,11 +7,12 @@ class GrantPerson
   belongs_to :person, foreign_key: :person_uid
   
   def self.new_with_defaults(attributes={})
-    GrantPerson.new({
+    new({
       position: 0,
       role: "",
       notes: "",
-      person_uid: ""
+      person_uid: "",
+      person: Person.new_with_defaults
     }.merge(attributes))
   end
 

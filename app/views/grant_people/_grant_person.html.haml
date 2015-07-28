@@ -1,0 +1,10 @@
+- grant_person = @grant_person || GrantPerson.new_with_defaults unless grant_person.present?
+
+= fields_for :grant do |f|
+  = f.fields_for :grant_people, grant_person do |gpf|
+    .grant_person
+      %p.onecol
+        %span.col>
+          = gpf.text_field :role, placeholder: t("placeholders.grant_person.role"), required: true, data: {role: "rolepicker"}, class: "strong"
+
+      = render "people/pick_or_add", f: gpf, person: @grant_person.person, association: :person, person_uid_field: :person_uid, required: true
