@@ -8,6 +8,7 @@ class Grant
   belongs_to :institution, foreign_key: :institution_code
   belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
   has_many :grant_people
+  accepts_nested_attributes_for :grant_people
 
   def self.new_with_defaults(attributes={})
     Grant.new({
@@ -28,6 +29,7 @@ class Grant
       approved_at: nil,
       approved_by_uid: nil,
       applicant_uid: "",
+      grant_people: [],
       grant_person_attributes: [],
       year: Date.today.year
     }.merge(attributes))

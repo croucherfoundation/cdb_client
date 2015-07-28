@@ -1,7 +1,9 @@
+- grant = Grant.new_with_defaults
 - grant_person = @grant_person || GrantPerson.new_with_defaults unless grant_person.present?
+- grant_person_counter ||= nil
 
-= fields_for :grant do |f|
-  = f.fields_for :grant_people, grant_person do |gpf|
+= fields_for :grant, grant do |f|
+  = f.fields_for :grant_people, grant_person, :child_index => grant_person_counter || 'field_counter' do |gpf|
     %fieldset.list_item
       %p.twocol.reversed
         %span.col.first>
