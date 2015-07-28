@@ -1,5 +1,5 @@
 class Country
-  include PaginatedHer::Model
+  include Her::JsonApi::Model
   use_api CDB
   collection_path "/api/countries"
   primary_key :code

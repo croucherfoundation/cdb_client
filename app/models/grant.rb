@@ -1,5 +1,5 @@
 class Grant
-  include PaginatedHer::Model
+  include Her::JsonApi::Model
   use_api CDB
   collection_path "/api/grants"
 
@@ -7,6 +7,7 @@ class Grant
   belongs_to :country, foreign_key: :country_code
   belongs_to :institution, foreign_key: :institution_code
   belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
+  belongs_to :applicant, foreign_key: :applicant_uid_code, class_name: "Person"
   has_many :grant_people
 
   def self.new_with_defaults(attributes={})
@@ -27,6 +28,7 @@ class Grant
       duration: "",
       approved_at: nil,
       approved_by_uid: nil,
+      applicant_uid: "",
       grant_person_attributes: [],
       year: Date.today.year
     }.merge(attributes))

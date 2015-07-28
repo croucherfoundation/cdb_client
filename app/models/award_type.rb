@@ -1,5 +1,5 @@
 class AwardType
-  include PaginatedHer::Model
+  include Her::JsonApi::Model
   use_api CDB
   collection_path "/api/award_types"
 

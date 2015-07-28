@@ -1,0 +1,29 @@
+- institution ||= nil
+- only_likely_countries ||= false
+- default_country_code ||= 'HKG'
+
+- if institution.present?
+  - country_code = institution.country_code
+- else
+  - country_code = default_country_code
+
+- country_code_field ||= :country_code
+- institution_code_field ||= :institution_code
+- institution_name_field ||= :institution_name
+- institution_name_placeholder ||= t('placeholders.institution_name')
+
+- if only_likely_countries
+  - country_options = Country.likely_for_selection
+- else
+  - country_options = Country.for_selection
+
+
+%fieldset.institution{data: {role: "institution"}}
+  %p.twocol.unequal
+    %span.col>
+      = select_tag country_code_field, options_for_select(country_options, country_code), data: {role: 'countrypicker'}
+    %span.col.last>
+      = f.select institution_code_field, Institution.for_selection(country_code), {prompt: t("placeholders.please_choose")}, {data: {role: 'institutionpicker'}}
+      = f.text_field institution_name_field, placeholder: institution_name_placeholder, value: ""
+      %br
+      = link_to t(:add_institution), '#', class: 'note', data: {role: "toggle", alt: t(:choose_institution)}

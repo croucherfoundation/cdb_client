@@ -1,6 +1,6 @@
 class Person
   include HkNames
-  include PaginatedHer::Model
+  include Her::JsonApi::Model
   use_api CDB
   collection_path "/api/people"
   primary_key :uid
