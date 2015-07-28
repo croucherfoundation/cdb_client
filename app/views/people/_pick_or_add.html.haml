@@ -1,0 +1,24 @@
+- association ||= :person
+- person = Person.new_with_defaults unless person.present?
+- person_uid_field ||= :person_uid
+
+= f.hidden_field person_uid_field, data: {key: "uid"}
+
+= f.fields_for association, person do |pf|
+  %fieldset
+    %p.threecol
+      %span.col>
+        = pf.text_field :title, placeholder: t("placeholders.person.title"), class: 'title', data: {key: "title"}
+      %span.col>
+        = pf.text_field :family_name, placeholder: t("placeholders.person.family_name"), class: 'family_name', required: true, data: {key: "family_name"}
+      %span.col.last>
+        = pf.text_field :given_name, placeholder: t("placeholders.person.given_name"), class: 'given_name', required: true, data: {key: "given_name"}
+
+    %p.twocol.reversed
+      %span.col>
+        = pf.email_field :email, placeholder: t("placeholders.person.email"), class: 'email', required: true, data: {key: "email"}
+      %span.col.last>
+        = pf.text_field :phone, placeholder: t("placeholders.person.phone"), class: 'phone', data: {key: "phone"}
+
+      %p.formnote
+        Suggestions will appear here as you type names and email addresses. Click on a suggestion to populate the form with that person.
