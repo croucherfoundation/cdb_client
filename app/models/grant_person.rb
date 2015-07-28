@@ -10,6 +10,7 @@ class GrantPerson
     new({
       position: 0,
       role: "",
+      applicant: false,
       notes: "",
       person_uid: "",
       person: Person.new_with_defaults
