@@ -62,6 +62,14 @@ class Grant
     grant_people.map(&:person)
   end
   
+  def applicants
+    grant_people.select {|gp| gp.applicant?}
+  end
+  
+  def has_applicant?
+    applicants.any?
+  end
+
   ## Tags are delivered from cdb as ids.
   #
   def scientific_tags

@@ -2,12 +2,15 @@
 
 = fields_for :grant do |f|
   = f.fields_for :grant_people, grant_person do |gpf|
-    .grant_person
+    %fieldset.grant_person
       %p.twocol.reversed
         %span.col.first>
           = gpf.text_field :role, placeholder: t("placeholders.grant_person.role"), required: true, data: {role: "rolepicker"}, class: "strong"
         %span.col.last>
           = gpf.check_box :applicant
-          = gpf.label :applicant
+          = gpf.label(:applicant, class: "inline") do
+            Primary contact for this grant
+            %span.formnote
+              = t "notes.grant.applicant"
 
       = render "people/pick_or_add", f: gpf, person: grant_person.person, association: :person, person_uid_field: :person_uid, required: true
