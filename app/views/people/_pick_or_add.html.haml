@@ -1,8 +1,9 @@
 - association ||= :person
-- person = Person.new_with_defaults unless person.present?
+- person = @person || Person.new_with_defaults unless person.present?
 - person_uid_field ||= :person_uid
 - required ||= false
 - heading ||= nil
+- without_institution ||= false
 
 = f.hidden_field person_uid_field, data: {key: "uid"}
 
@@ -24,3 +25,5 @@
         = pf.email_field :email, placeholder: t("placeholders.person.email"), class: 'email', required: true, data: {key: "email"}
       %span.col.last>
         = pf.text_field :phone, placeholder: t("placeholders.person.phone"), class: 'phone', data: {key: "phone"}
+    - unless without_institution
+      = render "institutions/pick_or_add", f: pf, institution: person.institution, institution_code_field: 'institution_code', only_likely_countries: true

@@ -2,7 +2,7 @@
 
 = fields_for :grant do |f|
   = f.fields_for :grant_people, grant_person do |gpf|
-    %fieldset.grant_person
+    %fieldset.list_item
       %p.twocol.reversed
         %span.col.first>
           = gpf.text_field :role, placeholder: t("placeholders.grant_person.role"), required: true, data: {role: "rolepicker"}, class: "strong"

@@ -19,7 +19,7 @@ class Person
       Person.all(show: "all").sort_by(&:name).map{|p| [p.name, p.uid] }
     end
   
-    def new_with_defaults
+    def new_with_defaults(attributes={})
       Person.new({
         uid: nil,
         title: "",
@@ -43,11 +43,12 @@ class Person
         blacklisted: false,
         graduated_from_code: "",
         graduated_year: "",
-        msc_year: "", 
+        msc_year: "",
         mphil_year: "",
         phd_year: "",
-        page_id: ""
-      })
+        page_id: "",
+        institution: Institution.new_with_defaults
+      }.merge(attributes))
     end
   end
 
