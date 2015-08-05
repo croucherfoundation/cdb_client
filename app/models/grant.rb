@@ -57,7 +57,11 @@ class Grant
   end
   
   def institutions
-    [institution.fetch, second_institution.fetch].compact
+    [institution, second_institution].compact
+  end
+  
+  def any_institution?
+    institution || second_institution
   end
 
   def people

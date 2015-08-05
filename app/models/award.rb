@@ -51,45 +51,19 @@ class Award
   def summary
     "##{record_no}: #{name} to #{person.name}"
   end
-  
-  def name_or_award_type_name
-    name.present? ? name : award_type.name
-  end
-
-  def short_name_or_award_type_name
-    if name.present?
-      name
-    elsif award_type
-      award_type.short_name
-    else
-      "Unknown award type (#{id})"
-    end
-  end
 
   def country?
     country_code && !!country
-  end
-  
-  def country_name
-    country.name if country?
   end
   
   def institution?
     institution_code? && !!institution
   end
   
-  def institution_name
-    institution.name if institution?
-  end
-
   def second_institution?
     second_institution_code? && !!second_institution
   end
 
-  def second_institution_name
-    second_institution.name if second_institution?
-  end
-  
   def person?
     person_uid && !!person
   end
@@ -98,14 +72,6 @@ class Award
     person.colloquial_name if person?
   end
 
-  def award_type?
-    award_type_code && !!award_type
-  end
-  
-  def award_type_name
-    award_type.name if award_type?
-  end
-  
   
   ## Tags are delivered from cdb as ids.
   #

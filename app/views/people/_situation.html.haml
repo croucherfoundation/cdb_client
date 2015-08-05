@@ -5,10 +5,10 @@
       = person.post
       - if person.institution? || person.employer?
         = t :at
-    - if person.institution?
-      = person.institution.definite_name
+    - if person.institution_name?
+      = person.institution_name
     - elsif person.employer?
       = person.employer
     - else
-      %span.note
+      %span.unknown
         = t :situation_unknown
