@@ -9,4 +9,6 @@
       = person.institution.definite_name
     - elsif person.employer?
       = person.employer
-      
+    - else
+      %span.note
+        = t :situation_unknown
