@@ -1,0 +1,12 @@
+- person ||= nil
+- if person
+  = succeed '.' do
+    - if person.post?
+      = person.post
+      - if person.institution? || person.employer?
+        = t :at
+    - if person.institution?
+      = person.institution.definite_name
+    - elsif person.employer?
+      = person.employer
+      

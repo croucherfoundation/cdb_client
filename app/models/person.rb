@@ -9,9 +9,6 @@ class Person
   has_many :grants
   has_many :tags
   has_many :notes
-  belongs_to :country, foreign_key: :country_code
-  belongs_to :institution, foreign_key: :institution_code
-  belongs_to :graduated_from, foreign_key: :graduated_from_code, class_name: "Institution"
   has_many :grant_people, foreign_key: :person_uid
   
   class << self
@@ -47,6 +44,7 @@ class Person
         mphil_year: "",
         phd_year: "",
         page_id: "",
+        user_uid: "",
         institution: Institution.new_with_defaults
       }.merge(attributes))
     end
