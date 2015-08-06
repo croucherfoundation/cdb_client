@@ -10,6 +10,7 @@ class Person
   has_many :tags
   has_many :notes
   has_many :grant_people, foreign_key: :person_uid
+  has_many :grants, foreign_key: :person_uid
   
   class << self
     def for_selection
@@ -118,7 +119,7 @@ class Person
   end
   
   def graduated_from_name
-    graduated_from.name if graduated_from_code && graduated_from.fetch
+    graduated_from.name if graduated_from
   end
 
 end
