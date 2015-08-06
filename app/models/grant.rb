@@ -9,6 +9,9 @@ class Grant
   belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
   has_many :grant_people
   accepts_nested_attributes_for :grant_people
+  # temporary while we are not yet sending jsonapi data back to core properly
+  include_root_in_json true
+  parse_root_in_json false
 
   def self.new_with_defaults(attributes={})
     Grant.new({

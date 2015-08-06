@@ -6,30 +6,35 @@
 - heading ||= nil
 - without_institution ||= false
 
-= f.fields_for association, person do |pf|
-  %p.threecol
-    - if heading
-      = heading
-      %br
-    %span.col.first>
-      = pf.text_field :title, placeholder: t("placeholders.person.title"), class: 'title', data: {key: "title"}
-    %span.col>
-      = pf.text_field :family_name, placeholder: t("placeholders.person.family_name"), class: 'family_name', required: true, data: {key: "family_name"}
-    %span.col.last>
-      = pf.text_field :given_name, placeholder: t("placeholders.person.given_name"), class: 'given_name', required: true, data: {key: "given_name"}
-
-  %p.twocol.reversed
-    %span.col>
-      = pf.email_field :email, placeholder: t("placeholders.person.email"), class: 'email', required: true, data: {key: "email"}
-    %span.col.last>
-      = pf.text_field :phone, placeholder: t("placeholders.person.phone"), class: 'phone', data: {key: "phone"}
-  - unless without_institution
-    = render "institutions/pick_or_add", f: pf, institution: person.institution, institution_code_field: 'institution_code', only_likely_countries: true
-
-  .linkage
-    = f.hidden_field person_uid_field, data: {key: "uid"}
+= f.fields_for association, person, include_id: false do |pf|
+  %fieldset{data: {role: "personpicker"}}
     - if person.persisted?
-      = render "people/linked", person: person, associated: associated
+      = f.hidden_field person_uid_field, data: {role: "linker"}
     - else
-      = render "people/unlinked", associated: associated
+      = f.hidden_field person_uid_field, value: "", data: {role: "linker"}
       
+    %p.threecol
+      - if heading
+        = heading
+        %br
+      %span.col.first>
+        = pf.text_field :title, placeholder: t("placeholders.person.title"), class: 'title', data: {key: "title"}
+      %span.col>
+        = pf.text_field :family_name, placeholder: t("placeholders.person.family_name"), class: 'family_name', required: true, data: {key: "family_name"}
+      %span.col.last>
+        = pf.text_field :given_name, placeholder: t("placeholders.person.given_name"), class: 'given_name', required: true, data: {key: "given_name"}
+
+    %p.twocol.reversed
+      %span.col>
+        = pf.email_field :email, placeholder: t("placeholders.person.email"), class: 'email', required: true, data: {key: "email"}
+      %span.col.last>
+        = pf.text_field :phone, placeholder: t("placeholders.person.phone"), class: 'phone', data: {key: "phone"}
+
+    - unless without_institution
+      = render "institutions/pick_or_add", f: pf, institution: person.institution, institution_code_field: 'institution_code'
+
+    .linkage
+      - if person.persisted?
+        = render "people/linked", person: person, associated: associated
+      - else
+        = render "people/unlinked", associated: associated

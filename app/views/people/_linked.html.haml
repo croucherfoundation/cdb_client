@@ -1,17 +1,17 @@
 - person ||= @person
 - associated ||= "record"
 
-- if person
+- if person.present?
   = render "people/photo", person: person
   %p
     This
     = associated
     is linked to
     %strong
-      = person.colloquial_name + ','
+      = "#{person.colloquial_name}."
     = render "people/situation", person: person
     Changing the fields above will update the records we hold for
-    = person.formal_name + "."
+    = "#{person.formal_name}."
   %p.danger
     %a.detach{href: "#"}
       Detach this

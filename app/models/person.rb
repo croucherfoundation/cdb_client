@@ -4,6 +4,7 @@ class Person
   use_api CDB
   collection_path "/api/people"
   primary_key :uid
+  custom_get :suggest
 
   has_many :awards
   has_many :grants
@@ -12,6 +13,10 @@ class Person
   has_many :grant_people, foreign_key: :person_uid
   has_many :grants, foreign_key: :person_uid
   belongs_to :institution, foreign_key: :institution_code
+  belongs_to :graduated_from, foreign_key: :graduated_from_code, class_name: "Institution"
+  # temporary while we are not yet sending jsonapi data back to core properly
+  include_root_in_json true
+  parse_root_in_json false
   
   class << self
     def for_selection
@@ -49,6 +54,14 @@ class Person
         user_uid: "",
         institution: Institution.new_with_defaults
       }.merge(attributes))
+    end
+    
+    def suggestions(params)
+      if params[:uid]
+        [self.find(params[:uid])]
+      else
+        self.suggest(params)
+      end
     end
   end
 
@@ -121,6 +134,23 @@ class Person
   
   def graduated_from_name
     graduated_from.name if graduated_from
+  end
+  
+  def as_json_for_suggestion
+    {
+      uid: uid,
+      title: title,
+      given_name: given_name,
+      family_name: family_name,
+      email: email,
+      phone: phone,
+      colloquial_name: colloquial_name,
+      formal_name: formal_name,
+      country_code: country_code,
+      institution_code: institution_code,
+      situation: situation,
+      icon: icon
+    }
   end
 
 end

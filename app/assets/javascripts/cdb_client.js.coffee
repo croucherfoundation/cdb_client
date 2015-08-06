@@ -5,12 +5,149 @@ jQuery ($) ->
 
 
 
-
-
-
-
-
   # person picker
+
+  $.fn.person_picker_and_editor = ->
+    @each ->
+      new PersonPickerEditor @
+    @
+
+  class PersonPickerEditor
+    constructor: (element) ->
+      @_container = $(element)
+      @_linkage_box = @_container.find('.linkage')
+      @_uid_field = @_container.find('[data-role="linker"]')
+      @_edit_fields = @_container.find('[data-key]')
+      @_cache = {}
+      @_people = []
+      @_current_person = {}
+      @getSuggestionsSoon = _.debounce(@getSuggestions, 500)
+      @listenToFields() unless @linked()
+      @_linkage_box.find('a.detach').click @defix
+      $.ppe = @
+
+    getUid: () =>
+      @_uid_field.val()
+
+    linked: () =>
+      !!@getUid()
+
+    # get and cache relevant people
+
+    listenToFields: () =>
+      @_edit_fields.bind 'keyup', @getSuggestionsSoon
+    
+    stopListening: () =>
+      @_edit_fields.unbind 'keyup', @getSuggestionsSoon
+
+    cacheKey: =>
+      @getUid() or @fieldsKey() or "nobody"
+
+    fieldsKey: =>
+      key = []
+      _.each @_edit_fields, (f) ->
+        $f = $(f)
+        if val = $f.val()
+          key.push $f.data('key') + ":" + val
+      key.join(',')
+
+    formData: =>
+      formdata = {}
+      if person_uid = @getUid()
+        formdata["uid"] = person_uid
+      _.each @_edit_fields, (f) ->
+        $f = $(f)
+        if val = $f.val()
+          formdata[$f.data("key")] = val
+      formdata
+
+    getSuggestions: =>
+      # show situation or suggestions
+      cache_key = @cacheKey()
+      if @_cache[cache_key]
+        @showSituation(cache_key)
+      else
+        @_linkage_box.empty().append($("<p class='waiting'>Checking for matching records.</p>"))
+        $.ajax
+          method: "GET"
+          dataType: "json",
+          url: "/cdb/people/suggestions"
+          data: 
+            person: @formData()
+          success: (json) =>
+            @cacheJson(cache_key, json)
+            @showSituation(cache_key)
+          
+    cacheJson: (key, json) =>
+      @_cache[key] = json
+    
+    showSituation: (key) =>
+      @_people = @_cache[key]
+      @_linkage_box.empty()
+      if @_person
+        statement = $("<p>This record will be linked to <strong>#{@_person.colloquial_name}</strong>, #{@_person.situation}. Changing the fields above will also update the records we hold for #{@_person.formal_name}.</p>")
+        warning = $("<p class='danger'></p>")
+        detacher = $("<a class='detach'>Detach from #{@_person.formal_name} and reassign</a>").appendTo(warning)
+        if @_person.icon
+          background = "background-image: url('#{@_person.icon}')"
+          mugshot = $("<div class='mugshot' style='#{background}'></div>")
+          @_linkage_box.append mugshot
+        @_linkage_box.append statement
+        @_linkage_box.append warning
+
+      else if @_people?.length
+        @_linkage_box.append("<h4>Possible matches:</h4>")
+        list = $('<ul class="suggestions"></ul>').appendTo(@_linkage_box)
+        _.each @_people, (person) =>
+          li = $('<li class="suggestion"></li>').appendTo(list)
+          $('<a href="#"><strong>' + person.colloquial_name + '</strong> ' + person.situation + '</a>').appendTo(li).bind 'click', (e) =>
+            e.preventDefault()
+            @fix(person)
+      else 
+        @_linkage_box.html("<p>This record is not linked to a person. The fields above will be used to create a new person record. If the input resemble any existing person, links will be suggested here. Please try to link to existing people wherever you can.</p>")
+
+      @_linkage_box.find('a.detach').click @defix
+
+
+
+    # attach to and detach from persons
+    #
+    fix: (person) =>
+      e?.preventDefault()
+      @_previous_values ?= {}
+      @_person = person
+      console.log "fix", person
+      _.each @_edit_fields, (f) =>
+        $f = $(f)
+        key = $f.data("key")
+        @_previous_values[key] = $f.val()
+        $f.val @_person[key]
+      @_uid_field.val(@_person.uid)
+      @showSituation()
+      @stopListening()
+
+    defix: =>
+      e?.preventDefault()
+      if @_person
+        @_previous_values ?= {}
+        _.each @_edit_fields, (f) =>
+          $f = $(f)
+          key = $f.data("key")
+          if $f.val() is @_person[key]
+            $f.val @_previous_values[key]
+        @_uid_field.val('')
+        @_person = null
+        @getSuggestions()
+      else
+        @_edit_fields.val('')
+        @_uid_field.val('')
+        @_person = null
+        @showSituation()
+      @listenToFields()
+
+
+
+
 
 
 

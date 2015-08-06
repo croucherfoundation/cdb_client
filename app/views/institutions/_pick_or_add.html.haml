@@ -23,9 +23,9 @@
 %fieldset.institution{data: {role: "institution", required: required}}
   %p.twocol.unequal
     %span.col>
-      = f.select country_code_field, country_options, {prompt: t("placeholders.please_choose")}, data: {role: 'countrypicker'}
+      = f.select country_code_field, country_options, {prompt: t("placeholders.please_choose")}, data: {key: "country_code", role: 'countrypicker'}
     %span.col.last>
-      = f.select institution_code_field, Institution.for_selection(country_code), {prompt: t("placeholders.please_choose")}, {data: {role: 'institutionpicker'}}
+      = f.select institution_code_field, Institution.for_selection(country_code), {prompt: t("placeholders.please_choose")}, {data: {key: "institution_code", role: 'institutionpicker'}}
       = f.text_field institution_name_field, placeholder: institution_name_placeholder, value: ""
       %br
       = link_to t(:add_institution), '#', class: 'note', data: {role: "toggle", alt: t(:choose_institution)}
