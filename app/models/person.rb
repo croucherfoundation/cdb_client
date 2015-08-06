@@ -11,6 +11,7 @@ class Person
   has_many :notes
   has_many :grant_people, foreign_key: :person_uid
   has_many :grants, foreign_key: :person_uid
+  belongs_to :institution, foreign_key: :institution_code
   
   class << self
     def for_selection

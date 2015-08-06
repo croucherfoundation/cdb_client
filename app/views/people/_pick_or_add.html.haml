@@ -1,11 +1,10 @@
 - association ||= :person
+- associated ||= "record"
 - person = @person || Person.new_with_defaults unless person.present?
 - person_uid_field ||= :person_uid
 - required ||= false
 - heading ||= nil
 - without_institution ||= false
-
-= f.hidden_field person_uid_field, data: {key: "uid"}
 
 = f.fields_for association, person do |pf|
   %p.threecol
@@ -26,3 +25,11 @@
       = pf.text_field :phone, placeholder: t("placeholders.person.phone"), class: 'phone', data: {key: "phone"}
   - unless without_institution
     = render "institutions/pick_or_add", f: pf, institution: person.institution, institution_code_field: 'institution_code', only_likely_countries: true
+
+  .linkage
+    = f.hidden_field person_uid_field, data: {key: "uid"}
+    - if person.persisted?
+      = render "people/linked", person: person, associated: associated
+    - else
+      = render "people/unlinked", associated: associated
+      

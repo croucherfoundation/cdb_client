@@ -11,7 +11,6 @@ jQuery ($) ->
 
 
   # person picker
-  
 
 
 
@@ -64,10 +63,12 @@ jQuery ($) ->
         @setOptions(data)
       else
         @_country_code = country_code
+        @_select.addClass('waiting')
         @_request = $.getJSON "#{@_url}/#{country_code}", @receive
 
     receive: (data) =>
       @_cache[@_country_code] = data
+      @_select.removeClass('waiting')
       @setOptions(data)
 
     setOptions: (data) =>
@@ -78,7 +79,7 @@ jQuery ($) ->
         for pair in data
           [name, code] = pair
           @appendOption(name, code)
-          reselectable.push(code) if @_previous_values.contains(code) 
+          reselectable.push(code) if @_previous_values.contains(code)
         @_select.val(reselectable[0] ? "")
         @selectInstead() unless @_state is 'selecting'
       else
@@ -136,8 +137,6 @@ jQuery ($) ->
 
       @_container.find('select[data-role="countrypicker"]').restricts(@_select)
       
-      console.log @_select.get(0), "restricted by", @_container.find('select[data-role="countrypicker"]').get(0)
-      
       @_select.bind 'refresh', @restrict
       @_select.bind 'change', @noteValue
 
@@ -160,7 +159,6 @@ jQuery ($) ->
         $(@_alternative).slideDown()
 
     restrict: (e, country_code) =>
-      console.log "restrict", country_code
       @_select.empty()
       @_request?.abort()
       if data = @_cache[country_code]
@@ -183,9 +181,9 @@ jQuery ($) ->
           @appendOption(name, code)
           reselectable.push(code) if @_previous_values.contains(code) 
         @_select.val(reselectable[0] ? "")
-        @selectInstead() unless @_state is 'selecting'
+        @showSelect() unless @_state is 'selecting'
       else
-        @addInstead()
+        @showAdd()
 
     appendOption: (name, code) =>
       @_select.append $("<option />").val(code).text(name)
@@ -220,3 +218,16 @@ jQuery ($) ->
       @_chooser.show()
       @_adder.before @_or
 
+
+  $.fn.country_dependent = () ->
+    @each ->
+      $el = $(@)
+      country_select = $el.parents('form').find('select[data-role="countrypicker"]')
+      if country_select.length
+        toggle = (e) ->
+          if country_select.val() is $el.attr('data-country')
+            $el.show()
+          else
+            $el.hide()
+        country_select.bind 'change', toggle
+        toggle()

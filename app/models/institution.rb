@@ -61,7 +61,7 @@ class Institution
   #
   # The prepositionishness of names like 'University of Cambridge' requires us to prepend a 'the'
   # when in object position. Eg. 'studying at the University of Cambridge' vs. 'studying at Oxford University'.
-  # 
+  #
   def definite_name(prefix="the")
     if name =~ /\b(of|for)\b/i
       "#{prefix} #{name}"
