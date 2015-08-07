@@ -1,5 +1,5 @@
-- grant = Grant.new_with_defaults
-- grant_person = @grant_person || GrantPerson.new_with_defaults unless grant_person.present?
+- grant ||= @grant || Grant.new_with_defaults
+- grant_person ||= @grant_person || GrantPerson.new_with_defaults unless grant_person.present?
 - grant_person_counter ||= nil
 
 = fields_for :grant, grant do |f|

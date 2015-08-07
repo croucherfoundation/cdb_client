@@ -5,6 +5,8 @@ class GrantPerson
 
   belongs_to :grant
   belongs_to :person, foreign_key: :person_uid
+  accepts_nested_attributes_for :person
+  sends_nested_attributes_for :person
   
   def self.new_with_defaults(attributes={})
     new({

@@ -7,8 +7,11 @@ class Grant
   belongs_to :country, foreign_key: :country_code
   belongs_to :institution, foreign_key: :institution_code
   belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
+
   has_many :grant_people
   accepts_nested_attributes_for :grant_people
+  sends_nested_attributes_for :grant_people
+
   # temporary while we are not yet sending jsonapi data back to core properly
   include_root_in_json true
   parse_root_in_json false
