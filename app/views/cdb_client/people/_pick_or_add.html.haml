@@ -31,10 +31,10 @@
         = pf.text_field :phone, placeholder: t("placeholders.person.phone"), class: 'phone', data: {key: "phone"}
 
     - unless without_institution
-      = render "institutions/pick_or_add", f: pf, institution: person.institution, institution_code_field: 'institution_code'
+      = render "cdb_client/institutions/pick_or_add", f: pf, institution: person.institution, institution_code_field: 'institution_code'
 
     .linkage
       - if person.persisted?
-        = render "people/linked", person: person, associated: associated
+        = render "cdb_client/people/linked", person: person, associated: associated
       - else
-        = render "people/unlinked", associated: associated
+        = render "cdb_client/people/unlinked", associated: associated

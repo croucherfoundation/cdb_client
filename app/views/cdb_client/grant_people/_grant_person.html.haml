@@ -15,4 +15,4 @@
             %span.formnote
               = t "notes.grant.applicant"
 
-      = render "people/pick_or_add", f: gpf, person: grant_person.person, association: :person, person_uid_field: :person_uid, required: true
+      = render "cdb_client/people/pick_or_add", f: gpf, person: grant_person.person, association: :person, person_uid_field: :person_uid, required: true
