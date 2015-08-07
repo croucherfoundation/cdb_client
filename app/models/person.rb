@@ -38,7 +38,7 @@ class Person
         institution_code: "",
         employer: "",
         employer_address: "",
-        country_code: "HKG",
+        country_code: "",
         email: "",
         phone: "",
         mobile: "",
