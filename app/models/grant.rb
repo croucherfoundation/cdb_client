@@ -17,6 +17,7 @@ class Grant
     Grant.new({
       name: "",
       title: "",
+      description: "",
       field: "",
       field_chinese: "",
       application_id: nil,
@@ -29,9 +30,12 @@ class Grant
       begin_date: "",
       extension: "",
       duration: "",
+      expected_value: "",
       approved_at: nil,
       approved_by_uid: nil,
       applicant_uid: "",
+      scientific_tag_ids: [],
+      admin_tag_ids: [],
       grant_people: [],
       grant_person_attributes: [],
       year: Date.today.year

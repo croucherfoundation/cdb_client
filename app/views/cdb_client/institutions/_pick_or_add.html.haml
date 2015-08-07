@@ -1,6 +1,6 @@
 - institution ||= nil
 - only_likely_countries ||= false
-- default_country_code ||= ''
+- default_country_code ||= 'HKG'
 - required ||= false
 
 - if institution.present?
@@ -19,8 +19,7 @@
 - else
   - country_options = Country.for_selection
 
-
-%fieldset.institution{data: {role: "institution", required: required}}
+%fieldset.institution_chooser{data: {role: "institution", required: required}}
   %p.twocol.unequal
     %span.col>
       = f.select country_code_field, country_options, {prompt: t("placeholders.please_choose")}, data: {key: "country_code", role: 'countrypicker'}
