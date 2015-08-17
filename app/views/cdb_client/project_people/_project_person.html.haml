@@ -1,0 +1,12 @@
+- project ||= @project || Project.new_with_defaults
+- project_person ||= @project_person || ProjectPerson.new_with_defaults unless project_person.present?
+- project_person_counter ||= nil
+
+= fields_for :project, project do |f|
+  = f.fields_for :project_people, project_person, :child_index => project_person_counter || 'field_counter' do |ppf|
+    %fieldset.list_item
+      %p.twocol.reversed
+        %span.col.first>
+          = ppf.text_field :role, placeholder: t("placeholders.project_person.role"), required: true, data: {role: "rolepicker"}, class: "strong"
+
+      = render "cdb_client/people/pick_or_add", f: ppf, person: project_person.person, association: :person, person_uid_field: :person_uid, required: true

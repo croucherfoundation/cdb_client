@@ -3,14 +3,11 @@ class Grant
   use_api CDB
   collection_path "/api/grants"
 
+  belongs_to :applicant, foreign_key: :applicant_uid, class_name: "Person"
   belongs_to :grant_type, foreign_key: :grant_type_code
   belongs_to :country, foreign_key: :country_code
   belongs_to :institution, foreign_key: :institution_code
   belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
-
-  has_many :grant_people
-  accepts_nested_attributes_for :grant_people
-  sends_nested_attributes_for :grant_people
 
   # temporary while we are not yet sending jsonapi data back to core properly
   include_root_in_json true
@@ -19,6 +16,7 @@ class Grant
   def self.new_with_defaults(attributes={})
     Grant.new({
       name: "",
+      year: Date.today.year,
       title: "",
       description: "",
       field: "",
@@ -31,17 +29,16 @@ class Grant
       institution_name: "",
       second_institution_name: "",
       begin_date: "",
+      end_date: "",
       extension: "",
       duration: "",
       expected_value: "",
       approved_at: nil,
       approved_by_uid: nil,
       applicant_uid: "",
+      projects: [],
       scientific_tag_ids: [],
-      admin_tag_ids: [],
-      grant_people: [],
-      grant_person_attributes: [],
-      year: Date.today.year
+      admin_tag_ids: []
     }.merge(attributes))
   end
 
@@ -72,18 +69,6 @@ class Grant
   
   def any_institution?
     institution || second_institution
-  end
-
-  def people
-    grant_people.map(&:person)
-  end
-  
-  def applicants
-    grant_people.select {|gp| gp.applicant?}
-  end
-  
-  def has_applicant?
-    applicants.any?
   end
 
   ## Tags are delivered from cdb as ids.

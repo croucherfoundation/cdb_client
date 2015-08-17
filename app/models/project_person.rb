@@ -1,7 +1,7 @@
-class GrantPerson
+class ProjectPerson
   include Her::JsonApi::Model
   use_api CDB
-  collection_path "/api/grant_people"
+  collection_path "/api/project_people"
 
   belongs_to :grant
   belongs_to :person, foreign_key: :person_uid
@@ -10,11 +10,10 @@ class GrantPerson
   
   def self.new_with_defaults(attributes={})
     new({
+      person_uid: "",
       position: 0,
       role: "",
-      applicant: false,
       notes: "",
-      person_uid: "",
       person: Person.new_with_defaults
     }.merge(attributes))
   end
