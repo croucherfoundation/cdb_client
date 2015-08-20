@@ -1,14 +1,4 @@
 en:
-  activerecord:
-    attributes:
-      cdb_client:
-        user:
-          name: "Your name"
-          email: "Email address"
-          preferred_name: "Preferred form of address"
-          password: "Password"
-          password_confirmation: "Confirm password"
-          remember_me: "Remember me"
   already_signed_in: "You are already signed in."
   authentication_required: "This part of the site is private. Please sign in to continue."
   edit_account_settings: "Edit your account settings"
@@ -18,15 +8,14 @@ en:
   forgot_password: "Forgotten your password?"
   he: "he"
   placeholders:
-    user:
-      title: "e.g. Mr, Professor"
-      family_name: "e.g. Chan"
-      given_name: "e.g. Tai Wan, David"
-      chinese_name: "e.g .陳大衞"
-      password: "Six characters or more, please"
-      email: "eg. chantaiwan@gmail.com"
-      phone: "Phone"
+    project:
+      begin_date: "From yyyy-mm-dd"
+      end_date: "To yyyy-mm-dd"
+      name: "Project name (optional, defaults to grant name)"
+      slug: "Identifier (eg year)"
   leave_password: "If you don't want to change your password, leave both boxes empty."
+  linked_to_person: "This %{associate} is linked to %{full_name}. Changing the fields above will update the records we hold for %{short_name}."
+  not_linked_to_person: "This %{associate} is not linked to a person, so the fields above will be used to create a new person record. If the input resembles any existing person, links will be suggested here. Please try to create connections to existing people wherever you can."
   notes:
     user_email: "This is the email that you use to sign in, and to which we send reminders and administrative messages."
   please_sign_in: "Please sign in"

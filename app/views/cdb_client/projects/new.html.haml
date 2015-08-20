@@ -1,0 +1,3 @@
+- grant ||= @grant || Grant.new_with_defaults
+= fields_for grant do |f|
+  = render "project", project: @project, f: f

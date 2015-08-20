@@ -1,0 +1,23 @@
+- project ||= @project || Project.new_with_defaults
+- project_counter ||= nil
+
+= f.fields_for :projects, project, :child_index => project_counter || 'field_counter' do |pf|
+  %fieldset.list_item
+    %p.twocol.unequal
+      %span.col.name.first>
+        = pf.text_field :slug, placeholder: t("placeholders.project.slug")
+      %span.col.name.last>
+        = pf.text_field :name, placeholder: t("placeholders.project.name")
+
+    %p.threecol
+      %span.col.first>
+        = pf.text_field :begin_date, class: "date", data: {role: "date"}, placeholder: t("placeholders.project.begin_date")
+      %span.col>
+        = pf.text_field :end_date, class: "date", data: {role: "date"}, placeholder: t("placeholders.project.end_date")
+      %span.col.last>
+        = pf.check_box :eventful
+        = pf.label :eventful, class: 'inline' do
+          event-based
+          %br
+          %span.formnote
+            eg. a course or conference

@@ -1,9 +1,4 @@
 - associated ||= "record"
 
-%p
-  This
-  = associated
-  is not linked to a person.
-  The fields above will be used to create a new person record.
-  If the input resemble any existing person, links will be suggested here.
-  Please try to link to existing people wherever you can.
+%p.formnote
+  = t :not_linked_to_person, associate: associated

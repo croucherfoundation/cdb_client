@@ -1,6 +1,5 @@
 module CdbClient
   class ProjectPeopleController < ApplicationController
-    respond_to :html
     layout false
 
     def new

@@ -50,7 +50,7 @@ class Person
         msc_year: "",
         mphil_year: "",
         phd_year: "",
-        page_id: "",
+        person_page_id: "",
         user_uid: "",
         institution: Institution.new_with_defaults
       }.merge(attributes))
