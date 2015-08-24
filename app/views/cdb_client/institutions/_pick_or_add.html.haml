@@ -2,6 +2,8 @@
 - only_likely_countries ||= false
 - default_country_code ||= nil
 - required ||= false
+- with_employer ||= false
+- with_employer_address ||= false
 
 - if institution.present?
   - country_code = institution.country_code
@@ -13,6 +15,9 @@
 - institution_name_field ||= :institution_name
 - institution_name_placeholder ||= t('placeholders.institution_name')
 - label_class = required ? "required" : ""
+- employer_name_field ||= :employer
+- employer_name_placeholder ||= t('placeholders.employer')
+- employer_address_placeholder ||= t('placeholders.employer_address')
 
 - if only_likely_countries
   - country_options = Country.likely_for_selection
@@ -22,9 +27,23 @@
 %fieldset.institution_chooser{data: {role: "institution", required: required}}
   %p.twocol.unequal
     %span.col>
-      = f.select country_code_field, country_options, {prompt: t("placeholders.please_choose")}, data: {key: "country_code", role: 'countrypicker'}
+      = f.select country_code_field, country_options, {prompt: t("placeholders.please_choose")}, data: {key: "country_code", role: 'country'}
     %span.col.last>
-      = f.select institution_code_field, Institution.for_selection(country_code), {prompt: t("placeholders.please_choose")}, {data: {key: "institution_code", role: 'institutionpicker'}}
-      = f.text_field institution_name_field, placeholder: institution_name_placeholder, value: ""
+      %span{data: {role: "choose"}}
+        = f.select institution_code_field, Institution.for_selection(country_code), {prompt: t("placeholders.please_choose")}, {data: {key: "institution_code"}}
+      %span{data: {role: "add"}}
+        = f.text_field institution_name_field, placeholder: institution_name_placeholder, value: ""
+      - if with_employer
+        %span{data: {role: "other"}}
+          = f.text_field employer_name_field, placeholder: employer_name_placeholder
       %br
-      = link_to t(:add_institution), '#', class: 'note', data: {role: "toggle", alt: t(:choose_institution)}
+      = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
+      = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}
+      - if with_employer
+        %span.or
+          = t :or
+        = link_to t(:other_employer), '#', class: 'note', data: {role: "showother"}
+
+  - if with_employer && with_employer_address
+    %p.address{data: {role: "other"}}
+      = f.text_area :employer_address, placeholder: employer_address_placeholder

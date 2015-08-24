@@ -45,6 +45,7 @@ class Person
         correspondence_address: "",
         hidden: false,
         blacklisted: false,
+        featured: false,
         graduated_from_code: "",
         graduated_year: "",
         msc_year: "",
