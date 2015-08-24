@@ -11,7 +11,7 @@ class GrantType
     GrantType.new({
       name: "",
       code: "",
-      collection_id: nil,
+      page_collection_id: nil,
       round_type_id: nil
     }.merge(attributes))
   end

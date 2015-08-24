@@ -4,9 +4,10 @@ class Project
   collection_path "/api/projects"
 
   belongs_to :grant
+  has_many :siblings, class_name: "Project"
   has_many :project_people
   accepts_nested_attributes_for :project_people
-  sends_nested_attributes_for :project_people
+  # sends_nested_attributes_for :project_people
   
   # temporary while we are not yet sending jsonapi data back to core properly
   include_root_in_json true
@@ -37,6 +38,16 @@ class Project
 
   def people
     project_people.map(&:person)
+  end
+
+  def name_or_grant_name
+    if name.present?
+      name
+    elsif grant
+      grant.name
+    else
+      "Unlinked Project"
+    end
   end
 
   ## Tags are delivered from cdb as ids.

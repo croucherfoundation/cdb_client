@@ -14,6 +14,7 @@ class Person
   has_many :projects, foreign_key: :applicant_uid
   belongs_to :institution, foreign_key: :institution_code
   belongs_to :graduated_from, foreign_key: :graduated_from_code, class_name: "Institution"
+
   # temporary while we are not yet sending jsonapi data back to core properly
   include_root_in_json true
   parse_root_in_json false

@@ -36,9 +36,5 @@ module HasGrant
   def institutions
     grant.institutions if grant
   end
-  
-  def people
-    grant.people if grant
-  end
 
 end

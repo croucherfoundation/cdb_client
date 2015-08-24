@@ -8,6 +8,7 @@ class Grant
   belongs_to :country, foreign_key: :country_code
   belongs_to :institution, foreign_key: :institution_code
   belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
+
   has_many :projects
   accepts_nested_attributes_for :projects
   sends_nested_attributes_for :projects
