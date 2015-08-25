@@ -35,7 +35,7 @@
         = f.text_field institution_name_field, placeholder: institution_name_placeholder, value: ""
       - if with_employer
         %span{data: {role: "other"}}
-          = f.text_field employer_name_field, placeholder: employer_name_placeholder
+          = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: "employer"}
       %br
       = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
       = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}

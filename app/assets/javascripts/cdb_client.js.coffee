@@ -110,7 +110,6 @@ jQuery ($) ->
       e?.preventDefault()
       @_previous_values ?= {}
       @_person = person
-      console.log "fix", person
       _.each @_edit_fields, (f) =>
         $f = $(f)
         key = $f.data("key")
