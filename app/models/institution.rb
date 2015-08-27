@@ -8,39 +8,36 @@ class Institution
 
   class << self
 
-    def preloaded(code)
-      @institutions ||= self.all.each_with_object({}) do |inst, h|
-        h[inst.code] = inst
-      end
-      @institutions[code]
+    def preload
+      @institutions ||= self.all
     end
 
-    def for_selection(country_code=nil)
+    def preloaded(code)
+      @institutions_by_code ||= preload.each_with_object({}) do |inst, h|
+        h[inst.code] = inst
+      end
+      @institutions_by_code[code]
+    end
+
+    def for_selection(country_code=nil, active_only=false)
+      insts = preload
       if country_code.present?
-        insts = self.where(:country_code => country_code)
-      else
-        insts = self.all
+        insts = insts.select {|inst| inst.country_code == country_code && (!active_only || inst.active?) }
       end
       insts.sort_by(&:normalized_name).map{|inst| [inst.normalized_name, inst.code] }
     end
     
+    #NB this is a selection of likely partner institutions, not just everything in HK
+    #
     def hk_for_selection
-      insts = self.where(hk: true)
+      insts = preload.select{|inst| inst.hk?}
       insts.sort_by(&:normalized_name).map{|inst| [inst.normalized_name, inst.code] }
     end
 
     def active_for_selection(country_code=nil)
-      active(country_code).sort_by(&:normalized_name).map{|inst| [inst.normalized_name, inst.code] }
+      for_selection(country_code, true)
     end
-  
-    def active(country_code=nil)
-      if country_code.present?
-        self.where(:country_code => country_code, active: true)
-      else
-        self.where(active: true)
-      end
-    end
-  
+
     def new_with_defaults
       Institution.new({
         name: "",

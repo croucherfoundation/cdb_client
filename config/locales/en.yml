@@ -13,6 +13,7 @@ en:
       end_date: "To yyyy-mm-dd"
       name: "Project name (optional, defaults to grant name)"
       slug: "Identifier (eg year)"
+      project_type_code: "Project type"
   leave_password: "If you don't want to change your password, leave both boxes empty."
   linked_to_person: "This %{associate} is linked to %{full_name}. Changing the fields above will update the records we hold for %{short_name}."
   not_linked_to_person: "This %{associate} is not linked to a person, so the fields above will be used to create a new person record. If the input resembles any existing person, links will be suggested here. Please try to create connections to existing people wherever you can."

@@ -26,7 +26,7 @@ class Project
       event_id: nil,
       page_id: nil,
       round_id: nil,
-      project_type_code: "",
+      project_type_code: ProjectType.default,
       scientific_tag_ids: [],
       admin_tag_ids: [],
       project_people: [],

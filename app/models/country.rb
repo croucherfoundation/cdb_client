@@ -4,28 +4,39 @@ class Country
   collection_path "/api/countries"
   primary_key :code
 
-  def self.for_selection
-    countries = self.all.sort_by(&:name)
-    likely_countries = countries.select {|c| c.likely? }
-    options = likely_countries.map{ |c| [c.name, c.code] }
-    options << ["------------", ""]
-    options + countries.map{ |c| [c.name, c.code] }
-  end
+  class << self
+    def preload
+      @countries ||= self.all.sort_by(&:name)
+    end
 
-  def self.likely_for_selection
-    likely.map{|c| [c.name, c.code] }
-  end
+    def preloaded(code)
+      @countries_by_code ||= preload.each_with_object({}) do |co, h|
+        h[co.code] = co
+      end
+      @countries_by_code[code]
+    end
 
-  def self.active_for_selection
-    active.map{|c| [c.name, c.code] }
-  end
-  
-  def self.active
-    self.where(active: true)
-  end
+    def for_selection
+      options = likely_for_selection
+      options << ["------------", ""]
+      options + preload.map{ |c| [c.name, c.code] }
+    end
 
-  def self.likely
-    self.where(likely: true)
+    def likely
+      preload.select {|c| c.likely? }
+    end
+
+    def likely_for_selection
+      likely.map{|c| [c.name, c.code] }
+    end
+
+    def active
+      preload.select {|c| c.active? }
+    end
+
+    def active_for_selection
+      active.map{|c| [c.name, c.code] }
+    end
   end
 
   def likely?

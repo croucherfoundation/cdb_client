@@ -7,11 +7,16 @@ class ProjectType
     ProjectType.all.sort_by(&:name).map{|prt| [prt.name, prt.code] }
   end
   
+  def self.default
+    ProjectType.all.select{|pt| pt.default?}
+  end
+  
   def self.new_with_defaults(attributes={})
     ProjectType.new({
       name: "",
       code: "",
       description: "",
+      default: false,
       expect_event: false
     }.merge(attributes))
   end

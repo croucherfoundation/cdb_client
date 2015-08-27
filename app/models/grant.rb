@@ -39,7 +39,7 @@ class Grant
       expected_value: "",
       approved_at: nil,
       approved_by_uid: nil,
-      applicant_uid: "",
+      applicant_uid: nil,
       projects: [],
       scientific_tag_ids: [],
       admin_tag_ids: []
