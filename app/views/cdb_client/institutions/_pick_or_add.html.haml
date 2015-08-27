@@ -4,6 +4,7 @@
 - required ||= false
 - with_employer ||= false
 - with_employer_address ||= false
+- with_labels ||= false
 
 - if institution.present?
   - country_code = institution.country_code
@@ -26,9 +27,13 @@
 
 %fieldset.institution_chooser{data: {role: "institution", required: required}}
   %p.twocol.unequal
-    %span.col>
+    %span.col.first>
+      - if with_labels
+        = f.label country_code_field
       = f.select country_code_field, country_options, {prompt: t("placeholders.please_choose")}, data: {key: "country_code", role: 'country'}
     %span.col.last>
+      - if with_labels
+        = f.label institution_code_field
       %span{data: {role: "choose"}}
         = f.select institution_code_field, Institution.for_selection(country_code), {prompt: t("placeholders.please_choose")}, {data: {key: "institution_code"}}
       %span{data: {role: "add"}}

@@ -4,6 +4,7 @@ class Project
   collection_path "/api/projects"
 
   belongs_to :grant
+  belongs_to :project_type
   has_many :siblings, class_name: "Project"
   has_many :project_people
   accepts_nested_attributes_for :project_people
@@ -25,6 +26,7 @@ class Project
       event_id: nil,
       page_id: nil,
       round_id: nil,
+      project_type_code: "",
       scientific_tag_ids: [],
       admin_tag_ids: [],
       project_people: [],

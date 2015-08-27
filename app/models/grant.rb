@@ -20,7 +20,7 @@ class Grant
   def self.new_with_defaults(attributes={})
     Grant.new({
       name: "",
-      year: Date.today.year,
+      year: Date.today.year + 1,
       title: "",
       description: "",
       field: "",
@@ -91,6 +91,19 @@ class Grant
   
   def admin_tags=(tags)
     admin_tag_ids = tags.map(&:id)
+  end
+  
+  def build_project
+    project = Project.new_with_defaults({
+      grant_id: id,
+      name: name,
+      slug: year,
+      description: description,
+      begin_date: begin_date,
+      end_date: end_date
+    })
+    projects << project
+    project
   end
 
 end
