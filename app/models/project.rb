@@ -4,12 +4,12 @@ class Project
   collection_path "/api/projects"
 
   belongs_to :grant
-  belongs_to :project_type
+  belongs_to :project_type, foreign_key: :project_type_code
   has_many :siblings, class_name: "Project"
   has_many :project_people
   accepts_nested_attributes_for :project_people
   # sends_nested_attributes_for :project_people
-  
+    
   # temporary while we are not yet sending jsonapi data back to core properly
   include_root_in_json true
   parse_root_in_json false
@@ -68,6 +68,14 @@ class Project
   
   def admin_tags=(tags)
     admin_tag_ids = tags.map(&:id)
+  end
+
+  def instititution
+    grant.institution if grant
+  end
+
+  def institutions
+    grant.institutions if grant
   end
 
   attr_accessor :eventful
