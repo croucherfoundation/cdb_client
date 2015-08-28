@@ -70,7 +70,7 @@ class Project
     admin_tag_ids = tags.map(&:id)
   end
 
-  def instititution
+  def institution
     grant.institution if grant
   end
 
