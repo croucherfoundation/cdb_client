@@ -10,10 +10,37 @@ class Tag
     end
 
     def preloaded(code)
-      @tags_by_code ||= preload.each_with_object({}) do |inst, h|
-        h[inst.code] = inst
+      @tags_by_code ||= preload.each_with_object({}) do |tag, h|
+        h[tag.code] = tag
       end
       @tags_by_code[code]
+    end
+    
+    def tags_by_id(id)
+      @tags_by_id ||= preload.each_with_object({}) do |tag, h|
+        h[tag.id] = tag
+      end
+      @tags_by_id
+    end
+
+    def find(id)
+      preload.find{ |tag| tag.id == id }
+    end
+    
+    def find_list(ids)
+      preload.select{ |tag| ids.include?(tag.id) }
+    end
+
+    def from_term(term)
+      preload.find{ |tag| tag.term == term }
+    end
+
+    def from_terms(terms)
+      if terms && terms.any?
+        preload.select{ |tag| terms.include?(tag.term) }
+      else
+        []
+      end
     end
 
     def for_selection
@@ -28,12 +55,55 @@ class Tag
       scientific.map{ |t| [t.term, t.id] }
     end
 
+    def scientific_terms
+      scientific.map(&:term)
+    end
+
     def administrative
       preload.select { |t| t.tag_type == "admin" }
     end
 
-    def find(id)
-      preload.find{|tag| tag.id == id}
+    def administrative_selection
+      administrative.map{ |t| [t.term, t.id] }
+    end
+
+    def administrative_terms
+      administrative.map(&:term)
+    end
+  
+    def all_terms
+      preload.map(&:term)
+    end
+
+    def tree_from(tag)
+      json = tag.as_json
+      json[:family_size] = 1
+      if tag.child_ids.any?
+        children = tags_by_id.values_at(*tag.child_ids)
+        if children && children.any?
+          json[:children] = []
+          children.each do |child|
+            if child
+              child_json = tree_from(child)
+              json[:children].push child_json
+              json[:family_size] += child_json[:family_size]
+            end
+          end
+        end
+      end
+      json
+    end
+  
+    def root
+      from_term("science").first
+    end
+
+    def tree
+      tree_from(root)
+    end
+
+    def cluster_around(tags)
+      tags.map {|t| [t.id] + t.parent_ids + t.child_ids }.flatten
     end
 
   end
@@ -41,67 +111,7 @@ class Tag
   def relative_ids
     parent_ids + child_ids
   end
-
-
-  def self.administrative_selection
-    administrative.map{ |t| [t.term, t.id] }
-  end
-  
-  def self.from_terms(terms)
-    if terms && terms.any?
-      where(terms: terms)
-    else
-      []
-    end
-  end
-  
-  def self.all_terms
-    all.map(&:term)
-  end
-
-  def self.lcsh_terms
-    where(tag_type "LCSH").map(&:term)
-  end
-  
-  def self.find_list(ids)
-    find(ids)
-  end
-  
-  #TODO: try various clustering rules to find something simple that works most of the time.
-  #
-  def self.cluster_around(tags)
-    tags.map {|t| [t.id] + t.parent_ids + t.child_ids }.flatten
-  end
-  
-  # Tree construction and traversal
-  
-  def self.tree_from(tag)
-    json = tag.as_json
-    json[:family_size] = 1
-    if tag.child_ids.any?
-      children = collected_tags.values_at(*tag.child_ids)
-      if children && children.any?
-        json[:children] = []
-        children.each do |child|
-          if child
-            child_json = tree_from(child)
-            json[:children].push child_json
-            json[:family_size] += child_json[:family_size]
-          end
-        end
-      end
-    end
-    json
-  end
-  
-  def self.root
-    where(term: "science").first
-  end
-
-  def self.tree
-    tree_from(root)
-  end
-  
+    
   def as_json(options={})
     json = {
       id: id,
@@ -124,18 +134,6 @@ class Tag
   def omit_children!
     self.omit_children = true
     self.save
-  end
-  
-  protected
-  
-  # For tree-building and other assembly operations it's much more efficient to preload all the tags
-  # and their links.
-  #
-  
-  def self.collected_tags
-    @tag_lookup ||= Tag.all.each_with_object({}) do |tag, hash|
-      hash[tag.id] = tag
-    end
   end
 
 end

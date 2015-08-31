@@ -7,10 +7,15 @@ class ProjectPerson
   belongs_to :person, foreign_key: :person_uid
   accepts_nested_attributes_for :person
   sends_nested_attributes_for :person
-  
+
+  # temporary while we are not yet sending jsonapi data back to core properly
+  include_root_in_json true
+  parse_root_in_json false
+
   def self.new_with_defaults(attributes={})
     new({
       person_uid: "",
+      project_id: nil,
       position: 0,
       role: "",
       notes: "",
