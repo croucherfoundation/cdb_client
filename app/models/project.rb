@@ -31,7 +31,7 @@ class Project
       admin_tag_ids: [],
       project_people: [],
       project_people_attributes: [],
-      year: Date.today.year,
+      year: nil,
       hidden: false,
       blacklisted: false,
       featured: false

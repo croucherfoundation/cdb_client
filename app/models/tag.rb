@@ -21,7 +21,7 @@ class Tag
     end
 
     def scientific
-      preload.select {t| t.tag_type == "LCSH"}
+      preload.select { |t| t.tag_type == "LCSH" }
     end
   
     def scientific_selection
@@ -29,7 +29,7 @@ class Tag
     end
 
     def administrative
-      where(tag_type: "admin")
+      preload.select { |t| t.tag_type == "admin" }
     end
 
     def find(id)

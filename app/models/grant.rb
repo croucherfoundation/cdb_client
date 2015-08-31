@@ -96,7 +96,6 @@ class Grant
   def build_project
     project = Project.new_with_defaults({
       grant_id: id,
-      name: name,
       slug: year,
       description: description,
       begin_date: begin_date,
