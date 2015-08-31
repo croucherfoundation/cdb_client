@@ -1,6 +1,7 @@
 - photo ||= nil
 - cssclass = "mugshot"
-- if person ||= photo || @person
+- person ||= photo || @person
+- if person
   - if person.icon.present?
     - styles = "background-image: url(\"#{person.icon}\")"
   - else

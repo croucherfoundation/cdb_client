@@ -3,21 +3,22 @@
 
 - if person.present?
   = render "cdb_client/people/photo", person: person
-  %p.formnote
-    This
-    = associated
-    is linked to
-    %strong
-      = "#{person.colloquial_name}."
-    = render "cdb_client/people/situation", person: person
-    Changing the fields above will update the records we hold for
-    = "#{person.formal_name}."
-  %p.danger
-    %a.detach{href: "#"}
-      Detach this
+  .linkee
+    %p.formnote
+      This
       = associated
-      from
-      = person.formal_name
-      so that it can be reassigned.
+      is linked to
+      %strong
+        = "#{person.colloquial_name}."
+      = render "cdb_client/people/situation", person: person
+      Changing the fields above will update the records we hold for
+      = "#{person.formal_name}."
+    %p.danger
+      %a.detach{href: "#"}
+        Detach this
+        = associated
+        from
+        = person.formal_name
+        so that it can be reassigned.
 
     

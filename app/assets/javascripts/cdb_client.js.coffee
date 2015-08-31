@@ -81,15 +81,15 @@ jQuery ($) ->
       @_people = @_cache[key]
       @_linkage_box.empty()
       if @_person
-        statement = $("<p>This record will be linked to <strong>#{@_person.colloquial_name}</strong>, #{@_person.situation}. Changing the fields above will also update the records we hold for #{@_person.formal_name}.</p>")
-        warning = $("<p class='danger'></p>")
+        linkee = $('<div class="linkee"></div>')
+        statement = $("<p>This record will be linked to <strong>#{@_person.colloquial_name}</strong>, #{@_person.situation}. Changing the fields above will also update the records we hold for #{@_person.formal_name}.</p>").appendTo(linkee)
+        warning = $("<p class='danger'></p>").appendTo(linkee)
         detacher = $("<a class='detach'>Detach from #{@_person.formal_name} and reassign</a>").appendTo(warning)
         if @_person.icon
           background = "background-image: url('#{@_person.icon}')"
           mugshot = $("<div class='mugshot' style='#{background}'></div>")
           @_linkage_box.append mugshot
-        @_linkage_box.append statement
-        @_linkage_box.append warning
+        @_linkage_box.append linkee
 
       else if @_people?.length
         @_linkage_box.append("<h4>Possible matches:</h4>")
@@ -100,7 +100,7 @@ jQuery ($) ->
             e.preventDefault()
             @fix(person)
       else 
-        @_linkage_box.html("<p>This record is not linked to a person. The fields above will be used to create a new person record. If the input resemble any existing person, links will be suggested here. Please try to link to existing people wherever you can.</p>")
+        @_linkage_box.html("<div class=\"linkee\"><p>This record is not linked to a person. The fields above will be used to create a new person record. If the input resemble any existing person, links will be suggested here. Please try to link to existing people wherever you can.</p></div>")
 
       @_linkage_box.find('a.detach').click @defix
 

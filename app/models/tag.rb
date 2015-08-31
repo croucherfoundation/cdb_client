@@ -3,26 +3,45 @@ class Tag
   use_api CDB
   collection_path "/api/tags"
 
+  class << self
+
+    def preload
+      @tags ||= self.all
+    end
+
+    def preloaded(code)
+      @tags_by_code ||= preload.each_with_object({}) do |inst, h|
+        h[inst.code] = inst
+      end
+      @tags_by_code[code]
+    end
+
+    def for_selection
+      preload.sort_by(&:term).map{|t| [t.term, t.id] }
+    end
+
+    def scientific
+      preload.select {t| t.tag_type == "LCSH"}
+    end
+  
+    def scientific_selection
+      scientific.map{ |t| [t.term, t.id] }
+    end
+
+    def administrative
+      where(tag_type: "admin")
+    end
+
+    def find(id)
+      preload.find{|tag| tag.id == id}
+    end
+
+  end
+
   def relative_ids
     parent_ids + child_ids
   end
 
-  def self.for_selection(count=nil)
-    tags = count ? all(show: count) : all
-    tags.map{ |t| [t.term, t.id] }
-  end
-
-  def self.scientific
-    where(tag_type: "LCSH")
-  end
-  
-  def self.scientific_selection
-    scientific.map{ |t| [t.term, t.id] }
-  end
-
-  def self.administrative
-    where(tag_type: "admin")
-  end
 
   def self.administrative_selection
     administrative.map{ |t| [t.term, t.id] }
