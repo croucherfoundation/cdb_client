@@ -10,8 +10,10 @@ class Award
   belongs_to :institution, foreign_key: :institution_code
   belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
   belongs_to :person, foreign_key: :person_uid
+
   accepts_nested_attributes_for :person
   sends_nested_attributes_for :person
+
   # temporary while we are not yet sending jsonapi data back to core properly
   include_root_in_json true
   parse_root_in_json false
@@ -75,6 +77,10 @@ class Award
   
   def person_name
     person.colloquial_name if person?
+  end
+
+  def name_or_award_type_name
+    name.presence || award_type_short_name
   end
 
   
