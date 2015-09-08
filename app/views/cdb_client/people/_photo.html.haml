@@ -3,8 +3,7 @@
 - person ||= photo || @person
 - if person
   - if person.icon.present?
-    - styles = "background-image: url(\"#{person.icon}\")"
-  - else
-    - styles = ""
-
-  %div{class: cssclass, style: styles}
+    - style = "background-image: url(\"#{person.icon}\")"
+  - else 
+    - cssclass << " uninvited"
+  %div{class: cssclass, style: style}
