@@ -24,4 +24,11 @@ module HasPerson
     end
   end
 
+  def person_attributes=(attributes={})
+    if person?
+      self.person.update_attributes(attributes)
+      self.person.save
+    end
+  end
+
 end
