@@ -1,17 +1,20 @@
 - institution_code_field ||= :institution_code
 - institution_name_field ||= :institution_name
 - institution_name_placeholder ||= t('placeholders.institution_name')
+- required ||= false
 - country_code ||= nil
 - allow_blank ||= false
-- label ||= nil
+- only_pick ||= false
+- label_class = required ? "required" : "optional"
 
 %span.col.institution{data: {role: 'institution'}}>
   - if label
-    = f.label institution_code_field, label
+    = f.label institution_code_field, label, class: label_class
   %span{data: {role: "choose"}}
-    = f.select institution_code_field, Institution.for_selection(country_code), {prompt: t("placeholders.please_choose")}
-  %span{data: {role: "add"}}
-    = f.text_field institution_name_field, placeholder: institution_name_placeholder, value: ""
-  %br
-  = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
-  = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}
+    = f.select institution_code_field, Institution.for_selection(country_code), {prompt: t("placeholders.please_choose")}, required: required && only_pick
+  - unless only_pick
+    %span{data: {role: "add"}}
+      = f.text_field institution_name_field, placeholder: institution_name_placeholder, value: ""
+    %br
+    = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
+    = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}
