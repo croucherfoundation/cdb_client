@@ -83,5 +83,9 @@ class Project
   def eventful
     event_id.present? || !!@eventful
   end
+  
+  def grant_type_short_name
+    grant.grant_type_short_name if grant
+  end
 
 end

@@ -11,7 +11,7 @@ class Person
   has_many :tags
   has_many :notes
   has_many :project_people, foreign_key: :person_uid
-  has_many :projects, foreign_key: :applicant_uid
+  has_many :grants, foreign_key: :director_uid
   belongs_to :institution, foreign_key: :institution_code
   belongs_to :graduated_from, foreign_key: :graduated_from_code, class_name: "Institution"
 

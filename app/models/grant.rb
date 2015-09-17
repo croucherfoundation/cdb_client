@@ -3,7 +3,8 @@ class Grant
   use_api CDB
   collection_path "/api/grants"
 
-  belongs_to :applicant, foreign_key: :applicant_uid, class_name: "Person"
+  belongs_to :director, foreign_key: :director_uid, class_name: "Person"
+  belongs_to :codirector, foreign_key: :codirector_uid, class_name: "Person"
   belongs_to :grant_type, foreign_key: :grant_type_code
   belongs_to :country, foreign_key: :country_code
   belongs_to :institution, foreign_key: :institution_code
@@ -39,7 +40,8 @@ class Grant
       expected_value: "",
       approved_at: nil,
       approved_by_uid: nil,
-      applicant_uid: nil,
+      director_uid: nil,
+      codirector_uid: nil,
       projects: [],
       scientific_tag_ids: [],
       admin_tag_ids: []
@@ -103,6 +105,10 @@ class Grant
     })
     projects << project
     project
+  end
+  
+  def grant_type_short_name
+    grant_type.short_name if grant_type
   end
 
 end
