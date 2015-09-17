@@ -24,9 +24,13 @@ module HkNames
   def informal_name
     # The standard form of the given name is Tai Wan, Ray
     # But some people are known only as Ray.
-
-    chinese, english = given_name.split(/,\s*/)
-    parts = chinese.split(/\s+/)
+    if given_name
+      chinese, english = given_name.split(/,\s*/)
+      parts = chinese.split(/\s+/)
+    else
+      chinese, english = ["", ""]
+      parts = []
+    end
 
     # Here we can't tell the difference between people with one chinese given name and one anglo given name
     # but the order of names is reversed in the latter case. For now we assume that the presence of a chinese
