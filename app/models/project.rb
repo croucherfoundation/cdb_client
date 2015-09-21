@@ -4,7 +4,6 @@ class Project
   collection_path "/api/projects"
 
   belongs_to :grant
-  belongs_to :project_type, foreign_key: :project_type_code
   has_many :siblings, class_name: "Project"
     
   # temporary while we are not yet sending jsonapi data back to core properly
@@ -23,7 +22,6 @@ class Project
       event_id: nil,
       page_id: nil,
       round_id: nil,
-      project_type_code: ProjectType.default,
       scientific_tag_ids: [],
       admin_tag_ids: [],
       year: nil,
