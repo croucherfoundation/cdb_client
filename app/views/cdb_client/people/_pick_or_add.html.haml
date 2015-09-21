@@ -6,6 +6,7 @@
 - heading ||= nil
 - without_institution ||= false
 - with_employer ||= false
+- default_country_code ||= nil
 
 = f.fields_for association, person, include_id: false do |pf|
   %fieldset{data: {role: "personpicker"}}
@@ -32,7 +33,7 @@
         = pf.text_field :phone, placeholder: t("placeholders.person.phone"), class: 'phone', data: {key: "phone"}
 
     - unless without_institution
-      = render "cdb_client/institutions/pick_or_add", f: pf, institution: person.institution, institution_code_field: 'institution_code', with_employer: with_employer
+      = render "cdb_client/institutions/pick_or_add", f: pf, institution: person.institution, institution_code_field: 'institution_code', with_employer: with_employer, default_country_code: default_country_code
 
     .linkage
       - if person.persisted?

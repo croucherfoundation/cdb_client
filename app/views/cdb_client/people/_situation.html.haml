@@ -1,7 +1,10 @@
 - person ||= nil
+- with_country ||= false
+
 - if person
+  - punctuation = with_country && person.country.present? ? ',' : '.'
   %span.situation
-    = succeed '.' do
+    = succeed punctuation do
       - if person.post?
         = person.post
         - if person.institution_name? || person.employer?
@@ -13,3 +16,7 @@
       - else
         %span.unknown
           = t :situation_unknown
+    - if with_country && person.country.present?
+      = succeed '.' do
+        = person.country.name
+    

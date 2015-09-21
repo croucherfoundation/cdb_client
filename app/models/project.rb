@@ -6,9 +6,6 @@ class Project
   belongs_to :grant
   belongs_to :project_type, foreign_key: :project_type_code
   has_many :siblings, class_name: "Project"
-  has_many :project_people
-  accepts_nested_attributes_for :project_people
-  # sends_nested_attributes_for :project_people
     
   # temporary while we are not yet sending jsonapi data back to core properly
   include_root_in_json true
@@ -29,8 +26,6 @@ class Project
       project_type_code: ProjectType.default,
       scientific_tag_ids: [],
       admin_tag_ids: [],
-      project_people: [],
-      project_people_attributes: [],
       year: nil,
       hidden: false,
       blacklisted: false,
@@ -39,7 +34,7 @@ class Project
   end
 
   def people
-    project_people.map(&:person)
+    [director, codirector]
   end
 
   def name_or_grant_name
