@@ -27,8 +27,9 @@ class Tag
       preload.find{ |tag| tag.id == id }
     end
     
-    def find_list(ids)
-      preload.select{ |tag| ids.include?(tag.id) }
+    def find_list(*ids)
+      ids = [ids].flatten.map(&:to_i)
+      preload.select{ |tag| ids.include?(tag.id.to_i) }
     end
 
     def from_term(term)

@@ -77,14 +77,14 @@ class Grant
     institution || second_institution
   end
 
-  ## Tags are delivered from cdb as ids.
+  ## Tags are delivered from cdb as ids in two groups.
   #
   def scientific_tags
     Tag.find_list(scientific_tag_ids)
   end
   
   def scientific_tags=(tags)
-    scientific_tag_ids = tags.map(&:id)
+    self.scientific_tag_ids = tags.map(&:id)
   end
 
   def admin_tags
@@ -92,7 +92,7 @@ class Grant
   end
   
   def admin_tags=(tags)
-    admin_tag_ids = tags.map(&:id)
+    self.admin_tag_ids = tags.map(&:id)
   end
   
   def build_project

@@ -71,7 +71,8 @@ module HasTags
   def tagged?
     taggings.any?
   end
-  
+
+
   protected
   
   def create_taggings

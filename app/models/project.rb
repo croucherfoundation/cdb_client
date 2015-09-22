@@ -22,8 +22,6 @@ class Project
       event_id: nil,
       page_id: nil,
       round_id: nil,
-      scientific_tag_ids: [],
-      admin_tag_ids: [],
       year: nil,
       hidden: false,
       blacklisted: false,
@@ -43,24 +41,6 @@ class Project
     else
       "Unlinked Project"
     end
-  end
-
-  ## Tags are delivered from cdb as ids.
-  #
-  def scientific_tags
-    Tag.find_list(scientific_tag_ids)
-  end
-  
-  def scientific_tags=(tags)
-    scientific_tag_ids = tags.map(&:id)
-  end
-
-  def admin_tags
-    Tag.find_list(admin_tag_ids)
-  end
-  
-  def admin_tags=(tags)
-    admin_tag_ids = tags.map(&:id)
   end
 
   def institution
