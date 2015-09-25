@@ -8,6 +8,7 @@ class Grant
   belongs_to :grant_type, foreign_key: :grant_type_code
   belongs_to :country, foreign_key: :country_code
   belongs_to :institution, foreign_key: :institution_code
+  belongs_to :second_country, foreign_key: :second_country_code, class_name: "Country"
   belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
 
   has_many :projects
@@ -29,7 +30,9 @@ class Grant
       application_id: nil,
       grant_type_code: "",
       country_code: "",
+      second_country_code: "",
       institution_code: "",
+      show_second_institution: false,
       second_institution_code: "",
       institution_name: "",
       second_institution_name: "",
@@ -69,6 +72,10 @@ class Grant
     expected_end_date
   end
   
+  def countries
+    [country, second_country].compact
+  end
+
   def institutions
     [institution, second_institution].compact
   end
