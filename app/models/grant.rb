@@ -84,6 +84,22 @@ class Grant
     institution || second_institution
   end
 
+  def country_name
+    country.name if country.present?
+  end
+
+  def second_country_name
+    second_country.name if second_country.present?
+  end
+
+  def institution_name
+    institution.name if institution.present?
+  end
+
+  def second_institution_name
+    second_institution.name if second_institution.present?
+  end
+
   ## Tags are delivered from cdb as ids in two groups.
   #
   def scientific_tags

@@ -83,7 +83,14 @@ class Award
     name.presence || award_type_short_name
   end
 
-  
+  def country_name
+    country.name if country.present?
+  end
+
+  def institution_name
+    institution.name if institution.present?
+  end
+
   ## Tags are delivered from cdb as ids.
   #
   def scientific_tags
