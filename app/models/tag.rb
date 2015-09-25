@@ -6,28 +6,33 @@ class Tag
   class << self
 
     def preload
-      @tags ||= self.all
+      RequestStore.store[:tags] ||= self.all
     end
 
     def preloaded(code)
-      @tags_by_code ||= preload.each_with_object({}) do |tag, h|
+      RequestStore.store[:tags_by_code] ||= preload.each_with_object({}) do |tag, h|
         h[tag.code] = tag
       end
-      @tags_by_code[code]
+      RequestStore.store[:tags_by_code][code]
     end
     
     def tags_by_id(id)
-      @tags_by_id ||= preload.each_with_object({}) do |tag, h|
+      RequestStore.store[:tags_by_id] ||= preload.each_with_object({}) do |tag, h|
         h[tag.id] = tag
       end
-      @tags_by_id
+      RequestStore.store[:tags_by_id]
     end
 
-    def find(id)
+    def find_with_preload(id)
       preload.find{ |tag| tag.id == id }
     end
     
     def find_list(*ids)
+      ids = [ids].flatten.map(&:to_i)
+      find(ids)
+    end
+
+    def find_list_with_preload(*ids)
       ids = [ids].flatten.map(&:to_i)
       preload.select{ |tag| ids.include?(tag.id.to_i) }
     end

@@ -9,14 +9,14 @@ class Institution
   class << self
 
     def preload
-      @institutions ||= self.all
+      RequestStore.store[:institutions] ||= self.all
     end
 
     def preloaded(code)
-      @institutions_by_code ||= preload.each_with_object({}) do |inst, h|
+      RequestStore.store[:institutions_by_code] ||= preload.each_with_object({}) do |inst, h|
         h[inst.code] = inst
       end
-      @institutions_by_code[code]
+      RequestStore.store[:institutions_by_code][code]
     end
 
     def for_selection(country_code=nil, active_only=false)

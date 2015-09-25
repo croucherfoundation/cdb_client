@@ -6,14 +6,14 @@ class Country
 
   class << self
     def preload
-      @countries ||= self.all.sort_by(&:name)
+      RequestStore.store[:countries] ||= self.all.sort_by(&:name)
     end
 
     def preloaded(code)
-      @countries_by_code ||= preload.each_with_object({}) do |co, h|
+      RequestStore.store[:countries_by_code] ||= preload.each_with_object({}) do |co, h|
         h[co.code] = co
       end
-      @countries_by_code[code]
+      RequestStore.store[:countries_by_code][code]
     end
 
     def for_selection
