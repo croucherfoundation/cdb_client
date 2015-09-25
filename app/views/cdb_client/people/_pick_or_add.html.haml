@@ -20,7 +20,7 @@
         = heading
         %br
       %span.col.first>
-        = pf.text_field :title, placeholder: t("placeholders.person.title"), class: 'title'
+        = pf.text_field :title, placeholder: t("placeholders.person.title"), class: 'title', data: {key: "title"}
       %span.col>
         = pf.text_field :family_name, placeholder: t("placeholders.person.family_name"), class: 'family_name', data: {key: "family_name"}, required: "true"
       %span.col.last>
