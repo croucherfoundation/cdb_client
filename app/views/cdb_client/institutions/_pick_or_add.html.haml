@@ -34,19 +34,19 @@
     %span.col.first>
       - if with_labels
         = f.label country_code_field
-      = f.select country_code_field, country_options, {selected: country_code, include_blank: t("placeholders.please_choose_country")}, data: {key: "country_code", role: 'country'}
+      = f.select country_code_field, country_options, {selected: country_code, include_blank: t("placeholders.please_choose_country")}, data: {key: country_code_field, role: 'country'}
 
     - select_cell_class = additional_field ? "col" : "col last"
     %span{class: select_cell_class}>
       - if with_labels
         = f.label institution_code_field
       %span{data: {role: "choose"}}
-        = f.select institution_code_field, Institution.for_selection(country_code), {include_blank: t("placeholders.please_choose_institution")}, {data: {key: "institution_code"}}
+        = f.select institution_code_field, Institution.for_selection(country_code), {include_blank: t("placeholders.please_choose_institution")}, {data: {key: institution_code_field}}
       %span{data: {role: "add"}}
         = f.text_field institution_name_field, placeholder: institution_name_placeholder, value: ""
       - if with_employer
         %span{data: {role: "other"}}
-          = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: "employer"}
+          = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}
       %br
       = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
       = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}
