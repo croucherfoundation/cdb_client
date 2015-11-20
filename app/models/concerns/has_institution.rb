@@ -5,6 +5,7 @@ module HasInstitution
 
   included do
     scope :without_institution, -> { where('institution_code IS NULL OR institution_code = ""') }
+    scope :with_institution, -> { where('institution_code IS NOT NULL AND institution_code <> ""') }
   end
 
   def institution

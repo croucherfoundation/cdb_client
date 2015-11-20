@@ -6,6 +6,7 @@
 - heading ||= nil
 - without_institution ||= false
 - with_employer ||= false
+- with_addresses ||= false
 - default_country_code ||= nil
 
 = f.fields_for association, person, include_id: false do |pf|
@@ -34,6 +35,13 @@
 
     - unless without_institution
       = render "cdb_client/institutions/pick_or_add", f: pf, institution: person.institution, institution_code_field: 'institution_code', with_employer: with_employer, default_country_code: default_country_code
+
+    - if with_addresses
+      %p.twocol
+        %span.col>
+          = pf.text_area :address, placeholder: t("placeholders.person.address")
+        %span.col.last>
+          = pf.text_area :correspondence_address, placeholder: t("placeholders.person.pcorrespondence_addresshone")
 
     .linkage
       - if person.persisted?

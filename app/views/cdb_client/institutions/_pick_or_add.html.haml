@@ -34,8 +34,8 @@
     %span.col.first>
       - if with_labels
         = f.label country_code_field
-      = f.select country_code_field, country_options, {selected: country_code, include_blank: t("placeholders.please_choose_country")}, data: {key: country_code_field, role: 'country'}
-
+      = f.select country_code_field, country_options, {include_blank: t("placeholders.please_choose_country")}, data: {key: country_code_field, role: 'country'}
+      
     - select_cell_class = additional_field ? "col" : "col last"
     %span{class: select_cell_class}>
       - if with_labels
