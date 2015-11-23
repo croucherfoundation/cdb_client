@@ -57,6 +57,10 @@ class Project
     event_id.present? || !!@eventful
   end
   
+  def should_have_event?
+    grant.grant_type.event_based? if grant && grant.grant_type
+  end
+  
   def grant_type_short_name
     grant.grant_type_short_name if grant
   end

@@ -22,6 +22,7 @@ class Award
     Award.new({
       name: "",
       title: "",
+      description: "",
       record_no: "",
       record_code: "",
       application_id: nil,
@@ -36,6 +37,7 @@ class Award
       duration: "",
       approved_at: nil,
       approved_by_uid: nil,
+      expected_value: "",
       year: Date.today.year
     }.merge(attributes))
   end
