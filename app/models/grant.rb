@@ -121,11 +121,11 @@ class Grant
   def project_word
     case grant_type_code
     when "asi", "csc"
-      "Course"
+      "course"
     when "cas"
-      "Laboratory"
+      "laboratory"
     else
-      "Project"
+      "project"
     end
   end
 
