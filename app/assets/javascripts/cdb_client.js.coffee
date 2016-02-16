@@ -18,9 +18,11 @@ jQuery ($) ->
       @_people = []
       @_current_person = {}
       @getSuggestionsSoon = _.debounce(@getSuggestions, 500)
-      @listenToFields() unless @linked()
       @_linkage_box.find('a.detach').click @defix
-      $.ppe = @
+      unless @linked()
+        @listenToFields()
+        @getSuggestions()
+      $.pp = @
 
     getUid: () =>
       @_uid_field.val()
@@ -28,13 +30,17 @@ jQuery ($) ->
     linked: () =>
       !!@getUid()
 
+    populated: () =>
+      populated_fields = @edit_fields.filter -> !!@value
+      populated_fields.length > 0
+
     # get and cache relevant people
 
     listenToFields: () =>
       @_edit_fields.bind 'keyup', @getSuggestionsSoon
     
     stopListening: () =>
-      @_edit_fields.unbind 'keyup', @getSuggestionsSoon
+      @_edit_fields.unbind 'keyup', @getSuggestionsSoons
 
     cacheKey: =>
       @getUid() or @fieldsKey() or "nobody"
@@ -63,16 +69,17 @@ jQuery ($) ->
       if @_cache[cache_key]
         @showSituation(cache_key)
       else
-        @_linkage_box.empty().append($("<p class='waiting'>Checking for matching records.</p>"))
-        $.ajax
-          method: "GET"
-          dataType: "json",
-          url: "/cdb/people/suggestions"
-          data: 
-            person: @formData()
-          success: (json) =>
-            @cacheJson(cache_key, json)
-            @showSituation(cache_key)
+        if @populated()
+          @_linkage_box.empty().append($("<p class='waiting'>Checking for matching records.</p>"))
+          $.ajax
+            method: "GET"
+            dataType: "json",
+            url: "/cdb/people/suggestions"
+            data: 
+              person: @formData()
+            success: (json) =>
+              @cacheJson(cache_key, json)
+              @showSituation(cache_key)
           
     cacheJson: (key, json) =>
       @_cache[key] = json
