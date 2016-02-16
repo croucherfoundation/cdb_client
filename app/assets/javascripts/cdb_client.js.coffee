@@ -31,7 +31,7 @@ jQuery ($) ->
       !!@getUid()
 
     populated: () =>
-      populated_fields = @edit_fields.filter -> !!@value
+      populated_fields = @_edit_fields.filter -> !!@value
       populated_fields.length > 0
 
     # get and cache relevant people

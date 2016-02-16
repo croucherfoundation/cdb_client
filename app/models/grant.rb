@@ -117,7 +117,18 @@ class Grant
   def admin_tags=(tags)
     self.admin_tag_ids = tags.map(&:id)
   end
-  
+
+  def project_word
+    case grant_type_code
+    when "asi", "csc"
+      "Course"
+    when "cas"
+      "Laboratory"
+    else
+      "Project"
+    end
+  end
+
   def build_project
     project = Project.new_with_defaults({
       grant_id: id,
