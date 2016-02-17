@@ -8,7 +8,6 @@ class Person
 
   has_many :awards
   has_many :grants
-  has_many :tags
   has_many :notes
   has_many :grants, foreign_key: :director_uid
   belongs_to :country, foreign_key: :country_code
@@ -54,7 +53,9 @@ class Person
         phd_year: "",
         person_page_id: "",
         user_uid: "",
-        institution: Institution.new_with_defaults
+        institution: Institution.new_with_defaults,
+        scientific_tags: "",
+        admin_tags: ""
       }.merge(attributes))
     end
     

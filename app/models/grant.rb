@@ -46,8 +46,8 @@ class Grant
       director_uid: nil,
       codirector_uid: nil,
       projects: [],
-      scientific_tag_ids: [],
-      admin_tag_ids: []
+      scientific_tags: "",
+      admin_tags: ""
     }.merge(attributes))
   end
 
@@ -98,24 +98,6 @@ class Grant
 
   def second_institution_name
     second_institution.name if second_institution.present?
-  end
-
-  ## Tags are delivered from cdb as ids in two groups.
-  #
-  def scientific_tags
-    Tag.find_list(scientific_tag_ids)
-  end
-  
-  def scientific_tags=(tags)
-    self.scientific_tag_ids = tags.map(&:id)
-  end
-
-  def admin_tags
-    Tag.find_list(admin_tag_ids)
-  end
-  
-  def admin_tags=(tags)
-    self.admin_tag_ids = tags.map(&:id)
   end
 
   def project_word

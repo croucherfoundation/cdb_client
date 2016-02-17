@@ -38,7 +38,9 @@ class Award
       approved_at: nil,
       approved_by_uid: nil,
       expected_value: "",
-      year: Date.today.year
+      year: Date.today.year,
+      scientific_tags: "",
+      admin_tags: ""
     }.merge(attributes))
   end
 
@@ -91,24 +93,6 @@ class Award
 
   def institution_name
     institution.name if institution.present?
-  end
-
-  ## Tags are delivered from cdb as ids.
-  #
-  def scientific_tags
-    Tag.find_list(scientific_tag_ids)
-  end
-  
-  def scientific_tags=(tags)
-    scientific_tag_ids = tags.map(&:id)
-  end
-
-  def admin_tags
-    Tag.find_list(admin_tag_ids)
-  end
-  
-  def admin_tags=(tags)
-    admin_tag_ids = tags.map(&:id)
   end
   
   ## Duration and extension

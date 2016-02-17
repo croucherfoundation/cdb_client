@@ -25,7 +25,9 @@ class Project
       year: nil,
       hidden: false,
       blacklisted: false,
-      featured: false
+      featured: false,
+      scientific_tags: "",
+      admin_tags: ""
     }.merge(attributes))
   end
 
