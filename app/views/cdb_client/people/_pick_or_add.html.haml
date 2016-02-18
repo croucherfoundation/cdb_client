@@ -23,9 +23,9 @@
       %span.col.first>
         = pf.text_field :title, placeholder: t("placeholders.person.title"), class: 'title', data: {key: "title"}
       %span.col>
-        = pf.text_field :family_name, placeholder: t("placeholders.person.family_name"), class: 'family_name', data: {key: "family_name"}, required: "true"
+        = pf.text_field :family_name, placeholder: t("placeholders.person.family_name"), class: 'family_name', data: {key: "family_name"}, required: required
       %span.col.last>
-        = pf.text_field :given_name, placeholder: t("placeholders.person.given_name"), class: 'given_name', data: {key: "given_name"}, required: "true"
+        = pf.text_field :given_name, placeholder: t("placeholders.person.given_name"), class: 'given_name', data: {key: "given_name"}, required: required
 
     %p.twocol.reversed
       %span.col>
