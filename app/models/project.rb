@@ -46,11 +46,11 @@ class Project
   end
 
   def institution
-    grant.institution if grant
+    grant.institution if grant.present?
   end
 
   def institutions
-    grant.institutions if grant
+    grant.institutions if grant.present?
   end
 
   attr_accessor :eventful
@@ -60,11 +60,11 @@ class Project
   end
   
   def should_have_event?
-    grant.grant_type.event_based? if grant && grant.grant_type
+    grant.grant_type.event_based? if grant.present? && grant.grant_type
   end
   
   def grant_type_short_name
-    grant.grant_type_short_name if grant
+    grant.grant_type_short_name if grant.present?
   end
 
 end
