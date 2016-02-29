@@ -8,19 +8,28 @@ module HasAward
   end
 
   def award
-    Award.find(award_id) if award_id?
+    begin
+      @award ||= Award.find(award_id) if award_id?
+    rescue Her::Errors::Error
+      nil
+    end
   end
   
   def award?
-    award_id? && !!award
+    award_id? && !!award.present?
   end
   
   def award_type
-    award.award_type if award
+    award.award_type if award.present?
   end
   
   def award=(award)
-    self.award_id = award.id
+    if award
+      self.award_id = award.id
+    else
+      self.award_id = nil
+    end
+    @award = award
   end
 
 end

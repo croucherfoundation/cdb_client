@@ -9,7 +9,11 @@ module HasGrant
   end
 
   def grant
-    @grant ||= Grant.find(grant_id) if grant_id?
+    begin
+      @grant ||= Grant.find(grant_id) if grant_id?
+    rescue Her::Errors::Error
+      nil
+    end
   end
   
   def grant=(grant)
@@ -22,11 +26,11 @@ module HasGrant
   end
   
   def grant?
-    grant_id? && !!grant
+    grant_id? && !!grant.present?
   end
   
   def grant_type
-    grant.grant_type if grant
+    grant.grant_type if grant.present?
   end
   
   def grant_type_name
@@ -34,7 +38,7 @@ module HasGrant
   end
   
   def institutions
-    grant.institutions if grant
+    grant.institutions if grant.present?
   end
 
 end

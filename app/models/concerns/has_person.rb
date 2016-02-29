@@ -7,7 +7,11 @@ module HasPerson
   end
 
   def person
-    @person ||= Person.find(person_uid) if person_uid?
+    begin
+      @person ||= Person.find(person_uid) if person_uid?
+    rescue Her::Errors::Error
+      nil
+    end
   end
   
   def person?
