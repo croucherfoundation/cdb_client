@@ -5,9 +5,9 @@ module CdbClientHelper
   end
 
   def cdb_host
-    Settings.cdb[:asset_host] ||= Settings.cdb.host
-    Settings.cdb[:protocol] ||= 'http'
-    "#{Settings.cdb.protocol}://#{Settings.cdb.asset_host}"
+    Settings.cdb[:asset_host] ||= "db.croucher.org.hk"
+    Settings.cdb[:asset_protocol] ||= 'https'
+    "#{Settings.cdb.asset_protocol}://#{Settings.cdb.asset_host}"
   end
 
 end
