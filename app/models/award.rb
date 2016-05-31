@@ -92,7 +92,11 @@ class Award
   end
 
   def institution_name
-    institution.name if institution.present?
+    institution.name if institution?
+  end
+
+  def second_institution_name
+    second_institution.name if second_institution?
   end
   
   ## Duration and extension
