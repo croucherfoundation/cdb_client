@@ -112,7 +112,14 @@ class Tag
       tags.map {|t| [t.id] + t.parent_ids + t.child_ids }.flatten
     end
 
+    def with_all_broader_terms(tags)
+      
+    end
+
   end
+
+
+
 
   def relative_ids
     parent_ids + child_ids

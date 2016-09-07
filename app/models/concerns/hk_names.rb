@@ -69,11 +69,11 @@ module HkNames
   end
   
   def title_if_it_matters
-    normalized_title unless title_ordinary?
+    title unless title_ordinary?
   end
 
   def formal_name
-    [normalized_title, family_name].compact.join(' ')
+    [title_if_it_matters, family_name].compact.join(' ')
   end
 
   # This is our best shot at a representation of how this person would normally be referred to. It combines

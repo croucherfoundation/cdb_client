@@ -13,7 +13,6 @@ class Project
   def self.new_with_defaults(attributes={})
     Project.new({
       name: "",
-      year: "",
       slug: "",
       description: "",
       begin_date: "",
