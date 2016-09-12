@@ -9,6 +9,10 @@
 - with_addresses ||= false
 - default_country_code ||= nil
 
+- prominent ||= false
+- pclass = "threecol"
+- pclass << " name" if prominent
+
 = f.fields_for association, person, include_id: false do |pf|
   %fieldset{data: {role: "personpicker"}}
     - if person.persisted?
@@ -16,7 +20,7 @@
     - else
       = f.hidden_field person_uid_field, value: "", data: {role: "linker"}
       
-    %p.threecol
+    %p{class: pclass}
       - if heading
         = heading
         %br
@@ -27,21 +31,8 @@
       %span.col.last>
         = pf.text_field :given_name, placeholder: t("placeholders.person.given_name"), class: 'given_name', data: {key: "given_name"}, required: required
 
-    %p.twocol.reversed
-      %span.col>
-        = pf.email_field :email, placeholder: t("placeholders.person.email"), class: 'email', data: {key: "email"}
-      %span.col.last>
-        = pf.text_field :phone, placeholder: t("placeholders.person.phone"), class: 'phone', data: {key: "phone"}
-
     - unless without_institution
       = render "cdb_client/institutions/pick_or_add", f: pf, institution: person.institution, institution_code_field: 'institution_code', with_employer: with_employer, default_country_code: default_country_code
-
-    - if with_addresses
-      %p.twocol
-        %span.col>
-          = pf.text_area :address, placeholder: t("placeholders.person.address")
-        %span.col.last>
-          = pf.text_area :correspondence_address, placeholder: t("placeholders.person.correspondence_address")
 
     .linkage
       - if person.persisted?
