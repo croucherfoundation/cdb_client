@@ -2,7 +2,7 @@
 - cssclass = "mugshot"
 - person ||= photo || @person
 - if person
-  - if person.person_page?
+  - if person.icon.present?
     - style = "background-image: url(\"#{person.icon}\")"
   - else
     - cssclass << " uninvited"
