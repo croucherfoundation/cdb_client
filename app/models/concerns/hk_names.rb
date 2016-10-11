@@ -6,74 +6,60 @@ module HkNames
   # With Anglo-Chinese Hong Kong names it is difficult to be sure of the right presentation for each individual.
   #
   # We hold the name in three fields: title, given name and family name. People with both a Chinese and an
-  # English forename are encouraged to enter their given name in the form Tai Wan, Jimmy. The family_name 
+  # English forename are encouraged to enter their given name in the form Tai Wan, Jimmy. The family_name
   # should always be a single, usually Chinese, surname: Chan or Smith.
   #
-  # When a comma is found in the given name, we assume that they have followed the chinese, english format.
-  # If not, we assume the whole name is Chinese.
-
   def name?
     family_name? || given_name?
   end
 
   # ### Polite informality
   #
-  # People with an English forename would normally be addressed as Jimmy Chan. People with only a Chinese
-  # forename should be addressed as Chan Tai Wan.
+  # It is not possible for us to distinguish name styles programmatically, but we do know that a given name
+  # with a comma includes both chinese and english versions. In that case we favour the english component
+  # for informal use, but in every other case we just print `given_name family_name`. This shows a fully
+  # Chinese name in the wrong order, but apparently when printed in latin script that's quite normal.
+  #
+  # This also gives sane results in the common but incorrect case where people have given us Johnny Tai Wan.
   #
   def informal_name
-    # The standard form of the given name is Tai Wan, Ray
-    # But some people are known only as Ray.
-    if given_name?
-      chinese, english = given_name.split(/,\s*/)
-      parts = chinese.split(/\s+/)
-    else
-      chinese, english = ["", ""]
-      parts = []
-    end
-
-    # Here we can't tell the difference between people with one chinese given name and one anglo given name
-    # but the order of names is reversed in the latter case. For now we assume that the presence of a chinese
-    # name or two given names indicates that the chinese word ordering should be used.
-    unless chinese_name? || parts.length > 1
-      english ||= chinese
-    end
-    if english
-      # People with an english name are called Ray Chan, by default
-      [english, family_name].join(' ')
-    else
-      # People without are called Chan Tai Wan
-      [family_name, chinese].join(' ')
-    end
+    chinese, english = given_name.split(/,\s*/)
+    given = english.presence || chinese # nb. if no comma then chinese will hold the whole name
+    [given, family_name].join(' ')
   end
   alias :name :informal_name
 
   # ### Formality
   #
-  # The family name is held separately because for most purposes we will address people using the relatively 
-  # reliable 'Dr Chan' or 'Mr Smith'.
+  # For most purposes we can address people using the relatively reliable 'Dr Chan' or 'Mr Smith'.
   #
-  
   def normalized_title
-    t = self.title
-    t = ordinary_title unless t.present?
+    t = self.title.presence || default_title
     t.gsub('.', '').strip
   end
-  
-  def ordinary_title
-    gender == 'f' ? "Ms" : "Mr"
+
+  def default_title
+    if respond_to? :gender
+      gender == 'f' ? "Ms" : "Mr"
+    else
+      ""
+    end
   end
-  
+
   def title_ordinary?
     ['Mr', 'Ms', 'Mrs', '', nil].include?(title)
   end
-  
+
   def title_if_it_matters
     title unless title_ordinary?
   end
 
   def formal_name
-    [title_if_it_matters, family_name].compact.join(' ')
+    if normalized_title.present?
+      [normalized_title, family_name].compact.join(' ')
+    else
+      [given_name, family_name].compact.join(' ')
+    end
   end
 
   # This is our best shot at a representation of how this person would normally be referred to. It combines
