@@ -113,7 +113,7 @@ class Award
 
   def self.csv_columns
     # %w{id record_no person_name year}
-    %w{id record_no person_name year application_id award_type_name institution_name second_institution_name country_name name field field_chinese description title person_uid supervisor supervisor_email supervisor_address department degree duration value expected_value uk begin_date expected_end_date completed end_date terminated terminated_date returned returned_date duration extended extension extension_end_date remarks payments bank green_form job_form progress_report_received progress_reports thesis_submitted thesis_url conference_grant_given conference_grant conference_report_received conference_report final_report_received final_report spouse_fee no_children leave}
+    %w{id record_no person_name year application_id award_type_name institution_name second_institution_name country_name name field description title person_uid supervisor supervisor_email supervisor_address department degree duration value expected_value uk begin_date expected_end_date completed end_date terminated terminated_date returned returned_date duration extended extension extension_end_date remarks payments bank green_form job_form progress_report_received progress_reports thesis_submitted thesis_url conference_grant_given conference_grant conference_report_received conference_report final_report_received final_report spouse_fee no_children leave}
   end
 
 end
