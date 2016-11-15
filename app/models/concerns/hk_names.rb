@@ -28,7 +28,8 @@ module HkNames
   # This also gives sane results in the common but incorrect case where people have given us Johnny Tai Wan Chan.
   #
   def informal_name
-    chinese, english = given_name.split(/,\s*/)
+    given = given_name.presence || ""
+    chinese, english = given.split(/,\s*/)
     given = english.presence || chinese # nb. if no comma then chinese will hold the whole name and we'll show that.
     [given, family_name].join(' ')
   end
