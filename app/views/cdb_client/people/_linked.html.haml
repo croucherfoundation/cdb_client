@@ -9,16 +9,18 @@
       = associated
       is linked to
       %strong
-        = "#{person.colloquial_name}."
+        = person.title
+        = person.informal_name
       = render "cdb_client/people/situation", person: person
       Changing the fields above will update the records we hold for
-      = "#{person.formal_name}."
+      = succeed "." do
+        = person.title
+        = person.family_name
     %p.danger
       %a.detach{href: "#"}
         Detach this
         = associated
         from
-        = person.formal_name
+        = person.title
+        = person.family_name
         so that it can be reassigned.
-
-    
