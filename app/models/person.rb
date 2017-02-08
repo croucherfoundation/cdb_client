@@ -137,6 +137,7 @@ class Person
   def as_json_for_suggestion
     {
       uid: uid,
+      user_uid: user_uid,
       title: title,
       given_name: given_name,
       family_name: family_name,
