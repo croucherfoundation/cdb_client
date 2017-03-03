@@ -51,4 +51,8 @@ module HasPerson
     end
   end
 
+  def relink_user(id,user_uid)
+    Person.relink_user(id,user_uid)
+  end
+
 end
