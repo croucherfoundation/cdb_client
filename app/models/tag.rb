@@ -99,7 +99,44 @@ class Tag
       end
       json
     end
-  
+
+    # tree_to gives us a nested object combining all the 
+    # descents to all the given tags
+    # `descent` is a simplification: one chain linking us back to one root node.
+    # It ignores all the complexity of multiple parentage.
+    # But this is enough to show a sunburst of broad to narrow tag attachment.
+    #
+    #
+    def branch_to(tag)
+      if parent = tags_by_id(tag.parent_ids.first)
+        [tag, descent_to(parent)].flatten
+      else
+        [tag]
+      end
+    end
+
+    def tree_to(terms)
+      children = {}
+      counts = {}
+      tags = from_terms(terms)
+      descents = tags.map {|t| branch_to(t) }
+
+      tags.each do |t|
+        counts[t.term] ||= 0
+        counts[t.term] += 1
+      end
+
+      descents.each do |d|
+        d.reverse!
+        d.each_with_index do |t, i|
+          parent = i > 0 ? d[i-1].term : 'root'
+          children[parent] ||= []
+          children[parent].push(t.term) unless children[parent].include?(t.term)
+        end
+      end
+      branch_from('root', children, counts)
+    end
+
     def root
       from_term("science").first
     end
