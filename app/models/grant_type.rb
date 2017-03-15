@@ -2,6 +2,7 @@ class GrantType
   include Her::JsonApi::Model
   use_api CDB
   collection_path "/api/grant_types"
+  primary_key :code
 
   def self.for_selection
     GrantType.all.sort_by(&:name).map{|grt| [grt.short_name, grt.code] }
@@ -18,6 +19,10 @@ class GrantType
   
   def event_based?
     !!event_based
+  end
+
+  def to_param
+    code
   end
 
 end
