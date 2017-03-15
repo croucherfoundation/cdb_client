@@ -13,11 +13,27 @@ module HasPerson
       nil
     end
   end
-  
+
+  def person_by_user_uid
+    begin
+      @person ||= Person.where(user_uid: uid).first
+    rescue Her::Errors::Error
+      nil
+    end
+  end
+
+  def person_by_user_uid_present?
+    present_user_uid? && person_by_user_uid.present?
+  end
+
+  def present_user_uid?
+    uid.present?
+  end
+
   def person?
     person_uid? && person.present?
   end
-  
+
   def person=(person)
     if person
       self.person_uid = person.uid
@@ -33,6 +49,10 @@ module HasPerson
       self.person.update_attributes(attributes)
       self.person.save
     end
+  end
+
+  def relink_user(id,user_uid)
+    Person.relink_user(id,user_uid)
   end
 
 end

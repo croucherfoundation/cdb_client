@@ -6,11 +6,11 @@ module CdbClient
       # response is a minimal representation sufficient to build suggestions or show linkage
       render json: @people.map(&:as_json_for_suggestion)
     end
-    
+
     protected
-      
+
     def match_params
-      params.require(:person).permit(:uid, :title, :family_name, :given_name, :email, :phone, :country_code, :institution_code)
+      params.require(:person).permit(:uid, :user_uid, :title, :family_name, :given_name, :email, :phone, :country_code, :institution_code)
     end
 
   end

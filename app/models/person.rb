@@ -17,12 +17,12 @@ class Person
   # temporary while we are not yet sending jsonapi data back to core properly
   include_root_in_json true
   parse_root_in_json false
-  
+
   class << self
     def for_selection
       Person.all(show: "all").sort_by(&:name).map{|p| [p.name, p.uid] }
     end
-  
+
     def new_with_defaults(attributes={})
       Person.new({
         uid: nil,
@@ -53,7 +53,7 @@ class Person
         admin_tags: ""
       }.merge(attributes))
     end
-    
+
     def suggestions(params)
       if params[:uid]
         [self.find(params[:uid])]
@@ -88,7 +88,7 @@ class Person
       "scholar"
     end
   end
-  
+
   def image
     images[:standard]
   end
@@ -100,7 +100,7 @@ class Person
   def icon
     images[:icon]
   end
-  
+
   def pronoun
     if gender? && gender == "f"
       I18n.t(:she)
@@ -108,7 +108,7 @@ class Person
       I18n.t(:he)
     end
   end
-  
+
   def whereabouts_explanation
     case whereabouts
     when "D" then "Due to start"
@@ -119,7 +119,7 @@ class Person
     else ""
     end
   end
-  
+
   def self.whereabouts_options
     [
       ["Due to start", "D"],
@@ -129,14 +129,15 @@ class Person
       ["Unknown","U"]
     ]
   end
-  
+
   def graduated_from_name
     graduated_from.name if graduated_from.present?
   end
-  
+
   def as_json_for_suggestion
     {
       uid: uid,
+      user_uid: user_uid,
       title: title,
       given_name: given_name,
       family_name: family_name,
@@ -149,6 +150,14 @@ class Person
       situation: situation,
       icon: icon
     }
+  end
+
+  def self.relink_user(id,user_uid)
+    begin
+      patch "/api/people/#{id}/relink_user/#{user_uid}"
+    rescue JSON::ParserError
+      nil
+    end
   end
 
 end
