@@ -8,7 +8,7 @@ class AwardType
     AwardType.new({
       name: "",
       code: nil,
-      id_code: nil,  #hack! to allow code to be set by user. TODO: use award_type_id throughout
+      id_code: nil, #hack! to allow `code` to be set by user. All would be much easier if we used award_type_id throughout.
       admin_code: "",
       round_type_name: nil,
       round_type_slug: nil,

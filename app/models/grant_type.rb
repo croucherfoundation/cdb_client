@@ -12,7 +12,7 @@ class GrantType
     GrantType.new({
       name: "",
       code: nil,
-      id_code: nil,  #hack! to allow code to be set by user. TODO: use grant_type_id throughout
+      id_code: nil, #hack! to allow `code` to be set by user. All would be much easier if we used grant_type_id throughout.
       admin_code: "",
       page_collection_id: nil,
       round_type_name: nil,
