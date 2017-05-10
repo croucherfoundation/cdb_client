@@ -1,3 +1,3 @@
 module CdbClient
-  VERSION = "0.6.2"
+  VERSION = "0.10.2"
 end

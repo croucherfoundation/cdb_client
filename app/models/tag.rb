@@ -100,41 +100,57 @@ class Tag
       json
     end
 
-    # tree_to gives us a nested object combining all the 
-    # descents to all the given tags
-    # `descent` is a simplification: one chain linking us back to one root node.
-    # It ignores all the complexity of multiple parentage.
-    # But this is enough to show a sunburst of broad to narrow tag attachment.
+    # tree_to gives us a nested object combining all the descents to all the given tags.
+    # This is much simpler than it used to be: the API now delivers each tag with its
+    # shortest descent precomputed.
+    # It's still a simplification and there are many more possible chains of parentage,
+    # but it's enough for visualisation purposes.
     #
+    # Here we return terms, not tags.
     #
     def branch_to(tag)
-      if parent = tags_by_id(tag.parent_ids.first)
-        [tag, descent_to(parent)].flatten
-      else
-        [tag]
-      end
+      tag.descent.split(',')
+    end
+
+    def branches_to(terms)
+      terms = terms.split(/,\s*/) if terms.is_a?(String)
+      from_terms(terms).map(&:descent).map{|d| d.split(',')}
     end
 
     def tree_to(terms)
       children = {}
       counts = {}
-      tags = from_terms(terms)
-      descents = tags.map {|t| branch_to(t) }
 
-      tags.each do |t|
-        counts[t.term] ||= 0
-        counts[t.term] += 1
+      terms.each do |t|
+        counts[t] ||= 0
+        counts[t] += 1
       end
 
+      descents = branches_to(terms)
       descents.each do |d|
         d.reverse!
-        d.each_with_index do |t, i|
-          parent = i > 0 ? d[i-1].term : 'root'
-          children[parent] ||= []
-          children[parent].push(t.term) unless children[parent].include?(t.term)
+        previous_term = 'root'
+        d.each do |t, i|
+          children[previous_term] ||= []
+          children[previous_term].push(t) unless children[previous_term].include?(t)
+          previous_term = t
         end
       end
-      branch_from('root', children, counts)
+      build_tree_from('root', children, counts)
+    end
+
+    # build_tree_from takes a root node and prepared lookup tables for children and counts,
+    # and descends recursively from the route by way of the children to create a tree of the counts.
+    #
+    def build_tree_from(term, children, counts)
+      node = {
+       "name": term,
+       "count": counts[term] || 0
+      }
+      if children[term]
+        node['children'] = children[term].map {|t| build_tree_from(t, children, counts) }
+      end
+      node
     end
 
     def root
@@ -148,14 +164,7 @@ class Tag
     def cluster_around(tags)
       tags.map {|t| [t.id] + t.parent_ids + t.child_ids }.flatten
     end
-
-    def with_all_broader_terms(tags)
-      
-    end
-
   end
-
-
 
 
   def relative_ids
