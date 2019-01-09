@@ -98,7 +98,11 @@ class Award
   def second_institution_name
     second_institution.name if second_institution?
   end
-  
+
+  def date
+    Date.parse(begin_date) if begin_date?
+  end
+
   ## Duration and extension
   #
   def extended?

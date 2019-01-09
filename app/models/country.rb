@@ -18,7 +18,7 @@ class Country
 
     def for_selection
       options = likely_for_selection
-      options << ["------------", ""]
+      options << ["------------", "-"]
       options + preload.map{ |c| [c.name, c.code] }
     end
 

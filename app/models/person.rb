@@ -58,7 +58,19 @@ class Person
       if params[:uid]
         [self.find(params[:uid])]
       else
-        self.suggest(params)
+        self.suggest(params.to_h)
+      end
+    end
+  end
+
+  def latest_award
+    awards.sort_by(&:date).last
+  end
+
+  def recent_award
+    if award = latest_award
+      if award.date && award.date > 3.months.ago
+        award
       end
     end
   end
