@@ -6,12 +6,12 @@
     = succeed '.' do
       - if person.post?
         = person.post
-        - if person.employer? || person.institution.present?
+        - if person.institution.present? || person.employer?
           = t :at
-      - if person.employer?
+      - if person.institution.present?
+        = person.institution.definite_name          
+      - elsif person.employer?
         = person.employer
-      - elsif person.institution.present?
-        = person.institution.definite_name
       - else
         Situation unknown.
 
