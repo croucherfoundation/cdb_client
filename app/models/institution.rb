@@ -74,7 +74,19 @@ class Institution
       definite_name(prefix)
     end
   end
-  
+
+  def located?
+    lat.present? && lng.present?
+  end
+
+  def location
+    { lat: lat.to_f, lng: lng.to_f } if located?
+  end
+
+  def geojson_location
+    { lat: lat.to_f, lon: lng.to_f } if located?
+  end
+
   def in_london?
     !!london && country_code == "GBR"
   end

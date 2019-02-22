@@ -1,13 +1,16 @@
 require 'csv'
 
 class Award
+  include HasCountry
+  include HasInstitution
   include Her::JsonApi::Model
+
   use_api CDB
   collection_path "/api/awards"
 
   belongs_to :award_type, foreign_key: :award_type_code
-  belongs_to :country, foreign_key: :country_code
-  belongs_to :institution, foreign_key: :institution_code
+  # belongs_to :country, foreign_key: :country_code
+  # belongs_to :institution, foreign_key: :institution_code
   belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
   belongs_to :person, foreign_key: :person_uid
 
@@ -63,6 +66,18 @@ class Award
     "##{record_no}: #{name} to #{person.name}"
   end
 
+  def listing
+    "#{year} #{name_or_award_type_name}"
+  end
+
+  def location
+    institution.location if institution
+  end
+
+  def geojson_location
+    institution.geojson_location if institution
+  end
+
   def country?
     country_code && !!country
   end
@@ -95,8 +110,20 @@ class Award
     institution.name if institution?
   end
 
+  def institution_definite_name
+    institution.definite_name if institution?
+  end
+
+  def institution_colloquial_name
+    institution.colloquial_name if institution?
+  end
+
   def second_institution_name
     second_institution.name if second_institution?
+  end
+
+  def second_institution_definite_name
+    second_institution.definite_name if second_institution?
   end
 
   def date

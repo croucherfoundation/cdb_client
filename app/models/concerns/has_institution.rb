@@ -3,11 +3,6 @@
 module HasInstitution
   extend ActiveSupport::Concern
 
-  included do
-    scope :without_institution, -> { where('institution_code IS NULL OR institution_code = ""') }
-    scope :with_institution, -> { where('institution_code IS NOT NULL AND institution_code <> ""') }
-  end
-
   def institution
     # here we guess that it's probably going to be cheaper to get everything than to retrieve one at a time
     Institution.preloaded(institution_code) if institution_code?

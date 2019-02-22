@@ -1,6 +1,9 @@
 class Person
   include HkNames
+  include HasCountry
+  include HasInstitution
   include Her::JsonApi::Model
+
   use_api CDB
   collection_path "/api/people"
   primary_key :uid
@@ -10,9 +13,7 @@ class Person
   has_many :grants
   has_many :notes
   has_many :grants, foreign_key: :director_uid
-  belongs_to :country, foreign_key: :country_code
-  belongs_to :institution, foreign_key: :institution_code
-  belongs_to :graduated_from, foreign_key: :graduated_from_code, class_name: "Institution"
+  # belongs_to :country, foreign_key: :country_code
 
   # temporary while we are not yet sending jsonapi data back to core properly
   include_root_in_json true
@@ -46,9 +47,9 @@ class Person
         msc_year: "",
         mphil_year: "",
         phd_year: "",
-        person_page_id: "",
         user_uid: "",
         institution: Institution.new_with_defaults,
+        situation: "",
         scientific_tags: "",
         admin_tags: ""
       }.merge(attributes))
@@ -64,7 +65,7 @@ class Person
   end
 
   def latest_award
-    awards.sort_by(&:date).last
+    awards.sort_by(&:year).last
   end
 
   def recent_award

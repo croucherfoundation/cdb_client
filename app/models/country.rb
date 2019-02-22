@@ -1,3 +1,5 @@
+require 'iso_country_codes'
+
 class Country
   include Her::JsonApi::Model
   use_api CDB
@@ -43,4 +45,19 @@ class Country
     !!likely && likely != 0
   end
 
+  def iso_country
+    IsoCountryCodes.find(code)
+  end
+
+  def alpha2
+    iso_country.alpha2
+  end
+
+  def timezones
+    ActiveSupport::TimeZone.country_zones(alpha2)
+  end
+
+  def timezones_for_selection
+    timezones.map { |tz| [tz.to_s, tz.name]}
+  end
 end
