@@ -12,14 +12,6 @@ module HasInstitution
     institution_code? && institution
   end
 
-  def institution_name
-    if @institution_name.present?
-      @institution_name
-    elsif institution?
-      institution.name
-    end
-  end
-  
   def institution=(code)
     code = code.code if code.is_a? Institution
     self.institution_code = code
@@ -47,6 +39,26 @@ module HasInstitution
         self.institution_code = created.code
       end
     end
+  end
+
+  def institution_name
+    institution.name if institution?
+  end
+
+  def institution_definite_name
+    institution.definite_name if institution?
+  end
+
+  def institution_colloquial_name
+    institution.colloquial_name if institution?
+  end
+
+  def location
+    institution.location if institution?
+  end
+
+  def geojson_location
+    institution.geojson_location if institution
   end
 
 end

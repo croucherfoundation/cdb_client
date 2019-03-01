@@ -35,7 +35,8 @@ class Award
       second_institution_code: "",
       institution_name: "",
       second_institution_name: "",
-      begin_date: "",
+      begin_date: nil,
+      end_date: nil,
       extension: "",
       duration: "",
       approved_at: nil,
@@ -67,25 +68,13 @@ class Award
   end
 
   def listing
-    "#{year} #{name_or_award_type_name}"
-  end
-
-  def location
-    institution.location if institution
-  end
-
-  def geojson_location
-    institution.geojson_location if institution
+    "#{year} #{name_or_award_type_name} at #{institution_definite_name}"
   end
 
   def country?
     country_code && !!country
   end
-  
-  def institution?
-    institution_code? && !!institution
-  end
-  
+
   def second_institution?
     second_institution_code? && !!second_institution
   end
@@ -106,28 +95,30 @@ class Award
     country.name if country.present?
   end
 
-  def institution_name
-    institution.name if institution?
-  end
-
-  def institution_definite_name
-    institution.definite_name if institution?
-  end
-
-  def institution_colloquial_name
-    institution.colloquial_name if institution?
-  end
-
-  def second_institution_name
-    second_institution.name if second_institution?
-  end
-
-  def second_institution_definite_name
-    second_institution.definite_name if second_institution?
-  end
-
   def date
     Date.parse(begin_date) if begin_date?
+  end
+
+  def start
+    Date.parse(begin_date) if begin_date?
+  end
+
+  def finish
+    if end_date?
+      Date.parse(end_date)
+    elsif start && duration?
+      start.advance(years: duration)
+    end
+  end
+
+  def years
+    years = [year]
+    if duration?
+      duration.ceil.times do |i|
+        years.push year + i + 1
+      end
+    end
+    years
   end
 
   ## Duration and extension
