@@ -9,7 +9,7 @@
         - if person.institution.present? || person.employer?
           = t :at
       - if person.institution.present?
-        = person.institution.definite_name
+        = person.institution.definite_name          
       - elsif person.employer?
         = person.employer
       - else
