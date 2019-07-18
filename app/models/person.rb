@@ -10,9 +10,9 @@ class Person
   custom_get :suggest
 
   has_many :awards
-  has_many :grants
-  has_many :notes
   has_many :grants, foreign_key: :director_uid
+  has_many :cogrants, class_name: "Grant", foreign_key: :codirector_uid
+  has_many :notes
   # belongs_to :country, foreign_key: :country_code
 
   # temporary while we are not yet sending jsonapi data back to core properly
