@@ -92,15 +92,15 @@ class Institution
   end
   
   def image
-    images[:standard]
+    images[:standard] if images?
   end
 
   def thumb
-    images[:thumb]
+    images[:thumb] if images?
   end
 
   def icon
-    images[:icon]
+    images[:icon] if images?
   end
 
   def self.extract_salient(string)
