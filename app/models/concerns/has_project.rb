@@ -9,11 +9,7 @@ module HasProject
   end
 
   def project
-    begin
-      @project ||= Project.find(project_id) if project_id?
-    rescue Her::Errors::Error
-      nil
-    end
+    @project ||= Project.find(project_id) if project_id?
   end
 
   def project=(project)

@@ -9,11 +9,7 @@ module HasGrant
   end
 
   def grant
-    begin
-      @grant ||= Grant.find(grant_id) if grant_id?
-    rescue Her::Errors::Error
-      nil
-    end
+    @grant ||= Grant.find(grant_id) if grant_id?
   end
   
   def grant=(grant)
