@@ -1,13 +1,13 @@
 module CdbClientHelper
 
-  def cdb_url(path)
-    URI.join(cdb_host, path).to_s
+  def cdb_url(path, params={})
+    uri = URI.join(cdb_host, path.sub(/^\//, ''))
+    uri.query = params.to_query if params.any?
+    uri.to_s
   end
 
   def cdb_host
-    Settings.cdb[:host] ||= "db.croucher.org.hk"
-    Settings.cdb[:protocol] ||= 'https'
-    "#{Settings.cdb.protocol}://#{Settings.cdb.host}"
+    ENV['CORE_URL'] || "#{Settings.cdb.protocol}://#{Settings.cdb.host}"
   end
 
 end

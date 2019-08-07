@@ -15,7 +15,7 @@ class Grant
   accepts_nested_attributes_for :projects
   sends_nested_attributes_for :projects
 
-  # temporary while we are not yet sending jsonapi data back to core properly
+  # temporary while we are not yet sending jsonapi data back to core as jsonapi
   include_root_in_json true
   parse_root_in_json false
 
