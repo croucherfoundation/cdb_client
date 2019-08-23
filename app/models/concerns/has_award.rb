@@ -3,10 +3,6 @@
 module HasAward
   extend ActiveSupport::Concern
 
-  included do
-    scope :without_award, -> { where('award_id IS NULL OR award_id = ""') }
-  end
-
   def award
     @award ||= Award.find(award_id) if award_id.present?
   end

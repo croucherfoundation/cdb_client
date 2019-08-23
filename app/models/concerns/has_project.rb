@@ -3,11 +3,6 @@
 module HasProject
   extend ActiveSupport::Concern
 
-  included do
-    scope :without_project, -> { where('project_id IS NULL OR project_id = ""') }
-    scope :for_projects, -> project_ids { where(project_id: project_ids) }
-  end
-
   def project
     @project ||= Project.find(project_id) if project_id?
   end

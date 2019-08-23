@@ -16,11 +16,10 @@ class Tagging < ActiveRecord::Base
     where(taggee_type: klass.to_s)
   }
 
-  # we don't really want to retrieve tags one at a time,
-  # but here you go.
+  # we don't like retrieving tags one at a time.
   #
   def tag
-    Tag.find(tag_id)
+    Tag.preloaded(tag_id)
   end
 
 end
