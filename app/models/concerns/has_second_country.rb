@@ -1,26 +1,26 @@
 # Consolidating the business of country-having.
 
-module HasCountry
+module HasSecondCountry
   extend ActiveSupport::Concern
 
-  def country
+  def second_country
     Country.preloaded(country_code) if country_code.present?
   end
   
-  def country?
+  def second_country?
     country_code? && country.present?
   end
   
-  def country=(country)
+  def second_country=(country)
     if country
-      self.country_code = country.code
+      self.second_country_code = country.code
     else
-      self.country_code = nil
+      self.second_country_code = nil
     end
   end
   
-  def country_name
-    country.name if country?
+  def second_country_name
+    second_country.name if second_country?
   end
 
 end

@@ -12,7 +12,7 @@ module HasAwardType
   end
   
   def award_type?
-    award_type_code? && !!award_type
+    award_type_code? && award_type.present?
   end
 
 end

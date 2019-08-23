@@ -7,11 +7,11 @@ module HasPerson
   end
 
   def person
-    @person ||= Person.find(person_uid) if person_uid?
+    @person ||= Person.find(person_uid) if person_uid.present?
   end
     
   def person?
-    person_uid? && person.present?
+    person_uid.present? && person.present?
   end
 
   def person=(person)

@@ -1,18 +1,21 @@
 require 'csv'
 
 class Award
+  include HasAwardType
   include HasCountry
+  include HasSecondCountry
   include HasInstitution
+  include HasSecondInstitution
+  include HasPerson
   include Her::JsonApi::Model
 
   use_api CDB
   collection_path "/api/awards"
 
-  belongs_to :award_type, foreign_key: :award_type_code
+  belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
   # belongs_to :country, foreign_key: :country_code
   # belongs_to :institution, foreign_key: :institution_code
-  belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
-  belongs_to :person, foreign_key: :person_uid
+  # belongs_to :person, foreign_key: :person_uid
 
   accepts_nested_attributes_for :person
   sends_nested_attributes_for :person
@@ -64,7 +67,7 @@ class Award
   # as here when everything is a string.
   #
   def summary
-    "##{record_no}: #{name} to #{person.name}"
+    "##{record_no}: #{name} to #{person_name}"
   end
 
   def listing

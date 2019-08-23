@@ -31,7 +31,7 @@ class Project
   end
 
   def people
-    [director, codirector]
+    grant.people
   end
 
   def name_or_grant_name
@@ -57,11 +57,11 @@ class Project
   def eventful
     event_id.present? || !!@eventful
   end
-  
+
   def should_have_event?
     grant.grant_type.event_based? if grant.present? && grant.grant_type
   end
-  
+
   def grant_type_short_name
     grant.grant_type_short_name if grant.present?
   end

@@ -8,11 +8,11 @@ module HasAward
   end
 
   def award
-    @award ||= Award.find(award_id) if award_id?
+    @award ||= Award.find(award_id) if award_id.present?
   end
   
   def award?
-    award_id? && !!award.present?
+    award_id.present? && award.present?
   end
   
   def award_type

@@ -1,6 +1,10 @@
 class Grant
+  include HasGrantType
   include HasCountry
+  include HasSecondCountry
   include HasInstitution
+  include HasSecondInstitution
+  include HasDirectors
   include Her::JsonApi::Model
 
   use_api CDB
@@ -8,12 +12,6 @@ class Grant
 
   belongs_to :director, foreign_key: :director_uid, class_name: "Person"
   belongs_to :codirector, foreign_key: :codirector_uid, class_name: "Person"
-  belongs_to :grant_type, foreign_key: :grant_type_code
-
-  # belongs_to :country, foreign_key: :country_code
-  # belongs_to :institution, foreign_key: :institution_code
-  belongs_to :second_country, foreign_key: :second_country_code, class_name: "Country"
-  belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
 
   has_many :projects
   accepts_nested_attributes_for :projects
@@ -57,7 +55,7 @@ class Grant
   def approved?
     approved_at.present?
   end
-  
+
   def approve!(user=nil)
     self.approved_at ||= Time.now
     self.approved_by_uid ||= user.uid if user
@@ -74,7 +72,11 @@ class Grant
     end
     expected_end_date
   end
-  
+
+  def people
+    [director, codirector].compact
+  end
+
   def countries
     [country, second_country].compact
   end
@@ -82,25 +84,25 @@ class Grant
   def institutions
     [institution, second_institution].compact
   end
-  
+
   def any_institution?
     institution || second_institution
   end
 
   def country_name
-    country.name if country.present?
+    country.name if country?
   end
 
   def second_country_name
-    second_country.name if second_country.present?
+    second_country.name if second_country?
   end
 
   def institution_name
-    institution.name if institution.present?
+    institution.name if institution?
   end
 
   def second_institution_name
-    second_institution.name if second_institution.present?
+    second_institution.name if second_institution?
   end
 
   def project_word
@@ -124,10 +126,6 @@ class Grant
     })
     projects << project
     project
-  end
-  
-  def grant_type_short_name
-    grant_type.short_name if grant_type
   end
 
 end

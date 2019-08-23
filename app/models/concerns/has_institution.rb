@@ -5,11 +5,11 @@ module HasInstitution
 
   def institution
     # here we guess that it's probably going to be cheaper to get everything than to retrieve one at a time
-    Institution.preloaded(institution_code) if institution_code?
+    Institution.preloaded(institution_code) if institution_code.present?
   end
   
   def institution?
-    institution_code? && institution
+    institution_code.present? && institution.present?
   end
 
   def institution=(code)
