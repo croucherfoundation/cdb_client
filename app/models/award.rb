@@ -12,17 +12,10 @@ class Award
   use_api CDB
   collection_path "/api/awards"
 
-  belongs_to :second_institution, foreign_key: :second_institution_code, class_name: "Institution"
-  # belongs_to :country, foreign_key: :country_code
-  # belongs_to :institution, foreign_key: :institution_code
-  # belongs_to :person, foreign_key: :person_uid
-
-  accepts_nested_attributes_for :person
-  sends_nested_attributes_for :person
-
   # temporary while we are not yet sending jsonapi data back to core properly
   include_root_in_json true
   parse_root_in_json false
+  sends_nested_attributes_for :person
 
   def self.new_with_defaults(attributes={})
     Award.new({

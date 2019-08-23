@@ -10,16 +10,13 @@ class Grant
   use_api CDB
   collection_path "/api/grants"
 
-  belongs_to :director, foreign_key: :director_uid, class_name: "Person"
-  belongs_to :codirector, foreign_key: :codirector_uid, class_name: "Person"
-
   has_many :projects
   accepts_nested_attributes_for :projects
-  sends_nested_attributes_for :projects
 
   # temporary while we are not yet sending jsonapi data back to core as jsonapi
   include_root_in_json true
   parse_root_in_json false
+  sends_nested_attributes_for :projects
 
   def self.new_with_defaults(attributes={})
     Grant.new({
