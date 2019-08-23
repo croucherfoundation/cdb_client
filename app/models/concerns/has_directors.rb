@@ -1,13 +1,6 @@
 module HasDirectors
   extend ActiveSupport::Concern
 
-  included do
-    scope :without_director, -> { where('director_uid IS NULL OR director_uid = ""') }
-    scope :with_director, -> { where('director_uid IS NOT NULL AND director_uid <> ""') }
-    scope :without_codirector, -> { where('codirector_uid IS NULL OR codirector_uid = ""') }
-    scope :with_codirector, -> { where('codirector_uid IS NOT NULL AND codirector_uid <> ""') }
-  end
-
   # Director should always be present
   #
   def director
