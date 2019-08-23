@@ -5,7 +5,7 @@ class Project
 
   belongs_to :grant
   has_many :siblings, class_name: "Project"
-    
+
   # temporary while we are not yet sending jsonapi data back to core properly
   include_root_in_json true
   parse_root_in_json false
