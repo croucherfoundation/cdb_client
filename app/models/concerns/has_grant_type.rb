@@ -3,10 +3,6 @@
 module HasGrantType
   extend ActiveSupport::Concern
 
-  included do
-    scope :without_grant_type, -> { where('grant_type_code IS NULL OR grant_type_code = ""') }
-  end
-
   def grant_type
     GrantType.find(grant_type_code) if grant_type_code?
   end
