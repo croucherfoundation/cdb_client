@@ -1,6 +1,12 @@
 module HasPerson
   extend ActiveSupport::Concern
 
+  included do
+    belongs_to :person
+  end
+
+  # override the generated `person` method to use our person_uid key
+  #
   def person
     @person ||= Person.find(person_uid) if person_uid.present?
   end

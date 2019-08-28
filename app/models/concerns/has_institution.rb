@@ -3,6 +3,10 @@
 module HasInstitution
   extend ActiveSupport::Concern
 
+  included do
+    belongs_to :institution
+  end
+
   def institution
     # here we guess that it's probably going to be cheaper to get everything than to retrieve one at a time
     Institution.preloaded(institution_code) if institution_code.present?

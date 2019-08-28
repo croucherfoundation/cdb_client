@@ -3,6 +3,10 @@
 module HasAwardType
   extend ActiveSupport::Concern
 
+  included do
+    belongs_to :award_type
+  end
+
   def award_type
     AwardType.find(award_type_code) if award_type_code?
   end

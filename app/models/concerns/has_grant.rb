@@ -3,6 +3,10 @@
 module HasGrant
   extend ActiveSupport::Concern
 
+  included do
+    belongs_to :grant
+  end
+
   def grant
     @grant ||= Grant.find(grant_id) if grant_id.present?
   end

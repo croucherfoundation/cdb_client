@@ -3,6 +3,10 @@
 module HasAward
   extend ActiveSupport::Concern
 
+  included do
+    belongs_to :award
+  end
+
   def award
     @award ||= Award.find(award_id) if award_id.present?
   end

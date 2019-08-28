@@ -3,6 +3,10 @@
 module HasProject
   extend ActiveSupport::Concern
 
+  included do
+    belongs_to :project
+  end
+
   def project
     @project ||= Project.find(project_id) if project_id?
   end
