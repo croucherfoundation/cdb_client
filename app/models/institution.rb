@@ -1,5 +1,6 @@
 class Institution
   include Her::JsonApi::Model
+
   use_api CDB
   collection_path "/api/institutions"
   primary_key :code

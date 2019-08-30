@@ -1,5 +1,6 @@
 class Note
   include Her::JsonApi::Model
+
   use_api CDB
   collection_path "/api/notes"
   belongs_to :person, foreign_key: :person_uid

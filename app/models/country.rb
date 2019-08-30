@@ -2,6 +2,7 @@ require 'iso_country_codes'
 
 class Country
   include Her::JsonApi::Model
+
   use_api CDB
   collection_path "/api/countries"
   primary_key :code

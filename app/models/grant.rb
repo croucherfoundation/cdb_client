@@ -1,11 +1,11 @@
 class Grant
+  include Her::JsonApi::Model
   include HasGrantType
   include HasCountry
   include HasSecondCountry
   include HasInstitution
   include HasSecondInstitution
   include HasDirectors
-  include Her::JsonApi::Model
 
   use_api CDB
   collection_path "/api/grants"

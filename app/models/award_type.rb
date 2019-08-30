@@ -1,5 +1,6 @@
 class AwardType
   include Her::JsonApi::Model
+
   use_api CDB
   collection_path "/api/award_types"
   primary_key :code

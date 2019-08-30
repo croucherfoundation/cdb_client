@@ -1,5 +1,6 @@
 class TagLink
   include Her::JsonApi::Model
+
   use_api CDB
   collection_path "/api/tag_links"
 

@@ -1,6 +1,6 @@
 class Project
-  include HasGrant
   include Her::JsonApi::Model
+  include HasGrant
 
   use_api CDB
   collection_path "/api/projects"

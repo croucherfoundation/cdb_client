@@ -1,5 +1,6 @@
 class GrantType
   include Her::JsonApi::Model
+
   use_api CDB
   collection_path "/api/grant_types"
   primary_key :code

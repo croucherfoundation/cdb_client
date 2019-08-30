@@ -1,8 +1,8 @@
 class Person
+  include Her::JsonApi::Model
   include HkNames
   include HasCountry
   include HasInstitution
-  include Her::JsonApi::Model
 
   use_api CDB
   collection_path "/api/people"

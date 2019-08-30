@@ -1,13 +1,13 @@
 require 'csv'
 
 class Award
+  include Her::JsonApi::Model
   include HasAwardType
   include HasCountry
   include HasSecondCountry
   include HasInstitution
   include HasSecondInstitution
   include HasPerson
-  include Her::JsonApi::Model
 
   use_api CDB
   collection_path "/api/awards"

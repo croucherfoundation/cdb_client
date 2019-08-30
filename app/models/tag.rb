@@ -1,5 +1,6 @@
 class Tag
   include Her::JsonApi::Model
+
   use_api CDB
   collection_path "/api/tags"
 

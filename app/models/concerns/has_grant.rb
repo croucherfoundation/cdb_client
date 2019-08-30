@@ -4,7 +4,7 @@ module HasGrant
   extend ActiveSupport::Concern
 
   included do
-    belongs_to :grant
+    belongs_to :grant if respond_to? :belongs_to
   end
 
   def grant
