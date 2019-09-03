@@ -62,7 +62,7 @@ module HasInstitution
   end
 
   def geojson_location
-    institution.geojson_location if institution
+    institution.geojson_location if institution?
   end
 
 end
