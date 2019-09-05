@@ -2,28 +2,32 @@ module HasPerson
   extend ActiveSupport::Concern
 
   included do
-    belongs_to :person
+    belongs_to :person, foreign_key: :person_uid
   end
 
   # override the generated `person` method to use our person_uid key
   #
-  def person
-    @person ||= Person.find(person_uid) if person_uid.present?
-  end
+  # def person
+  #   @person ||= Person.find(person_uid) if person_uid.present?
+  # end
 
   def person?
     person_uid.present? && person.present?
   end
 
-  def person=(person)
-    if person
-      self.person_uid = person.uid
-      @person = person
-    else
-      self.person_uid = nil
-      @person = nil
-    end
+  def person_name
+    person.colloquial_name if person?
   end
+
+  # def person=(person)
+  #   if person
+  #     self.person_uid = person.uid
+  #     @person = person
+  #   else
+  #     self.person_uid = nil
+  #     @person = nil
+  #   end
+  # end
 
   def person_attributes=(attributes={})
     if person?

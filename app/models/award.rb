@@ -75,14 +75,6 @@ class Award
     second_institution_code? && !!second_institution
   end
 
-  def person?
-    person_uid && !!person
-  end
-  
-  def person_name
-    person.colloquial_name if person?
-  end
-
   def name_or_award_type_name
     name.presence || award_type_short_name
   end
