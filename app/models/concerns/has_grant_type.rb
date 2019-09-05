@@ -8,7 +8,7 @@ module HasGrantType
   end
 
   def grant_type
-    GrantType.find(grant_type_code) if grant_type_code?
+    GrantType.preloaded(grant_type_code) if grant_type_code?
   end
   
   def grant_type?
