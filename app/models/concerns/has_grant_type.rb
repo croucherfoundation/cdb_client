@@ -5,12 +5,12 @@ module HasGrantType
 
   included do
     belongs_to :grant_type
+
+    def grant_type
+      GrantType.preloaded(grant_type_code) if grant_type_code.present?
+    end
   end
 
-  def grant_type
-    GrantType.preloaded(grant_type_code) if grant_type_code?
-  end
-  
   def grant_type?
     grant_type_code? && grant_type.present?
   end

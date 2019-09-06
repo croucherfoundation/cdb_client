@@ -5,12 +5,12 @@ module HasAwardType
 
   included do
     belongs_to :award_type
+
+    def award_type
+      AwardType.preloaded(award_type_code) if award_type_code.present?
+    end
   end
 
-  def award_type
-    AwardType.preloaded(award_type_code) if award_type_code.present?
-  end
-  
   def award_type?
     award_type_code? && award_type.present?
   end

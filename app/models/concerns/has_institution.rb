@@ -5,20 +5,19 @@ module HasInstitution
 
   included do
     belongs_to :institution
-  end
 
-  def institution
-    # here we guess that it's probably going to be cheaper to get everything than to retrieve one at a time
-    Institution.preloaded(institution_code) if institution_code.present?
+    def institution
+      Institution.preloaded(institution_code) if institution_code.present?
+    end
+
+    def institution=(code)
+      code = code.code if code.is_a? Institution
+      self.institution_code = code
+    end
   end
   
   def institution?
     institution_code.present? && institution.present?
-  end
-
-  def institution=(code)
-    code = code.code if code.is_a? Institution
-    self.institution_code = code
   end
 
   def institution_or_employer
