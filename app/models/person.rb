@@ -144,9 +144,23 @@ class Person
     ]
   end
 
-  def graduated_from_name
-    graduated_from.name if graduated_from.present?
+  def graduated_from
+    Institution.preloaded(graduated_from_code) if graduated_from_code.present?
   end
+
+  def graduated_from?
+    graduated_from_code.present? && graduated_from.present?
+  end
+
+  def graduated_from=(code)
+    code = code.code if code.is_a? Institution
+    self.graduated_from_code = code
+  end
+
+  def graduated_from_name
+    graduated_from.name if graduated_from?
+  end
+
 
   def as_json_for_suggestion
     {
