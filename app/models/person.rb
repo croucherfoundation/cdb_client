@@ -39,6 +39,7 @@ class Person
         institution_code: "",
         employer: "",
         country_code: "",
+        invitable: false,
         hidden: false,
         blacklisted: false,
         featured: false,
