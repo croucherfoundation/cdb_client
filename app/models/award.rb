@@ -25,6 +25,7 @@ class Award
       record_no: "",
       record_code: "",
       application_id: nil,
+      person_uid: nil,
       award_type_code: "",
       country_code: "",
       institution_code: "",
@@ -52,7 +53,6 @@ class Award
     self.approved_at ||= Time.now
     self.approved_by_uid ||= user.uid if user
   end
-
 
   ## Helpers
   #
