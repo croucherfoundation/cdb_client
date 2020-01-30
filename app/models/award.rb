@@ -38,6 +38,8 @@ class Award
       duration: "",
       approved_at: nil,
       approved_by_uid: nil,
+      issued_at: nil,
+      issued_by_uid: nil,
       expected_value: "",
       year: Date.today.year,
       scientific_tags: "",
@@ -54,10 +56,19 @@ class Award
     self.approved_by_uid ||= user.uid if user
   end
 
+  def issued?
+    issued_at.present?
+  end
+
+  def issue!(user=nil)
+    self.issued_at ||= Time.now
+    self.issued_by_uid ||= user.uid if user
+  end
+
+
   ## Helpers
   #
-  # shortcut some of the if country then country.name boilerplate, which gets onerous
-  # as here when everything is a string.
+  # shortcut some of the if country then country.name boilerplate, which gets onerous when everything is a string.
   #
   def summary
     "##{record_no}: #{name} to #{person_name}"
@@ -70,9 +81,21 @@ class Award
   def country?
     country_code && !!country
   end
-
+  
+  def institution?
+    institution_code? && !!institution
+  end
+  
   def second_institution?
     second_institution_code? && !!second_institution
+  end
+
+  def person?
+    person_uid && !!person
+  end
+  
+  def person_name
+    person.colloquial_name if person?
   end
 
   def name_or_award_type_name
@@ -81,6 +104,14 @@ class Award
 
   def country_name
     country.name if country.present?
+  end
+
+  def institution_name
+    institution.name if institution?
+  end
+
+  def second_institution_name
+    second_institution.name if second_institution?
   end
 
   def date
