@@ -50,19 +50,29 @@ class Award
   def approved?
     approved_at.present?
   end
-  
-  def approve!(user=nil)
+
+  def approve(user=nil)
     self.approved_at ||= Time.now
     self.approved_by_uid ||= user.uid if user
+  end
+
+  def approve!(user=nil)
+    self.approve
+    self.save!
   end
 
   def issued?
     issued_at.present?
   end
 
-  def issue!(user=nil)
+  def issue(user=nil)
     self.issued_at ||= Time.now
     self.issued_by_uid ||= user.uid if user
+  end
+
+  def issue!(user=nil)
+    self.issue(user)
+    self.save
   end
 
 

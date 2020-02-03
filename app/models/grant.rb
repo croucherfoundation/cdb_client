@@ -53,9 +53,14 @@ class Grant
     approved_at.present?
   end
 
-  def approve!(user=nil)
+  def approve(user=nil)
     self.approved_at ||= Time.now
     self.approved_by_uid ||= user.uid if user
+  end
+
+  def approve!(user=nil)
+    self.approve
+    self.save!
   end
 
   ## Duration and extension
