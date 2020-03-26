@@ -1,4 +1,4 @@
-class Taggings < ActiveRecord::Migration
+class Taggings < ActiveRecord::Migration[4.2]
   def change
     create_table :taggings do |t|
       t.integer :tag_id

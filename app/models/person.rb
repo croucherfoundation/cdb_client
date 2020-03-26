@@ -63,6 +63,12 @@ class Person
         self.suggest(params.to_h)
       end
     end
+
+    def for_user(user)
+      get "/api/people/user/#{user.uid}"
+    rescue JSON::ParserError
+      nil
+    end
   end
 
   def latest_award

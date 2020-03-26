@@ -91,11 +91,7 @@ class Award
   def country?
     country_code && !!country
   end
-  
-  def institution?
-    institution_code? && !!institution
-  end
-  
+    
   def second_institution?
     second_institution_code? && !!second_institution
   end
