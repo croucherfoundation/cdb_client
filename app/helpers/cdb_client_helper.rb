@@ -7,7 +7,7 @@ module CdbClientHelper
   end
 
   def cdb_host
-    ENV['CORE_URL'] || "#{Settings.cdb.protocol}://#{Settings.cdb.host}"
+    ENV['CORE_URL']
   end
 
 end
