@@ -51,6 +51,10 @@ class Project
     grant.institutions if grant.present?
   end
 
+  def second_institution
+    grant.second_institution if grant.present?
+  end
+
   attr_accessor :eventful
 
   def eventful
