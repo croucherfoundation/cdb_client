@@ -43,6 +43,10 @@ class Project
     end
   end
 
+  def grant_type_code
+    grant.grant_type_code if grant.present?
+  end
+
   def institution
     grant.institution if grant.present?
   end
