@@ -28,4 +28,15 @@ module HasProject
     project.people if project
   end
 
+  def project_name
+    project.name_or_grant_name if project
+  end
+
+  def project_institution_names
+    project.institutions.map(&:name) if project
+  end
+
+  def project_person_mames
+    project.people.map(&:name) if project
+  end
 end

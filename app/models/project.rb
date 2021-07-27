@@ -29,10 +29,6 @@ class Project
     }.merge(attributes))
   end
 
-  def people
-    grant.people
-  end
-
   def name_or_grant_name
     if name.present?
       name
@@ -51,8 +47,20 @@ class Project
     grant.institution if grant.present?
   end
 
+  def people
+    if grant.present?
+      grant.people 
+    else
+      []
+    end
+  end
+
   def institutions
-    grant.institutions if grant.present?
+    if grant.present?
+      grant.institutions 
+    else
+      []
+    end
   end
 
   def second_institution
