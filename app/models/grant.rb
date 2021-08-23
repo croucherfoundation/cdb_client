@@ -130,4 +130,14 @@ class Grant
     project
   end
 
+  ## CSV export
+ 
+  def to_csv
+    self.class.csv_columns.map {|col| self.send col.to_sym}
+  end
+
+  def self.csv_columns
+    %w{id name record_code year application_id grant_type_code institution_code second_institution_code category_code country_code field description duration value expected_value begin_date expected_end_date director_uid codirector_uid terminated remarks payments}
+  end
+
 end
