@@ -225,19 +225,23 @@ jQuery ($) ->
 
     showAdd: (e) =>
       e?.preventDefault()
+      @_other.find('input').val("")
+      @_choose.find('select').val("")
       @_add.enable().show()
       @_adder.hide()
-      @_other.disable().hide()
+      @_other.hide()
       @_otherer.show()
-      @_choose.disable().hide()
+      @_choose.hide()
       @_chooser.show()
       @_otherer.before @_or
 
     showSelect: (e) =>
       e?.preventDefault()
-      @_add.disable().hide()
+      @_other.find('input').val("")
+      @_add.find('input').val("")
+      @_add.hide()
       @_adder.show()
-      @_other.disable().hide()
+      @_other.hide()
       @_otherer.show()
       @_choose.enable().show()
       @_chooser.hide()
@@ -245,11 +249,13 @@ jQuery ($) ->
 
     showOther: (e) =>
       e?.preventDefault()
-      @_add.disable().hide()
+      @_add.find('input').val("")
+      @_choose.find('select').val("")
+      @_add.hide()
       @_adder.show()
       @_other.enable().show()
       @_otherer.hide()
-      @_choose.disable().hide()
+      @_choose.hide()
       @_chooser.show()
       @_adder.before @_or
 
