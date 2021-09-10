@@ -23,7 +23,7 @@ module HasDirectors
 
   def director_attributes=(attributes={})
     if director?
-      self.director.update_attributes(attributes)
+      self.director.update(attributes)
       self.director.save
     end
   end
@@ -50,7 +50,7 @@ module HasDirectors
 
   def codirector_attributes=(attributes={})
     if codirector?
-      self.codirector.update_attributes(attributes)
+      self.codirector.update(attributes)
       self.codirector.save
     end
   end
