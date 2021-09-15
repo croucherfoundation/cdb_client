@@ -140,4 +140,12 @@ class Grant
     %w{id name record_code year application_id grant_type_code institution_code second_institution_code category_code country_code field description duration value expected_value begin_date expected_end_date director_uid codirector_uid terminated remarks payments}
   end
 
+  def self.generate_record(params, csv, pdf, email)
+    begin
+      get "/api/people/grants/generate_grant_record/?search_params=#{params}&csv=#{csv}&pdf=#{pdf}&email=#{email}"
+    rescue JSON::ParserError
+      nil
+    end
+  end
+
 end
