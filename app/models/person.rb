@@ -110,15 +110,15 @@ class Person
   end
 
   def image
-    images[:standard]
+    images[:standard] if images.present?
   end
 
   def thumb
-    images[:thumb]
+    images[:thumb] if images.present?
   end
 
   def icon
-    images[:icon]
+    images[:icon] if images.present?
   end
 
   def pronoun

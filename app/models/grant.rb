@@ -1,5 +1,8 @@
-class Grant
-  include Her::JsonApi::Model
+class Grant < ActiveResource::Base
+  # include Her::JsonApi::Model
+  self.site = ENV['CORE_API_URL']
+  self.include_format_in_path = false
+
   include HasGrantType
   include HasCountry
   include HasSecondCountry
@@ -7,16 +10,16 @@ class Grant
   include HasSecondInstitution
   include HasDirectors
 
-  use_api CDB
-  collection_path "/api/grants"
+  # use_api CDB
+  # collection_path "/api/grants"
 
   has_many :projects
-  accepts_nested_attributes_for :projects
+  # accepts_nested_attributes_for :projects
 
-  # temporary while we are not yet sending jsonapi data back to core as jsonapi
-  include_root_in_json true
-  parse_root_in_json false
-  sends_nested_attributes_for :projects
+  # # temporary while we are not yet sending jsonapi data back to core as jsonapi
+  # include_root_in_json true
+  # parse_root_in_json false
+  # sends_nested_attributes_for :projects
 
   def self.new_with_defaults(attributes={})
     Grant.new({

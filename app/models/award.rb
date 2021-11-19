@@ -1,7 +1,11 @@
 require 'csv'
 
-class Award
-  include Her::JsonApi::Model
+class Award < ActiveResource::Base
+  # include Her::JsonApi::Model
+  
+  self.site = ENV['CORE_API_URL']
+  self.include_format_in_path = false
+
   include HasAwardType
   include HasCountry
   include HasSecondCountry
@@ -9,12 +13,12 @@ class Award
   include HasSecondInstitution
   include HasPerson
 
-  use_api CDB
-  collection_path "/api/awards"
+  # use_api CDB
+  # collection_path "/api/awards"
 
   # temporary while we are not yet sending jsonapi data back to core properly
-  include_root_in_json true
-  parse_root_in_json false
+  # include_root_in_json true
+  # parse_root_in_json false
   sends_nested_attributes_for :person
 
   def self.new_with_defaults(attributes={})

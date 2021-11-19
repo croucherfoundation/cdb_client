@@ -1,9 +1,12 @@
-class GrantType
-  include Her::JsonApi::Model
+class GrantType < ActiveResource::Base
+  # include Her::JsonApi::Model
 
-  use_api CDB
-  collection_path "/api/grant_types"
-  primary_key :code
+  self.site = ENV['CORE_API_URL']
+  self.include_format_in_path = false
+
+  # use_api CDB
+  # collection_path "/api/grant_types"
+  # primary_key :code
 
   class << self
     def preload

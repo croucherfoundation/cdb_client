@@ -1,9 +1,9 @@
-class Institution
-  include Her::JsonApi::Model
+class Institution < ActiveResource::Base
+  # include Her::JsonApi::Model
 
-  use_api CDB
-  collection_path "/api/institutions"
-  primary_key :code
+  # use_api CDB
+  # collection_path "/api/institutions"
+  # primary_key :code
 
   belongs_to :country, foreign_key: :country_code
 

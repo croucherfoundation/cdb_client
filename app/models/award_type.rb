@@ -1,9 +1,12 @@
-class AwardType
-  include Her::JsonApi::Model
+class AwardType < ActiveResource::Base
+  # include Her::JsonApi::Model
 
-  use_api CDB
-  collection_path "/api/award_types"
-  primary_key :code
+  self.site = ENV['CORE_API_URL']
+  self.include_format_in_path = false
+
+  # use_api CDB
+  # collection_path "/api/award_types"
+  # primary_key :code
 
   class << self
 
