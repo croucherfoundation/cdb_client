@@ -1,23 +1,24 @@
-class Person
-  include Her::JsonApi::Model
+
+
+class Person < ActiveResource::Base
   include HkNames
   include HasCountry
   include HasInstitution
+  include ArConfig
+  include ActiveResource::Formats::JsonFormat
 
-  use_api CDB
-  collection_path "/api/people"
-  primary_key :uid
-  custom_get :suggest
+  # primary_key :uid
+  # custom_get :suggest
 
   has_many :awards
-  has_many :grants, foreign_key: :director_uid
-  has_many :cogrants, class_name: "Grant", foreign_key: :codirector_uid
+  has_many :grants#, foreign_key: :director_uid
+  has_many :cogrants#, class_name: "Grant", foreign_key: :codirector_uid
   has_many :notes
   # belongs_to :country, foreign_key: :country_code
 
   # temporary while we are not yet sending jsonapi data back to core properly
-  include_root_in_json true
-  parse_root_in_json false
+  include_root_in_json =  true
+  parse_root_in_json = false
 
   class << self
     def for_selection
@@ -58,9 +59,9 @@ class Person
 
     def suggestions(params)
       if params[:uid]
-        [self.find(params[:uid])]
+        [find(params[:uid])]
       else
-        self.suggest(params.to_h)
+        people = find(:all, :from => :suggest, params: params.to_h)
       end
     end
 

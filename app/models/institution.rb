@@ -1,9 +1,7 @@
-class Institution < ActiveResource::Base
-  # include Her::JsonApi::Model
 
-  # use_api CDB
-  # collection_path "/api/institutions"
-  # primary_key :code
+
+class Institution < ActiveResource::Base
+  include ArConfig
 
   belongs_to :country, foreign_key: :country_code
 
@@ -27,7 +25,7 @@ class Institution < ActiveResource::Base
       end
       insts.sort_by(&:normalized_name).map{|inst| [inst.normalized_name, inst.code] }
     end
-    
+
     #NB this is a selection of likely partner institutions, not just everything in HK
     #
     def hk_for_selection
@@ -54,7 +52,7 @@ class Institution < ActiveResource::Base
       })
     end
   end
-  
+
   ## Output formatting
   #
   # The prepositionishness of names like 'University of Cambridge' requires us to prepend a 'the'
@@ -91,7 +89,7 @@ class Institution < ActiveResource::Base
   def in_london?
     !!london && country_code == "GBR"
   end
-  
+
   def image
     images[:standard] if images?
   end
