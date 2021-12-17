@@ -1,31 +1,37 @@
 class Grant < ActiveResource::Base
-  # include Her::JsonApi::Model
-  self.site = ENV['CORE_API_URL']
-  self.include_format_in_path = false
-
   include HasGrantType
   include HasCountry
   include HasSecondCountry
   include HasInstitution
   include HasSecondInstitution
   include HasDirectors
-
-  # use_api CDB
-  # collection_path "/api/grants"
+  include FormatApiResponse
+  include ArConfig
 
   has_many :projects
   # accepts_nested_attributes_for :projects
 
-  # # temporary while we are not yet sending jsonapi data back to core as jsonapi
-  # include_root_in_json true
-  # parse_root_in_json false
-  # sends_nested_attributes_for :projects
+  def save
+    self.prefix_options[:grant] = self.attributes
+    super
+  end
+
+  def self.where(params = {})
+    begin
+      grants = find(:all, params: params)
+    rescue => e
+      Rails.logger.info "Awards Fetch Error: #{e}"
+    end
+    meta = FormatApiResponse.meta
+    return grants, meta
+  end
 
   def self.new_with_defaults(attributes={})
     Grant.new({
       name: "",
       year: Date.today.year + 1,
       title: "",
+      record_code: "",
       description: "",
       field: "",
       application_id: nil,
@@ -134,7 +140,7 @@ class Grant < ActiveResource::Base
   end
 
   ## CSV export
- 
+
   def to_csv
     self.class.csv_columns.map {|col| self.send col.to_sym}
   end
@@ -145,7 +151,8 @@ class Grant < ActiveResource::Base
 
   def self.export_reports(params, csv, pdf, email)
     begin
-      get "/api/grants/export_reports/?search_params=#{params}&csv=#{csv}&pdf=#{pdf}&email=#{email}"
+      p = {search_params: params.to_s, csv: csv, pdf: pdf, email: email}
+      find(:all, :from => :export_reports, params: p)
     rescue JSON::ParserError
       nil
     end

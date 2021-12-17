@@ -1,26 +1,28 @@
-
-
 class Person < ActiveResource::Base
   include HkNames
   include HasCountry
   include HasInstitution
+  include FormatApiResponse
   include ArConfig
-  include ActiveResource::Formats::JsonFormat
-
-  # primary_key :uid
-  # custom_get :suggest
 
   has_many :awards
-  has_many :grants#, foreign_key: :director_uid
-  has_many :cogrants#, class_name: "Grant", foreign_key: :codirector_uid
+  has_many :grants #, foreign_key: :director_uid
+  has_many :cogrants #, class_name: "Grant", foreign_key: :codirector_uid
   has_many :notes
   # belongs_to :country, foreign_key: :country_code
 
-  # temporary while we are not yet sending jsonapi data back to core properly
-  include_root_in_json =  true
-  parse_root_in_json = false
-
   class << self
+    def where(params = {})
+      begin
+        people = find(:all, params: params)
+      rescue => e
+        Rails.logger.info "People Fetch Error: #{e}"
+      end
+      meta = FormatApiResponse.meta
+      # people = Kaminari.paginate_array(people).page(params[:page]).per(params[:show])
+      return people, meta
+    end
+
     def for_selection
       Person.all(show: "all").sort_by(&:name).map{|p| [p.name, p.uid] }
     end
@@ -72,6 +74,15 @@ class Person < ActiveResource::Base
     end
   end
 
+  def save
+    self.prefix_options[:person] = self.attributes
+    super
+  end
+
+  def grants
+    Grant.find(:all, params: {person_id: self.uid})
+  end
+
   def latest_award
     awards.sort_by(&:year).last
   end
@@ -111,15 +122,15 @@ class Person < ActiveResource::Base
   end
 
   def image
-    images[:standard] if images.present?
+    images.standard if images.present?
   end
 
   def thumb
-    images[:thumb] if images.present?
+    images.thumb if images.present?
   end
 
   def icon
-    images[:icon] if images.present?
+    images.icon if images.present?
   end
 
   def pronoun

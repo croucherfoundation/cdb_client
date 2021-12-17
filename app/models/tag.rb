@@ -1,8 +1,6 @@
-class Tag
-  include Her::JsonApi::Model
-
-  use_api CDB
-  collection_path "/api/tags"
+class Tag < ActiveResource::Base
+  include FormatApiResponse
+  include ArConfig
 
   class << self
 
@@ -16,7 +14,7 @@ class Tag
       end
       RequestStore.store[:tags_by_code][code]
     end
-    
+
     def tags_by_id(id)
       RequestStore.store[:tags_by_id] ||= preload.each_with_object({}) do |tag, h|
         h[tag.id] = tag
@@ -27,7 +25,7 @@ class Tag
     def find_with_preload(id)
       preload.find{ |tag| tag.id == id }
     end
-    
+
     def find_list(*ids)
       ids = [ids].flatten.map(&:to_i)
       find(ids)
@@ -57,7 +55,7 @@ class Tag
     def scientific
       preload.select { |t| t.tag_type == "LCSH" }
     end
-  
+
     def scientific_selection
       scientific.map{ |t| [t.term, t.id] }
     end
@@ -77,7 +75,7 @@ class Tag
     def administrative_terms
       administrative.map(&:term)
     end
-  
+
     def all_terms
       preload.map(&:term)
     end
@@ -155,7 +153,7 @@ class Tag
     end
 
     def root
-      from_term("science").first
+      from_term("science") #.first
     end
 
     def tree
@@ -171,26 +169,27 @@ class Tag
   def relative_ids
     parent_ids + child_ids
   end
-    
+
   def as_json(options={})
+    w = weight || nil
     json = {
       id: id,
       term: term,
       omitted: omitted?,
-      branch_use: weight,
+      branch_use: w,
       use: taggings_count
     }
     json
   end
-  
+
   # Tree manipulation
   # ...pretty basic to start with
-  
+
   def omit!
     self.omitted = true
     self.save
   end
-  
+
   def omit_children!
     self.omit_children = true
     self.save

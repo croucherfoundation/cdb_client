@@ -1,8 +1,11 @@
 require 'iso_country_codes'
- 
+
 
 class Country < ActiveResource::Base
+  include FormatApiResponse
   include ArConfig
+
+  self.primary_key = 'code'
 
   class << self
     def preload

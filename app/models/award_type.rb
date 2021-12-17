@@ -1,7 +1,10 @@
 
 
 class AwardType < ActiveResource::Base
+  include FormatApiResponse
   include ArConfig
+
+  self.primary_key = 'code'
 
   class << self
 
@@ -22,6 +25,8 @@ class AwardType < ActiveResource::Base
         code: nil,
         id_code: nil, #hack! to allow `code` to be set by user. All would be much easier if we used award_type_id throughout.
         admin_code: "",
+        short_name: "",
+        description: "",
         round_type_name: nil,
         round_type_slug: nil,
         round_type_id: nil
@@ -31,6 +36,11 @@ class AwardType < ActiveResource::Base
     def for_selection
       preload.sort_by(&:name).map{|awt| [awt.short_name, awt.code] }
     end
+  end
+
+  def save
+    self.prefix_options[:award_type] = self.attributes
+    super
   end
 
   def to_param

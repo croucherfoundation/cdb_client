@@ -12,8 +12,11 @@ class Award < ActiveResource::Base
   include ArConfig
 
   # temporary while we are not yet sending jsonapi data back to core properly
-  # accept_nested_attributes_for = Person
-  self.include_root_in_json = true
+
+  def save
+    self.prefix_options[:award] = self.attributes
+    super
+  end
 
   def self.where(params = {})
     begin
@@ -22,7 +25,7 @@ class Award < ActiveResource::Base
       Rails.logger.info "Awards Fetch Error: #{e}"
     end
     meta = FormatApiResponse.meta
-    awards = Kaminari.paginate_array(awards).page(params[:page]).per(params[:show]) unless params[:show] == 'all'
+    # awards = Kaminari.paginate_array(awards).page(params[:page]).per(params[:show]) unless params[:show] == 'all'
     return awards, meta
   end
 
@@ -31,6 +34,11 @@ class Award < ActiveResource::Base
       name: "",
       title: "",
       description: "",
+      field: "",
+      degree: "",
+      supervisor: "",
+      supervisor_email: "",
+      department: "",
       record_no: "",
       record_code: "",
       application_id: nil,
@@ -174,7 +182,8 @@ class Award < ActiveResource::Base
 
   def self.export_reports(params, csv, pdf, email)
     begin
-      get "/api/awards/export_reports/?search_params=#{params}&csv=#{csv}&pdf=#{pdf}&email=#{email}"
+      p = {search_params: params.to_s, csv: csv, pdf: pdf, email: email}
+      find(:all, :from => :export_reports, params: p)
     rescue JSON::ParserError
       nil
     end

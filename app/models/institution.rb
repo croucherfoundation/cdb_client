@@ -1,11 +1,24 @@
 
 
 class Institution < ActiveResource::Base
+  include FormatApiResponse
   include ArConfig
+
+  self.primary_key = 'code'
 
   belongs_to :country, foreign_key: :country_code
 
   class << self
+
+    def where(params = {})
+      begin
+        institutions = find(:all, params: params)
+      rescue => e
+        Rails.logger.info "Awards Fetch Error: #{e}"
+      end
+      meta = FormatApiResponse.meta
+      return institutions, meta
+    end
 
     def preload
       RequestStore.store[:institutions] ||= self.all
@@ -53,6 +66,11 @@ class Institution < ActiveResource::Base
     end
   end
 
+  def save
+    self.prefix_options[:institution] = self.attributes
+    super
+  end
+
   ## Output formatting
   #
   # The prepositionishness of names like 'University of Cambridge' requires us to prepend a 'the'
@@ -91,15 +109,15 @@ class Institution < ActiveResource::Base
   end
 
   def image
-    images[:standard] if images?
+    images.standard if images?
   end
 
   def thumb
-    images[:thumb] if images?
+    images.thumb if images?
   end
 
   def icon
-    images[:icon] if images?
+    images.icon if images?
   end
 
   def self.extract_salient(string)

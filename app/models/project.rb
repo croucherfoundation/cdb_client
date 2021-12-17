@@ -1,13 +1,6 @@
-class Project
-  include Her::JsonApi::Model
-  include HasGrant
-
-  use_api CDB
-  collection_path "/api/projects"
-
-  # temporary while we are not yet sending jsonapi data back to core properly
-  include_root_in_json true
-  parse_root_in_json false
+class Project < ActiveResource::Base
+  include FormatApiResponse
+  include ArConfig
 
   def self.new_with_defaults(attributes={})
     Project.new({
@@ -27,6 +20,15 @@ class Project
       scientific_tags: "",
       admin_tags: ""
     }.merge(attributes))
+  end
+
+  def save
+    self.prefix_options[:project] = self.attributes
+    super
+  end
+
+  def grant
+    @grant ||= Grant.find(grant_id) if grant_id.present?
   end
 
   def name_or_grant_name
@@ -49,7 +51,7 @@ class Project
 
   def people
     if grant.present?
-      grant.people 
+      grant.people
     else
       []
     end
@@ -57,7 +59,7 @@ class Project
 
   def institutions
     if grant.present?
-      grant.institutions 
+      grant.institutions
     else
       []
     end
