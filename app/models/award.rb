@@ -25,7 +25,6 @@ class Award < ActiveResource::Base
       Rails.logger.info "Awards Fetch Error: #{e}"
     end
     meta = FormatApiResponse.meta
-    # awards = Kaminari.paginate_array(awards).page(params[:page]).per(params[:show]) unless params[:show] == 'all'
     return awards, meta
   end
 

@@ -22,6 +22,17 @@ class Project < ActiveResource::Base
     }.merge(attributes))
   end
 
+  def self.where(params = {})
+    begin
+      projects = find(:all, params: params)
+    rescue => e
+      Rails.logger.info "Awards Fetch Error: #{e}"
+    end
+    meta = FormatApiResponse.meta
+
+    return projects, meta
+  end
+
   def save
     self.prefix_options[:project] = self.attributes
     super

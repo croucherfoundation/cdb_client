@@ -19,7 +19,6 @@ class Person < ActiveResource::Base
         Rails.logger.info "People Fetch Error: #{e}"
       end
       meta = FormatApiResponse.meta
-      # people = Kaminari.paginate_array(people).page(params[:page]).per(params[:show])
       return people, meta
     end
 

@@ -10,13 +10,15 @@ class Institution < ActiveResource::Base
 
   class << self
 
-    def where(params = {})
+    def where(params = {}, include_meta = false)
       begin
         institutions = find(:all, params: params)
       rescue => e
         Rails.logger.info "Awards Fetch Error: #{e}"
       end
       meta = FormatApiResponse.meta
+
+      return institutions if include_meta == false
       return institutions, meta
     end
 
