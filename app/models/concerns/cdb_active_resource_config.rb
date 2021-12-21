@@ -1,4 +1,4 @@
-module ArConfig
+module CdbActiveResourceConfig
   extend ActiveSupport::Concern
 
   included do

@@ -1,6 +1,6 @@
 class GrantType < ActiveResource::Base
   include FormatApiResponse
-  include ArConfig
+  include CdbActiveResourceConfig
 
   self.primary_key = 'code'
 

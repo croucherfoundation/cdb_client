@@ -1,6 +1,7 @@
 class Project < ActiveResource::Base
   include FormatApiResponse
-  include ArConfig
+  include CdbActiveResourceConfig
+  include HasGrant
 
   def self.new_with_defaults(attributes={})
     Project.new({
@@ -36,6 +37,10 @@ class Project < ActiveResource::Base
   def save
     self.prefix_options[:project] = self.attributes
     super
+  end
+
+  def round
+    @round ||= Round.find(round_id) if round_id.present?
   end
 
   def grant

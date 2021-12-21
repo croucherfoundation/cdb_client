@@ -3,7 +3,7 @@ class Person < ActiveResource::Base
   include HasCountry
   include HasInstitution
   include FormatApiResponse
-  include ArConfig
+  include CdbActiveResourceConfig
 
   has_many :awards
   has_many :grants #, foreign_key: :director_uid

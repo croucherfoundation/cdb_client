@@ -1,6 +1,6 @@
 class Note < ActiveResource::Base
   include FormatApiResponse
-  include ArConfig
+  include CdbActiveResourceConfig
 
   belongs_to :person, foreign_key: :person_uid
 

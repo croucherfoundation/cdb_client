@@ -6,7 +6,7 @@ class Grant < ActiveResource::Base
   include HasSecondInstitution
   include HasDirectors
   include FormatApiResponse
-  include ArConfig
+  include CdbActiveResourceConfig
 
   has_many :projects
   # accepts_nested_attributes_for :projects

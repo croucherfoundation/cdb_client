@@ -9,7 +9,7 @@ class Award < ActiveResource::Base
   include HasSecondInstitution
   include HasPerson
   include FormatApiResponse
-  include ArConfig
+  include CdbActiveResourceConfig
 
   # temporary while we are not yet sending jsonapi data back to core properly
 

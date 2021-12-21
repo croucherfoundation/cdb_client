@@ -5,14 +5,14 @@ module HasGrant
 
   included do
     belongs_to :grant if respond_to? :belongs_to
-  end
 
-  def grant
-    @grant ||= Grant.find(grant_id) if grant_id.present?
-  end
+    def grant
+      @grant ||= Grant.find(grant_id) if grant_id.present?
+    end
 
-  def grant?
-    grant_id.present? && grant.present?
+    def grant?
+      grant_id.present? && grant.present?
+    end
   end
 
   def grant=(grant)

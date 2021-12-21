@@ -1,6 +1,6 @@
 class Tag < ActiveResource::Base
   include FormatApiResponse
-  include ArConfig
+  include CdbActiveResourceConfig
 
   class << self
 
