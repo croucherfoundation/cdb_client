@@ -68,7 +68,7 @@ class Person < ActiveResource::Base
     end
 
     def for_user(user)
-      get "/api/people/user/#{user.uid}"
+      user = Person.find(:all, params: {user_uid: user.uid}).first
     rescue JSON::ParserError
       nil
     end
