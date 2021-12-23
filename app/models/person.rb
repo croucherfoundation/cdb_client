@@ -54,7 +54,8 @@ class Person < ActiveResource::Base
         institution: Institution.new_with_defaults,
         situation: "",
         scientific_tags: "",
-        admin_tags: ""
+        admin_tags: "",
+        mobile: ""
       }.merge(attributes))
     end
 
