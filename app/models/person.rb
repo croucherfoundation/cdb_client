@@ -79,6 +79,11 @@ class Person < ActiveResource::Base
     super
   end
 
+  def update_person
+    url ='https://meme.eq8.eu/noidea.jpg'
+    person = self.put(uid, person: { preferred_name: name, chinese_name: chinese_name, biog: biog, image_url: url })
+  end
+
   def grants
     Grant.find(:all, params: {person_id: self.uid})
   end
