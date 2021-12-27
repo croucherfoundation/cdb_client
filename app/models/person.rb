@@ -80,8 +80,7 @@ class Person < ActiveResource::Base
   end
 
   def update_person
-    url ='https://meme.eq8.eu/noidea.jpg'
-    person = self.put(uid, person: { preferred_name: name, chinese_name: chinese_name, biog: biog, image_url: url })
+    person = self.put(uid, person: { preferred_name: name, chinese_name: chinese_name, biog: biog, image_url: image_url })
   end
 
   def grants
