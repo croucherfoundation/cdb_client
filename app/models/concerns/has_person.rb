@@ -31,7 +31,7 @@ module HasPerson
 
   def person_attributes=(attributes={})
     if person?
-      self.person.update(attributes)
+      self.person.assign_attributes(attributes)
       self.person.save
     end
   end
