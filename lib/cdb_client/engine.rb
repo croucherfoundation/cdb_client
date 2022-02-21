@@ -7,9 +7,9 @@ module CdbClient
       g.fixture_replacement :factory_girl, :dir => 'spec/factories'
     end
 
-    initializer :cdb_client_helper do |app|
-      ActiveSupport.on_load :action_controller do
-        helper CdbClientHelper
+    config.to_prepare do
+      Dir.glob(Rails.root + "app/helpers/*_helper.rb").each do |c|
+        require_dependency(c)
       end
     end
 
