@@ -6,10 +6,9 @@ class Person < ActiveResource::Base
   include CdbActiveResourceConfig
 
   has_many :awards
-  has_many :grants #, foreign_key: :director_uid
-  has_many :cogrants #, class_name: "Grant", foreign_key: :codirector_uid
+  has_many :grants
+  has_many :cogrants, class_name: "Grant"
   has_many :notes
-  # belongs_to :country, foreign_key: :country_code
 
   class << self
     def where(params = {})
@@ -85,6 +84,18 @@ class Person < ActiveResource::Base
 
   def grants
     Grant.find(:all, params: {person_id: self.uid})
+  end
+
+  def cogrants
+    Grant.find(:all, params: {person_id: self.uid})
+  end
+
+  def awards
+    Award.find(:all, params: {person_id: self.uid})
+  end
+
+  def notes
+    Note.find(:all, params: {person_id: self.uid})
   end
 
   def latest_award

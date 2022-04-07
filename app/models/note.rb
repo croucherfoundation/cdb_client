@@ -2,7 +2,7 @@ class Note < ActiveResource::Base
   include FormatApiResponse
   include CdbActiveResourceConfig
 
-  belongs_to :person, foreign_key: :person_uid
+  belongs_to :person
 
   def save
     self.prefix_options[:note] = self.attributes

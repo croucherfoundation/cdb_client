@@ -58,6 +58,10 @@ class Grant < ActiveResource::Base
     }.merge(attributes))
   end
 
+  def projects
+    Project.find(:all, params: {grant_id: self.id})
+  end
+
   def approved?
     approved_at.present?
   end
