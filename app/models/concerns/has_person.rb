@@ -2,7 +2,10 @@ module HasPerson
   extend ActiveSupport::Concern
 
   included do
-    belongs_to :person
+    #
+    ## Will be needed to add in Host system
+    # belongs_to :person
+
 
     def person
       @person ||= Person.find(person_uid) if person_uid.present?
@@ -31,7 +34,7 @@ module HasPerson
 
   def person_attributes=(attributes={})
     if person?
-      self.person.update_attributes(attributes)
+      self.person.assign_attributes(attributes)
       self.person.save
     end
   end
