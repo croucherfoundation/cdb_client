@@ -1,13 +1,17 @@
-class Note
-  include Her::JsonApi::Model
+class Note < ActiveResource::Base
+  include FormatApiResponse
+  include CdbActiveResourceConfig
 
-  use_api CDB
-  collection_path "/api/notes"
-  belongs_to :person, foreign_key: :person_uid
+  belongs_to :person
+
+  def save
+    self.prefix_options[:note] = self.attributes
+    super
+  end
 
   def self.new_with_defaults(attributes={})
     self.new({
-      title: "", 
+      title: "",
       text: ""
     }.merge(attributes))
   end

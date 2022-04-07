@@ -1,13 +1,26 @@
-class Institution
-  include Her::JsonApi::Model
 
-  use_api CDB
-  collection_path "/api/institutions"
-  primary_key :code
 
-  belongs_to :country, foreign_key: :country_code
+class Institution < ActiveResource::Base
+  include FormatApiResponse
+  include CdbActiveResourceConfig
+
+  self.primary_key = 'code'
+
+  belongs_to :country
 
   class << self
+
+    def where(params = {}, include_meta = false)
+      begin
+        institutions = find(:all, params: params)
+      rescue => e
+        Rails.logger.info "Awards Fetch Error: #{e}"
+      end
+      meta = FormatApiResponse.meta
+
+      return institutions if include_meta == false
+      return institutions, meta
+    end
 
     def preload
       RequestStore.store[:institutions] ||= self.all
@@ -27,7 +40,7 @@ class Institution
       end
       insts.sort_by(&:normalized_name).map{|inst| [inst.normalized_name, inst.code] }
     end
-    
+
     #NB this is a selection of likely partner institutions, not just everything in HK
     #
     def hk_for_selection
@@ -54,7 +67,12 @@ class Institution
       })
     end
   end
-  
+
+  def save
+    self.prefix_options[:institution] = self.attributes
+    super
+  end
+
   ## Output formatting
   #
   # The prepositionishness of names like 'University of Cambridge' requires us to prepend a 'the'
@@ -91,17 +109,17 @@ class Institution
   def in_london?
     !!london && country_code == "GBR"
   end
-  
+
   def image
-    images[:standard] if images?
+    images.standard if images?
   end
 
   def thumb
-    images[:thumb] if images?
+    images.thumb if images?
   end
 
   def icon
-    images[:icon] if images?
+    images.icon if images?
   end
 
   def self.extract_salient(string)

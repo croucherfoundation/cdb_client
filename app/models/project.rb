@@ -1,13 +1,7 @@
-class Project
-  include Her::JsonApi::Model
+class Project < ActiveResource::Base
+  include FormatApiResponse
+  include CdbActiveResourceConfig
   include HasGrant
-
-  use_api CDB
-  collection_path "/api/projects"
-
-  # temporary while we are not yet sending jsonapi data back to core properly
-  include_root_in_json true
-  parse_root_in_json false
 
   def self.new_with_defaults(attributes={})
     Project.new({
@@ -27,6 +21,30 @@ class Project
       scientific_tags: "",
       admin_tags: ""
     }.merge(attributes))
+  end
+
+  def self.where(params = {})
+    begin
+      projects = find(:all, params: params)
+    rescue => e
+      Rails.logger.info "Awards Fetch Error: #{e}"
+    end
+    meta = FormatApiResponse.meta
+
+    return projects, meta
+  end
+
+  def save
+    self.prefix_options[:project] = self.attributes
+    super
+  end
+
+  def round
+    @round ||= Round.find(round_id) if round_id.present?
+  end
+
+  def grant
+    @grant ||= Grant.find(grant_id) if grant_id.present?
   end
 
   def name_or_grant_name
@@ -49,7 +67,7 @@ class Project
 
   def people
     if grant.present?
-      grant.people 
+      grant.people
     else
       []
     end
@@ -57,7 +75,7 @@ class Project
 
   def institutions
     if grant.present?
-      grant.institutions 
+      grant.institutions
     else
       []
     end

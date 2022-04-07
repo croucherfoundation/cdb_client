@@ -1,11 +1,10 @@
 require 'iso_country_codes'
 
-class Country
-  include Her::JsonApi::Model
+class Country < ActiveResource::Base
+  include FormatApiResponse
+  include CdbActiveResourceConfig
 
-  use_api CDB
-  collection_path "/api/countries"
-  primary_key :code
+  self.primary_key = 'code'
 
   class << self
     def preload

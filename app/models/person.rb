@@ -1,25 +1,26 @@
-class Person
-  include Her::JsonApi::Model
+class Person < ActiveResource::Base
   include HkNames
   include HasCountry
   include HasInstitution
-
-  use_api CDB
-  collection_path "/api/people"
-  primary_key :uid
-  custom_get :suggest
+  include FormatApiResponse
+  include CdbActiveResourceConfig
 
   has_many :awards
-  has_many :grants, foreign_key: :director_uid
-  has_many :cogrants, class_name: "Grant", foreign_key: :codirector_uid
+  has_many :grants
+  has_many :cogrants, class_name: "Grant"
   has_many :notes
-  # belongs_to :country, foreign_key: :country_code
-
-  # temporary while we are not yet sending jsonapi data back to core properly
-  include_root_in_json true
-  parse_root_in_json false
 
   class << self
+    def where(params = {})
+      begin
+        people = find(:all, params: params)
+      rescue => e
+        Rails.logger.info "People Fetch Error: #{e}"
+      end
+      meta = FormatApiResponse.meta
+      return people, meta
+    end
+
     def for_selection
       Person.all(show: "all").sort_by(&:name).map{|p| [p.name, p.uid] }
     end
@@ -52,23 +53,49 @@ class Person
         institution: Institution.new_with_defaults,
         situation: "",
         scientific_tags: "",
-        admin_tags: ""
+        admin_tags: "",
+        mobile: ""
       }.merge(attributes))
     end
 
     def suggestions(params)
       if params[:uid]
-        [self.find(params[:uid])]
+        [find(params[:uid])]
       else
-        self.suggest(params.to_h)
+        people = find(:all, :from => :suggest, params: params.to_h)
       end
     end
 
     def for_user(user)
-      get "/api/people/user/#{user.uid}"
+      user = Person.find(:all, params: {user_uid: user.uid}).first
     rescue JSON::ParserError
       nil
     end
+  end
+
+  def save
+    self.prefix_options[:person] = self.attributes
+    super
+  end
+
+  def update_person
+    person = self.put(uid, person: { preferred_name: name, chinese_name: chinese_name, biog: biog, image_url: image_url })
+  end
+
+  def grants
+    Grant.find(:all, params: {person_id: self.uid})
+  end
+
+  def cogrants
+    Grant.find(:all, params: {person_id: self.uid})
+  end
+
+  def awards
+    Award.find(:all, params: {person_id: self.uid})
+  end
+
+  def notes
+    Note.find(:all, params: {person_id: self.uid})
   end
 
   def latest_award
@@ -110,15 +137,15 @@ class Person
   end
 
   def image
-    images[:standard]
+    images.standard if images.present?
   end
 
   def thumb
-    images[:thumb]
+    images.thumb if images.present?
   end
 
   def icon
-    images[:icon]
+    images.icon if images.present?
   end
 
   def pronoun

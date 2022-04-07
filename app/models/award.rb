@@ -1,27 +1,43 @@
 require 'csv'
 
-class Award
-  include Her::JsonApi::Model
+class Award < ActiveResource::Base
+
   include HasAwardType
   include HasCountry
   include HasSecondCountry
   include HasInstitution
   include HasSecondInstitution
   include HasPerson
-
-  use_api CDB
-  collection_path "/api/awards"
+  include FormatApiResponse
+  include CdbActiveResourceConfig
 
   # temporary while we are not yet sending jsonapi data back to core properly
-  include_root_in_json true
-  parse_root_in_json false
-  sends_nested_attributes_for :person
+
+  def save
+    self.prefix_options[:award] = self.attributes
+    super
+  end
+
+  def self.where(params = {})
+    begin
+      awards = find(:all, params: params)
+    rescue => e
+      Rails.logger.info "Awards Fetch Error: #{e}"
+    end
+    meta = FormatApiResponse.meta
+    return awards, meta
+  end
 
   def self.new_with_defaults(attributes={})
     Award.new({
       name: "",
       title: "",
       description: "",
+      field: "",
+      degree: "",
+      supervisor: "",
+      supervisor_email: "",
+      department: "",
       record_no: "",
       record_code: "",
       application_id: nil,
@@ -91,7 +107,7 @@ class Award
   def country?
     country_code && !!country
   end
-    
+
   def second_institution?
     second_institution_code? && !!second_institution
   end
@@ -99,7 +115,7 @@ class Award
   def person?
     person_uid && !!person
   end
-  
+
   def person_name
     person.colloquial_name if person?
   end
@@ -151,9 +167,9 @@ class Award
   def extended?
     extended && extension?
   end
-  
+
   ## CSV export
-  
+
   def to_csv
     self.class.csv_columns.map {|col| self.send col.to_sym}
   end
@@ -162,10 +178,11 @@ class Award
     # %w{id record_no person_name year}
     %w{id record_no person_name year application_id award_type_name institution_name second_institution_name country_name name field description title person_uid supervisor supervisor_email supervisor_address department degree duration value expected_value uk begin_date expected_end_date completed end_date terminated terminated_date returned returned_date duration extended extension extension_end_date remarks payments bank green_form job_form progress_report_received progress_reports thesis_submitted thesis_url conference_grant_given conference_grant conference_report_received conference_report final_report_received final_report spouse_fee no_children leave}
   end
-   
+
   def self.export_reports(params, csv, pdf, email)
     begin
-      get "/api/awards/export_reports/?search_params=#{params}&csv=#{csv}&pdf=#{pdf}&email=#{email}"
+      p = {search_params: params.to_s, csv: csv, pdf: pdf, email: email}
+      find(:all, :from => :export_reports, params: p)
     rescue JSON::ParserError
       nil
     end

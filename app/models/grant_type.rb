@@ -1,9 +1,8 @@
-class GrantType
-  include Her::JsonApi::Model
+class GrantType < ActiveResource::Base
+  include FormatApiResponse
+  include CdbActiveResourceConfig
 
-  use_api CDB
-  collection_path "/api/grant_types"
-  primary_key :code
+  self.primary_key = 'code'
 
   class << self
     def preload
@@ -18,21 +17,28 @@ class GrantType
     end
 
     def for_selection
-      GrantType.all.sort_by(&:name).map{|grt| [grt.short_name, grt.id] }
+      GrantType.all.sort_by(&:name).map{|grt| [grt.short_name, grt.code] }
     end
-  
+
     def new_with_defaults(attributes={})
       GrantType.new({
         name: "",
         code: nil,
         id_code: nil, #hack! to allow `code` to be set by user. All would be much easier if we used grant_type_id throughout.
         admin_code: "",
+        short_name: "",
+        description: "",
         page_collection_id: nil,
         round_type_name: nil,
         round_type_slug: nil,
         round_type_id: nil
       }.merge(attributes))
     end
+  end
+
+  def save
+    self.prefix_options[:grant_type] = self.attributes
+    super
   end
 
   def event_based?

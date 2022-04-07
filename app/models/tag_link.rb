@@ -1,8 +1,4 @@
-class TagLink
-  include Her::JsonApi::Model
-
-  use_api CDB
-  collection_path "/api/tag_links"
+class TagLink < ActiveResource::Base
 
   def as_json(options={})
     {
@@ -10,5 +6,5 @@ class TagLink
       parent_id: parent_id
     }
   end
-  
+
 end
