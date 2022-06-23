@@ -1,4 +1,4 @@
-module FormatApiResponse
+module CdbFormatApiResponse
   include ActiveResource::Formats::JsonFormat
   attr_accessor :meta
 

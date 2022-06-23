@@ -1,7 +1,7 @@
 
 
 class AwardType < ActiveResource::Base
-  include FormatApiResponse
+  include CdbFormatApiResponse
   include CdbActiveResourceConfig
 
   self.primary_key = 'code'

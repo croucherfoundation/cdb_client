@@ -2,7 +2,7 @@ require 'iso_country_codes'
 
 
 class Country < ActiveResource::Base
-  include FormatApiResponse
+  include CdbFormatApiResponse
   include CdbActiveResourceConfig
 
   self.primary_key = 'code'

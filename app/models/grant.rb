@@ -5,7 +5,7 @@ class Grant < ActiveResource::Base
   include HasInstitution
   include HasSecondInstitution
   include HasDirectors
-  include FormatApiResponse
+  include CdbFormatApiResponse
   include CdbActiveResourceConfig
 
   has_many :projects
@@ -22,7 +22,7 @@ class Grant < ActiveResource::Base
     rescue => e
       Rails.logger.info "Awards Fetch Error: #{e}"
     end
-    meta = FormatApiResponse.meta
+    meta = CdbFormatApiResponse.meta
     return grants, meta
   end
 

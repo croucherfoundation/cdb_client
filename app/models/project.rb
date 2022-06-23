@@ -1,5 +1,5 @@
 class Project < ActiveResource::Base
-  include FormatApiResponse
+  include CdbFormatApiResponse
   include CdbActiveResourceConfig
   include HasGrant
 
@@ -29,7 +29,7 @@ class Project < ActiveResource::Base
     rescue => e
       Rails.logger.info "Awards Fetch Error: #{e}"
     end
-    meta = FormatApiResponse.meta
+    meta = CdbFormatApiResponse.meta
 
     return projects, meta
   end

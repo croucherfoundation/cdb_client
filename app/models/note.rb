@@ -1,5 +1,5 @@
 class Note < ActiveResource::Base
-  include FormatApiResponse
+  include CdbFormatApiResponse
   include CdbActiveResourceConfig
 
   belongs_to :person
