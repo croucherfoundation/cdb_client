@@ -83,6 +83,14 @@ class Person
     end
   end
 
+  def email_name
+    unless title.present?
+      given_name
+    else
+      [title, family_name].join(' ')
+    end
+  end
+
   def invitable?
     email?
   end
