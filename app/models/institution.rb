@@ -1,7 +1,7 @@
 
 
 class Institution < ActiveResource::Base
-  include FormatApiResponse
+  include CdbFormatApiResponse
   include CdbActiveResourceConfig
 
   self.primary_key = 'code'
@@ -16,7 +16,7 @@ class Institution < ActiveResource::Base
       rescue => e
         Rails.logger.info "Awards Fetch Error: #{e}"
       end
-      meta = FormatApiResponse.meta
+      meta = CdbFormatApiResponse.meta
 
       return institutions if include_meta == false
       return institutions, meta

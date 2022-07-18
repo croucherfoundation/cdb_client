@@ -2,9 +2,11 @@ class Person < ActiveResource::Base
   include HkNames
   include HasCountry
   include HasInstitution
-  include FormatApiResponse
+  include CdbFormatApiResponse
   include CdbActiveResourceConfig
 
+  self.primary_key = 'uid'
+  
   has_many :awards
   has_many :grants
   has_many :cogrants, class_name: "Grant"
@@ -17,7 +19,7 @@ class Person < ActiveResource::Base
       rescue => e
         Rails.logger.info "People Fetch Error: #{e}"
       end
-      meta = FormatApiResponse.meta
+      meta = CdbFormatApiResponse.meta
       return people, meta
     end
 

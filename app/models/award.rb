@@ -8,7 +8,7 @@ class Award < ActiveResource::Base
   include HasInstitution
   include HasSecondInstitution
   include HasPerson
-  include FormatApiResponse
+  include CdbFormatApiResponse
   include CdbActiveResourceConfig
 
   # temporary while we are not yet sending jsonapi data back to core properly
@@ -24,7 +24,7 @@ class Award < ActiveResource::Base
     rescue => e
       Rails.logger.info "Awards Fetch Error: #{e}"
     end
-    meta = FormatApiResponse.meta
+    meta = CdbFormatApiResponse.meta
     return awards, meta
   end
 
