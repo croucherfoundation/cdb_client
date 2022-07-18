@@ -5,6 +5,8 @@ class Person < ActiveResource::Base
   include CdbFormatApiResponse
   include CdbActiveResourceConfig
 
+  self.primary_key = 'uid'
+  
   has_many :awards
   has_many :grants
   has_many :cogrants, class_name: "Grant"
