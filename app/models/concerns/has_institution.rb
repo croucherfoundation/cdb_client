@@ -4,7 +4,7 @@ module HasInstitution
   extend ActiveSupport::Concern
 
   included do
-    belongs_to :institution
+    belongs_to :institution, optional: true
 
     def institution
       Institution.preloaded(institution_code) if institution_code.present?
