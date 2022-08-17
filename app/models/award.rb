@@ -51,6 +51,12 @@ class Award
     approved_at.present?
   end
 
+  def self.award_date_info(type)
+    get "/api/awards/award_date_info?type=#{type}"
+  rescue JSON::ParserError
+    nil
+  end
+
   def approve(user=nil)
     self.approved_at ||= Time.now
     self.approved_by_uid ||= user.uid if user
