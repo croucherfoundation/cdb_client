@@ -21,3 +21,9 @@ en:
   tags: "Tags"
   placeholders:
     institution_name: "Full name of university"
+    please_choose_country: "Please choose country"
+    please_choose_institution: "Please choose institution"
+    please_choose: "Please choose"
+    institution_name: "Institution name"
+    employer: "Employer"
+    employer_address: "Employer address"
