@@ -61,7 +61,7 @@ class Institution
   # when in object position. Eg. 'studying at the University of Cambridge' vs. 'studying at Oxford University'.
   #
   def definite_name(prefix="the")
-    if name =~ /\b(of|for)\b/i
+    if name =~ /\b(of|for)\b/i && self.name.split(" ").first.downcase != 'the'
       "#{prefix} #{name}"
     else
       name
