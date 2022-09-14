@@ -93,8 +93,7 @@ jQuery ($) ->
         warning = $("<p class='danger'></p>").appendTo(linkee)
         detacher = $("<a class='detach'>Detach from #{@_person.formal_name} and reassign</a>").appendTo(warning)
         if @_person.icon
-          background = "background-image: url('#{@_person.icon}')"
-          mugshot = $("<div class='mugshot' style='#{background}'></div>")
+          mugshot = $("<div class='mugshot' style='background-image: url(#{@_person.icon})'></div>")
           @_linkage_box.append mugshot
         @_linkage_box.append linkee
 
