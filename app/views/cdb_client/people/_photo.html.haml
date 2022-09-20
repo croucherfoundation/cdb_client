@@ -2,8 +2,8 @@
 - cssclass = "mugshot"
 - person ||= photo || @person
 - if person
-  - if person.icon.present?
-    - style = "background-image: url(\"#{person.icon}\")"
+  - if person.thumb.present?
+    - style = "background-image: url(\"#{person.thumb}\")"
   - else
     - cssclass << " uninvited"
   %div{class: cssclass, style: style}

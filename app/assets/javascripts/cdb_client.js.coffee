@@ -92,8 +92,8 @@ jQuery ($) ->
         statement = $("<p>This record will be linked to <strong>#{@_person.colloquial_name}</strong>, #{@_person.situation}. Changing the fields above will also update the records we hold for #{@_person.formal_name}.</p>").appendTo(linkee)
         warning = $("<p class='danger'></p>").appendTo(linkee)
         detacher = $("<a class='detach'>Detach from #{@_person.formal_name} and reassign</a>").appendTo(warning)
-        if @_person.icon
-          mugshot = $("<div class='mugshot' style='background-image: url(#{@_person.icon})'></div>")
+        if @_person.thumb
+          mugshot = $("<div class='mugshot' style='background-image: url(#{@_person.thumb})'></div>")
           @_linkage_box.append mugshot
         @_linkage_box.append linkee
 
