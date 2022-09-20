@@ -4,6 +4,8 @@
 - if person
   - if person.thumb.present?
     - style = "background-image: url(\"#{person.thumb}\")"
+  - elsif person.original.present?
+    - style = "background-image: url(\"#{person.original}\")"
   - else
     - cssclass << " uninvited"
   %div{class: cssclass, style: style}

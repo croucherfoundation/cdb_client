@@ -128,6 +128,10 @@ class Person
   def icon
     images[:icon]
   end
+  
+  def original
+    images[:original]
+  end
 
   def pronoun
     if gender? && gender == "f"
