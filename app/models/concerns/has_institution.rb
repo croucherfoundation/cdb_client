@@ -7,7 +7,8 @@ module HasInstitution
     belongs_to :institution
 
     def institution
-      Institution.preloaded(institution_code) if institution_code.present?
+      # Institution.preloaded(institution_code) if institution_code.present?
+      Institution.find(institution_code) if institution_code.present?
     end
 
     def institution=(code)
