@@ -25,14 +25,14 @@ class Institution
       if country_code.present?
         insts = insts.select {|inst| inst.country_code == country_code && (!active_only || inst.active?) }
       end
-      insts.sort_by(&:normalized_name).map{|inst| [inst.normalized_name, inst.code] }
+      insts.sort_by(&:name).map{|inst| [inst.name, inst.code] }
     end
     
     #NB this is a selection of likely partner institutions, not just everything in HK
     #
     def hk_for_selection
       insts = preload.select{|inst| inst.hk?}
-      insts.sort_by(&:normalized_name).map{|inst| [inst.normalized_name, inst.code] }
+      insts.sort_by(&:name).map{|inst| [inst.name, inst.code] }
     end
 
     def active_for_selection(country_code=nil)
