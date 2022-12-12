@@ -12,7 +12,7 @@ module CdbClient
     def suggest
       unless params[:name].blank?
         @institutions = Institution.where(institution_name: params[:name])
-        render json: @institutions
+        render json: @institutions.map(&:as_json_for_suggestion)
       end
     end
 
