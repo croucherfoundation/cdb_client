@@ -9,6 +9,13 @@ module CdbClient
       render json: @institutions
     end
 
+    def suggest
+      unless params[:name].blank?
+        @institutions = Institution.where(institution_name: params[:name])
+        render json: @institutions
+      end
+    end
+
     protected
   
     def get_institutions

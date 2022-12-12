@@ -42,7 +42,7 @@
       %span{data: {role: "choose"}}
         = f.select institution_code_field, Institution.for_selection(country_code), {include_blank: t("placeholders.please_choose_institution")}, {data: {key: institution_code_field}}
       %span{data: {role: "add"}}
-        = f.text_field institution_name_field, placeholder: institution_name_placeholder, value: ""
+        = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, data: {role: "institutionpicker", param: "name", key: "name"}
       - if with_employer
         %span{data: {role: "other"}}
           = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}
