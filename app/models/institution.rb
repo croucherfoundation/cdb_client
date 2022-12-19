@@ -113,5 +113,12 @@ class Institution
     string.gsub!(/\s+College/i, '')
     string
   end
+  
+  def as_json_for_suggestion
+    {
+      code: id,
+      name: name
+    }
+  end
 
 end
