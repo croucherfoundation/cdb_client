@@ -74,6 +74,17 @@ module HkNames
   def colloquial_name
     [title_if_it_matters, informal_name].compact.join(' ')
   end
+  
+  def display_name
+    if christian_name.present?
+      name = [title, christian_name, family_name, given_name]
+    elsif chinese_name.present?
+      name = [title, family_name, given_name]
+    else
+      name = [title, given_name, family_name] # western names
+    end
+    name.reject(&:blank?).join(' ')
+  end
 
   # ### Completeness
   #
