@@ -209,6 +209,9 @@ jQuery ($) ->
       @_request = null
       if data.length
         @appendOption("", "")
+        institution_suggest_selection = $('.institution_suggest_selection')
+        if institution_suggest_selection &&institution_suggest_selection.next('.dropdown')
+         institution_suggest_selection.next('.dropdown').empty()
         reselectable = []
         for pair in data
           [name, code] = pair
