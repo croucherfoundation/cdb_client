@@ -178,19 +178,28 @@ jQuery ($) ->
       @_adder.bind 'click', @showAdd
       @_otherer.bind 'click', @showOther
       @noteValue()
-
-      console.log "institution_or_employer", @_other.find('input').val()
+      @removeInstitutionOption()
 
       if @_other.find('input').val()
         @showOther()
       else
         @showSelect()
 
+    removeInstitutionOption: (e) =>
+      if @_country_chooser.find(":selected").text() == 'Hong Kong'
+        @_adder.hide()
+      $("#application_institution_code option[value='open-hong-kong']").hide();
+      $("#application_institution_code option[value='hospital-authority']").hide();
+
     noteValue: (e) =>
       value = @_select.val()
       @_previous_values.push(value)
 
     restrict: (e, country_code) =>
+      if country_code == 'HKG'
+        @_adder.hide()
+      else
+        @_adder.show()
       @_select.empty()
       @_request?.abort()
       if data = @_cache[country_code]
@@ -210,12 +219,13 @@ jQuery ($) ->
       if data.length
         @appendOption("", "")
         institution_suggest_selection = $('.institution_suggest_selection')
-        if institution_suggest_selection &&institution_suggest_selection.next('.dropdown')
+        if institution_suggest_selection && institution_suggest_selection.next('.dropdown')
          institution_suggest_selection.next('.dropdown').empty()
         reselectable = []
         for pair in data
           [name, code] = pair
-          @appendOption(name, code)
+          if name != 'Hospital Authority' && name != 'Open University of Hong Kong'
+            @appendOption(name, code)
           reselectable.push(code) if @_previous_values.contains(code)
         @_select.val(reselectable[0] ? "")
         @showSelect()
@@ -227,22 +237,24 @@ jQuery ($) ->
 
     showAdd: (e) =>
       e?.preventDefault()
-      @_other.find('input').val("")
-      @_choose.find('select').val("")
-      @_add.enable().show()
-      @_adder.hide()
-      @_other.hide()
-      @_otherer.show()
-      @_choose.hide()
-      @_chooser.show()
-      @_otherer.before @_or
+      if @_country_chooser.find(":selected").text() != 'Hong Kong'
+        @_other.find('input').val("")
+        @_choose.find('select').val("")
+        @_add.enable().show()
+        @_adder.hide()
+        @_other.hide()
+        @_otherer.show()
+        @_choose.hide()
+        @_chooser.show()
+        @_otherer.before @_or
 
     showSelect: (e) =>
       e?.preventDefault()
       @_other.find('input').val("")
       @_add.find('input').val("")
       @_add.hide()
-      @_adder.show()
+      if @_country_chooser.find(":selected").text() != 'Hong Kong'
+        @_adder.show()
       @_other.hide()
       @_otherer.show()
       @_choose.enable().show()
@@ -254,7 +266,8 @@ jQuery ($) ->
       @_add.find('input').val("")
       @_choose.find('select').val("")
       @_add.hide()
-      @_adder.show()
+      if @_country_chooser.find(":selected").text() != 'Hong Kong'
+        @_adder.show()
       @_other.enable().show()
       @_otherer.hide()
       @_choose.hide()
