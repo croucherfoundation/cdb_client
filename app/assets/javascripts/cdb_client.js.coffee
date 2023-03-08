@@ -187,6 +187,7 @@ jQuery ($) ->
 
     removeInstitutionOption: (e) =>
       if @_country_chooser.find(":selected").text() == 'Hong Kong'
+        @_or.hide()
         @_adder.hide()
       $("#application_institution_code option[value='open-hong-kong']").hide();
       $("#application_institution_code option[value='hospital-authority']").hide();
@@ -198,8 +199,10 @@ jQuery ($) ->
     restrict: (e, country_code) =>
       if country_code == 'HKG'
         @_adder.hide()
+        @_or.hide()
       else
         @_adder.show()
+        @_or.show()
       @_select.empty()
       @_request?.abort()
       if data = @_cache[country_code]
