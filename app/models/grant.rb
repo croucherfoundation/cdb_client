@@ -41,8 +41,8 @@ class Grant
       expected_value: "",
       approved_at: nil,
       approved_by_uid: nil,
-      director_uid: nil,
-      codirector_uid: nil,
+      director_uids: nil,
+      codirector_uids: nil,
       projects: [],
       scientific_tags: "",
       admin_tags: ""
@@ -76,7 +76,7 @@ class Grant
   end
 
   def people
-    [director, codirector].compact
+    [directors, codirectors].compact
   end
 
   def countries
