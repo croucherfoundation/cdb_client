@@ -69,6 +69,12 @@ class Person
     rescue JSON::ParserError
       nil
     end
+
+    def reindex(id)
+      get "/api/people/#{id}/reindex"
+    rescue => e
+      puts "#{e}"
+    end
   end
 
   def latest_award
