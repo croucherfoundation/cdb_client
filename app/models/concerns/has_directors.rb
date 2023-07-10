@@ -25,10 +25,17 @@ module HasDirectors
     if attributes['0'].present?
       if attributes.any?
         attributes.keys.each do |k|
-          v = attributes[k]
-          if @director = Person.find(v['id'])
-            @director.assign_attributes(v)
-            @director.save
+          if attributes[k]['id'].present?
+            v = attributes[k]
+            if @director = Person.find(v['id'])
+              @director.assign_attributes(v)
+              @director.save
+            end
+          else
+            person = create_person(attributes[k])
+            if person.present?
+              @director = Person.find(person.uid)
+            end
           end
         end
       end
@@ -36,6 +43,11 @@ module HasDirectors
       if attributes['id'].present? && @director = Person.find(attributes['id'])
         @director.assign_attributes(attributes)
         @director.save
+      else
+        person = create_person(attributes)
+        if person.present?
+          @director = Person.find(person.uid)
+        end
       end
     end
     self.director_uids << @director.uid
@@ -66,10 +78,17 @@ module HasDirectors
     if attributes['0'].present?
       if attributes.any?
         attributes.keys.each do |k|
-          v = attributes[k]
-          if @codirector = Person.find(v['id'])
-            @codirector.assign_attributes(v)
-            @codirector.save
+          if attributes[k]['id'].present?
+            v = attributes[k]
+            if @codirector = Person.find(v['id'])
+              @codirector.assign_attributes(v)
+              @codirector.save
+            end
+          else
+            person = create_person(attributes[k])
+            if person.present?
+              @codirector = Person.find(person.uid)
+            end
           end
         end
       end
@@ -77,10 +96,20 @@ module HasDirectors
       if attributes['id'].present? && @codirector = Person.find(attributes['id'])
         @codirector.assign_attributes(attributes)
         @codirector.save
+      else
+        person = create_person(attributes)
+        if person.present?
+          @codirector = Person.find(person.uid)
+        end
       end
     end
     self.codirector_uids << @codirector.uid
     self.codirector_uids.uniq
+  end
+
+  def create_person(attributes)
+    person = Person.new(given_name: attributes['given_name'], family_name: attributes['family_name'], country_code: attributes['country_code'], institution_code: attributes['institution_code'], institution_name: attributes['institution_name'])
+    person.save
   end
 
 end
