@@ -22,7 +22,7 @@
       = f.hidden_field person_uid_field, value: "", data: {role: "linker"}
 
     - if association == :directors || association == :codirectors
-      = pf.hidden_field :id, data: {role: "linker"}
+      = pf.hidden_field :id, value: person.uid, data: {role: "linker"}
       
     %p{class: pclass}
       - if heading
