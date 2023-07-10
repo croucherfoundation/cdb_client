@@ -51,6 +51,12 @@ class Award
     approved_at.present?
   end
 
+  def self.unattach_file(attachment_id)
+    delete "/api/awards//unattach_file?attachment_id=#{attachment_id}"
+  rescue JSON::ParserError
+    nil
+  end
+
   def self.award_date_info(type)
     get "/api/awards/award_date_info?type=#{type}"
   rescue JSON::ParserError
