@@ -29,7 +29,7 @@
         = heading
         %br
       %span.col.first>
-        = pf.text_field :title, placeholder: t("placeholders.person.title"), class: 'title', data: {key: "title"}
+        = pf.select :title, [[t("placeholders.person.title"), nil], ['Mr', 'Mr'], ['Ms', 'Ms'], ['Dr', 'Dr'], ['Professor', 'Professor']], {}, data: {key: 'title'}, class: "title"
       %span.col>
         = pf.text_field :family_name, placeholder: t("placeholders.person.family_name"), class: 'family_name', data: {key: "family_name"}, required: required
       %span.col.last>
