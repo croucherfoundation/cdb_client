@@ -108,7 +108,7 @@ module HasDirectors
   end
 
   def create_person(attributes)
-    person = Person.new(given_name: attributes['given_name'], family_name: attributes['family_name'], country_code: attributes['country_code'], institution_code: attributes['institution_code'], institution_name: attributes['institution_name'])
+    person = Person.new(title: attributes['title'], given_name: attributes['given_name'], family_name: attributes['family_name'], country_code: attributes['country_code'], institution_code: attributes['institution_code'], institution_name: attributes['institution_name'])
     person.save
   end
 
