@@ -50,6 +50,7 @@ module HasDirectors
         end
       end
     end
+    self.director_uids ||= []
     self.director_uids << @director.uid
     self.director_uids.uniq
   end
@@ -103,6 +104,7 @@ module HasDirectors
         end
       end
     end
+    self.codirector_uids ||= []
     self.codirector_uids << @codirector.uid
     self.codirector_uids.uniq
   end
