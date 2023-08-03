@@ -8,6 +8,7 @@
 - with_employer ||= false
 - with_addresses ||= false
 - default_country_code ||= nil
+- with_post ||= false
 
 - prominent ||= false
 - pclass = "threecol"
@@ -34,6 +35,9 @@
         = pf.text_field :family_name, placeholder: t("placeholders.person.family_name"), class: 'family_name', data: {key: "family_name"}, required: required
       %span.col.last>
         = pf.text_field :given_name, placeholder: t("placeholders.person.given_name"), class: 'given_name', data: {key: "given_name"}, required: required
+    - if with_post    
+      %p{class: pclass}
+        = pf.text_field :post, placeholder: t("placeholders.person.post"), class: 'post', data: {key: "post"}, style: 'width: 100%'
 
     - unless without_institution
       = render "cdb_client/institutions/pick_or_add", f: pf, institution: person.institution, institution_code_field: 'institution_code', with_employer: with_employer, default_country_code: default_country_code

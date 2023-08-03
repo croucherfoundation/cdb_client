@@ -10,7 +10,7 @@ module CdbClient
     protected
 
     def match_params
-      params.require(:person).permit(:uid, :user_uid, :title, :family_name, :given_name, :email, :phone, :country_code, :institution_code, :checked_at)
+      params.require(:person).permit(:uid, :user_uid, :title, :family_name, :given_name, :email, :phone, :country_code, :institution_code, :checked_at, :post)
     end
 
   end
