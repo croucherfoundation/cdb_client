@@ -51,8 +51,8 @@ class Award
     approved_at.present?
   end
 
-  def self.unattach_file(attachment_id)
-    delete "/api/awards//unattach_file?attachment_id=#{attachment_id}"
+  def self.unattach_file(report_id)
+    delete "/api/awards/unattach_file?report_id=#{report_id}"
   rescue JSON::ParserError
     nil
   end
