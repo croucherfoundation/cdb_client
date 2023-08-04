@@ -17,8 +17,8 @@ class PaymentCategory
     }.merge(attributes))
   end
 
-  def self.gengrate_default_payment_note(award_id)
-    get "/api/payment_categories/gengrate_default_payment_note/#{award_id}"
+  def self.generate_default_payment_note(award_id)
+    get "/api/payment_categories/generate_default_payment_note/#{award_id}"
   rescue JSON::ParserError
     nil
   end
