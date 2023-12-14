@@ -115,7 +115,7 @@ class Tag
 
     def branches_to(terms)
       terms = terms.split(/,\s*/) if terms.is_a?(String)
-      from_terms(terms).map(&:descent).map{|d| d.split(',')}
+      from_terms(terms).map(&:descent).map{|d| d&.split(',')}
     end
 
     def tree_to(terms)
