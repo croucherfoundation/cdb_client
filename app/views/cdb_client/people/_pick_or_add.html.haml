@@ -8,6 +8,7 @@
 - with_employer ||= false
 - with_addresses ||= false
 - default_country_code ||= nil
+- with_post ||= false
 
 - prominent ||= false
 - pclass = "threecol"
@@ -17,19 +18,26 @@
   %fieldset{data: {role: "personpicker"}}
     - if person.persisted?
       = f.hidden_field person_uid_field, data: {role: "linker"}
+      = hidden_field_tag person_uid_field, person.uid
     - else
       = f.hidden_field person_uid_field, value: "", data: {role: "linker"}
+
+    - if association == :directors || association == :codirectors
+      = pf.hidden_field :id, value: person.uid, data: {role: "linker"}
       
     %p{class: pclass}
       - if heading
         = heading
         %br
       %span.col.first>
-        = pf.text_field :title, placeholder: t("placeholders.person.title"), class: 'title', data: {key: "title"}
+        = pf.select :title, [[t("placeholders.person.title"), nil], ['Mr', 'Mr'], ['Ms', 'Ms'], ['Dr', 'Dr'], ['Professor', 'Professor']], {}, data: {key: 'title'}, class: "title"
       %span.col>
         = pf.text_field :family_name, placeholder: t("placeholders.person.family_name"), class: 'family_name', data: {key: "family_name"}, required: required
       %span.col.last>
         = pf.text_field :given_name, placeholder: t("placeholders.person.given_name"), class: 'given_name', data: {key: "given_name"}, required: required
+    - if with_post    
+      %p{class: pclass}
+        = pf.text_field :post, placeholder: t("placeholders.person.post"), class: 'post', data: {key: "post"}, style: 'width: 100%'
 
     - unless without_institution
       = render "cdb_client/institutions/pick_or_add", f: pf, institution: person.institution, institution_code_field: 'institution_code', with_employer: with_employer, default_country_code: default_country_code

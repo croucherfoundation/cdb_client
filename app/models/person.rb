@@ -200,7 +200,8 @@ class Person
       country_code: country_code,
       institution_code: institution_code,
       situation: situation,
-      icon: icon
+      icon: icon,
+      post: post
     }
   end
 
