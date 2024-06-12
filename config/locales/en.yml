@@ -21,7 +21,7 @@ en:
   tags: "Tags"
   placeholders:
     institution_name: "Full name of university"
-    please_choose_country: "Choose country"
+    please_choose_country: "Choose country or region"
     please_choose_institution: "Choose institution"
     please_choose: "Choose"
     institution_name: "Institution name"
