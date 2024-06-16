@@ -75,6 +75,12 @@ class Person
     rescue => e
       puts "#{e}"
     end
+
+    def generate_token(id)
+      patch "/api/people/#{id}/generate_token"
+    rescue => e
+      puts "#{e}"
+    end
   end
 
   def latest_award
@@ -134,7 +140,7 @@ class Person
   def icon
     images[:icon]
   end
-  
+
   def original
     images[:original]
   end
