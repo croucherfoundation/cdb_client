@@ -9,7 +9,7 @@ class AwardTermAndCondition
     def new_with_defaults(attributes={})
       AwardTermAndCondition.new({
         award_id: nil,
-        term_and_condition_id: nil,
+        award_type_term_and_condition_id: nil,
         custom_content: ""
       }.merge(attributes))
     end
