@@ -11,7 +11,8 @@ class AwardTypeTermAndCondition
       award_type_code: nil,
       term_and_condition_id: nil,
       custom_content: "",
-      custom_content_enable: false
+      custom_content_enable: false,
+      position: nil
 
     }.merge(attributes))
   end
