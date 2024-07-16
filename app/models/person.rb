@@ -81,8 +81,16 @@ class Person
     rescue => e
       puts "#{e}"
     end
-  end
 
+    def update_personal_info(id, params)
+      params = params.to_h unless params == {}
+      patch "/api/people/#{id}/update_personal_info", params
+    rescue => e
+      puts "#{e}"
+    end
+
+  end
+  
   def latest_award
     awards.sort_by(&:year).last
   end
