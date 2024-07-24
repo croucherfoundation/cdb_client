@@ -14,7 +14,8 @@ class AwardTypeStipendAllowance
         award_type_code: nil,
         stipend_allowance_id: nil,
         is_custom_allowance: false,
-        custom_allowance_value: nil
+        custom_allowance_value: nil,
+        position: nil
       }.merge(attributes))
     end
   end
