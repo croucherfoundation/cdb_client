@@ -12,7 +12,8 @@ class StipendAllowance
       StipendAllowance.new({
         stipend_allowance_type_id: nil,
         allowance_value: nil,
-        year: nil
+        year: nil,
+        allowance_value_type: nil
       }.merge(attributes))
     end
   end
