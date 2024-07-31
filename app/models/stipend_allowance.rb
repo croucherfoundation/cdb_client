@@ -13,7 +13,8 @@ class StipendAllowance
         stipend_allowance_type_id: nil,
         allowance_value: nil,
         year: nil,
-        allowance_value_type: nil
+        allowance_value_type: nil,
+        is_per_annum: false
       }.merge(attributes))
     end
   end
