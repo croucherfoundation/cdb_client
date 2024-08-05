@@ -10,7 +10,8 @@ class AwardTermAndCondition
       AwardTermAndCondition.new({
         award_id: nil,
         award_type_term_and_condition_id: nil,
-        custom_content: ""
+        custom_content: "",
+        hide_in_portal: false
       }.merge(attributes))
     end
   end

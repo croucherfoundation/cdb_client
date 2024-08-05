@@ -14,7 +14,8 @@ class AwardStipendAllowance
         award_id: nil,
         award_type_stipend_allowance_id: nil,
         is_custom_allowance: false,
-        custom_allowance_value: nil
+        custom_allowance_value: nil,
+        hide_in_portal: false
       }.merge(attributes))
     end
   end
