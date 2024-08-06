@@ -26,7 +26,8 @@ class AwardType
         admin_code: "",
         round_type_name: nil,
         round_type_slug: nil,
-        round_type_id: nil
+        round_type_id: nil,
+        parent_code: nil
       }.merge(attributes))
     end
 
