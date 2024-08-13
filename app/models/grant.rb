@@ -18,35 +18,50 @@ class Grant
   parse_root_in_json false
   sends_nested_attributes_for :projects
 
-  def self.new_with_defaults(attributes={})
-    Grant.new({
-      name: "",
-      year: Date.today.year + 1,
-      title: "",
-      description: "",
-      field: "",
-      application_id: nil,
-      grant_type_code: "",
-      country_code: "",
-      second_country_code: "",
-      institution_code: "",
-      show_second_institution: false,
-      second_institution_code: "",
-      institution_name: "",
-      second_institution_name: "",
-      begin_date: "",
-      end_date: "",
-      extension: "",
-      duration: "",
-      expected_value: "",
-      approved_at: nil,
-      approved_by_uid: nil,
-      director_uids: nil,
-      codirector_uids: nil,
-      projects: [],
-      scientific_tags: "",
-      admin_tags: ""
-    }.merge(attributes))
+  class << self
+    def new_with_defaults(attributes={})
+      Grant.new({
+        name: "",
+        year: Date.today.year + 1,
+        title: "",
+        description: "",
+        field: "",
+        application_id: nil,
+        grant_type_code: "",
+        country_code: "",
+        second_country_code: "",
+        institution_code: "",
+        show_second_institution: false,
+        second_institution_code: "",
+        institution_name: "",
+        second_institution_name: "",
+        begin_date: "",
+        end_date: "",
+        extension: "",
+        duration: "",
+        expected_value: "",
+        approved_at: nil,
+        approved_by_uid: nil,
+        director_uids: nil,
+        codirector_uids: nil,
+        projects: [],
+        scientific_tags: "",
+        admin_tags: "",
+        parent_id: nil
+      }.merge(attributes))
+    end
+
+    def for_selection(gtc=nil)
+      Grant.where(grant_type_code: gtc).sort_by(&:record_code).map{|g| ["##{g.record_code} #{g.name}", g.id] }
+    end
+  end
+
+  def parent
+    self.class.find(parent_id) if parent_id?
+  end
+
+  def children
+    self.class.where(parent_id: id)
   end
 
   def approved?
@@ -131,7 +146,7 @@ class Grant
   end
 
   ## CSV export
- 
+
   def to_csv
     self.class.csv_columns.map {|col| self.send col.to_sym}
   end
