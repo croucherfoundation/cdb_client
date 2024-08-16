@@ -47,7 +47,8 @@ class Grant
         projects: [],
         scientific_tags: "",
         admin_tags: "",
-        parent_id: nil
+        parent_id: nil,
+        child_ids: []
       }.merge(attributes))
     end
 
@@ -61,7 +62,8 @@ class Grant
   end
 
   def children
-    self.class.where(parent_id: id)
+    return self.class.where(child_ids: child_ids) if child_ids.any?
+    []
   end
 
   def approved?
