@@ -128,8 +128,6 @@ class Grant
     case grant_type_code
     when "asi", "csc"
       "course"
-    when "cas"
-      "laboratory"
     else
       "project"
     end
