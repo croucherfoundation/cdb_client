@@ -32,9 +32,9 @@
       %span.col.first>
         = pf.select :title, [[t("placeholders.person.title"), nil], ['Mr', 'Mr'], ['Ms', 'Ms'], ['Dr', 'Dr'], ['Professor', 'Professor']], {}, data: {key: 'title'}, class: "title"
       %span.col>
-        = pf.text_field :family_name, placeholder: t("placeholders.person.family_name"), class: 'family_name', data: {key: "family_name"}, required: required
-      %span.col.last>
         = pf.text_field :given_name, placeholder: t("placeholders.person.given_name"), class: 'given_name', data: {key: "given_name"}, required: required
+      %span.col.last>
+        = pf.text_field :family_name, placeholder: t("placeholders.person.family_name"), class: 'family_name', data: {key: "family_name"}, required: required
     - if with_post    
       %p{class: pclass}
         = pf.text_field :post, placeholder: t("placeholders.person.post"), class: 'post', data: {key: "post"}, style: 'width: 100%'
