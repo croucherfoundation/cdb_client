@@ -5,6 +5,7 @@ module HasProject
 
   included do
     belongs_to :project
+    after_commit :reindex_project
 
     def project
       @project ||= Project.find(project_id) if project_id?
@@ -17,6 +18,10 @@ module HasProject
         self.project_id = nil
       end
       @project = project
+    end
+
+    def reindex_project
+      Project.reindex(project_id)
     end
   end
 

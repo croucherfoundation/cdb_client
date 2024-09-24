@@ -29,6 +29,12 @@ class Project
     }.merge(attributes))
   end
 
+  def self.reindex(id)
+    post "/api/projects/#{id}/reindex" if id.present?
+  rescue => e
+    puts "#{e}"
+  end
+
   def name_or_grant_name
     if name.present?
       name
@@ -49,7 +55,7 @@ class Project
 
   def people
     if grant.present?
-      grant.people 
+      grant.people
     else
       []
     end
@@ -57,7 +63,7 @@ class Project
 
   def institutions
     if grant.present?
-      grant.institutions 
+      grant.institutions
     else
       []
     end
