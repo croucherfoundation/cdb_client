@@ -1,15 +1,16 @@
 - person ||= nil
 - with_country ||= false
+- institution = person.institution if person 
 
 - if person
   %span.situation
     = succeed '.' do
       - if person.post?
         = person.post
-        - if person.institution.present? || person.employer?
+        - if institution.present? || person.employer?
           = t :at
-      - if person.institution.present?
-        = person.institution.definite_name          
+      - if institution.present?
+        = institution.definite_name          
       - elsif person.employer?
         = person.employer
       - else
