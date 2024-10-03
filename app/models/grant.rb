@@ -145,6 +145,12 @@ class Grant
     project
   end
 
+  def self.update_grants_attributes(params, grant_id)
+    if grant_id
+      grant = put "/api/grants/#{grant_id}", params
+    end
+  end
+
   ## CSV export
 
   def to_csv
