@@ -33,7 +33,7 @@ module HasDirectors
     uids_field = "#{type}_uids"
     person_instance_var = "@#{type.singularize}"
 
-    if attributes['0'].present?
+    if multiple_person_attributes?(attributes)
       if attributes.any?
         attributes.keys.each do |k|
           if attributes[k]['id'].present?
@@ -65,6 +65,14 @@ module HasDirectors
     self[uids_field] ||= []
     self[uids_field] << instance_variable_get(person_instance_var).uid
     self[uids_field].uniq!
+  end
+
+  def multiple_person_attributes?(attributes)
+    attributes.is_a?(Hash) && attributes.keys.any? { |key| numeric_string?(key) }
+  end
+
+  def numeric_string?(key)
+    key.to_s.match?(/^\d+$/)
   end
 
   # Codirector is optional but not unusual.
