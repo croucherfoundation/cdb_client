@@ -32,6 +32,7 @@ module HasDirectors
   def assign_person_attributes(type, attributes={})
     uids_field = "#{type}_uids"
     person_instance_var = "@#{type.singularize}"
+    person_uids=[]
 
     if multiple_person_attributes?(attributes)
       if attributes.any?
@@ -41,11 +42,13 @@ module HasDirectors
             if instance_variable_set(person_instance_var, Person.find(v['id']))
               instance_variable_get(person_instance_var).assign_attributes(v)
               instance_variable_get(person_instance_var).save
+              person_uids<<instance_variable_get(person_instance_var).uid
             end
           else
             person = create_person(attributes[k])
             if person.present?
               instance_variable_set(person_instance_var, Person.find(person.uid))
+              person_uids<<instance_variable_get(person_instance_var).uid
             end
           end
         end
@@ -54,16 +57,22 @@ module HasDirectors
       if attributes['id'].present? && instance_variable_set(person_instance_var, Person.find(attributes['id']))
         instance_variable_get(person_instance_var).assign_attributes(attributes)
         instance_variable_get(person_instance_var).save
+        person_uids<<instance_variable_get(person_instance_var).uid
       else
         person = create_person(attributes)
         if person.present?
           instance_variable_set(person_instance_var, Person.find(person.uid))
+          person_uids<<instance_variable_get(person_instance_var).uid
         end
       end
     end
 
     self[uids_field] ||= []
-    self[uids_field] << instance_variable_get(person_instance_var).uid
+    if person_uids.length > 1
+      self[uids_field] << person_uids
+    else
+      self[uids_field] << instance_variable_get(person_instance_var).uid
+    end
     self[uids_field].uniq!
   end
 

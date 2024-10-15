@@ -174,6 +174,16 @@
             $f = $(f);
             key = $f.data("key");
             _this._previous_values[key] = $f.val();
+            // ckeditor data insert
+            if ($f.hasClass('se_ckeditor')) {
+              const ckdiv = $f.siblings('.ck-editor');
+              if (ckdiv.length) {
+                const editorInstance = $f.data('editorInstance');
+                if (editorInstance) {
+                  editorInstance.setData(_this._person[key]);
+                }
+              }
+            }          
             return $f.val(_this._person[key]);
           };
         })(this));
@@ -196,6 +206,16 @@
               $f = $(f);
               key = $f.data("key");
               if ($f.val() === _this._person[key]) {
+                // ckeditor data remove
+                if ($f.hasClass('se_ckeditor')) {
+                  var ckdiv = $f.siblings('.ck-editor');
+                  if (ckdiv.length) {
+                    const editorInstance = $f.data('editorInstance');
+                    if (editorInstance) {
+                      editorInstance.setData(_this._previous_values[key]);
+                    }
+                  }
+                }
                 return $f.val(_this._previous_values[key]);
               }
             };
