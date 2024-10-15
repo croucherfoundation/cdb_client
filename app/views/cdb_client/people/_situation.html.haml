@@ -6,7 +6,7 @@
   %span.situation
     = succeed '.' do
       - if person.post?
-        = person.post
+        = person.post&.html_safe
         - if institution.present? || person.employer?
           = t :at
       - if institution.present?
