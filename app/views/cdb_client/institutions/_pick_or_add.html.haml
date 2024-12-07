@@ -58,7 +58,10 @@
       - if additional_field
         %span.col.last>
           - if with_labels
-            = f.label additional_field
+            - if additional_field == :post
+              = f.label additional_field, "Position"
+            - else
+              = f.label additional_field
           = f.text_field additional_field, placeholder: additional_field_placeholder
 
     - if with_employer && with_employer_address
@@ -95,7 +98,10 @@
         %p.onecol.appl_form_onecol
           %span.col.last>
             - if with_labels
-              = f.label additional_field
+              - if additional_field == :post
+                = f.label additional_field, "Position"
+              - else
+                = f.label additional_field
             = f.text_field additional_field, placeholder: additional_field_placeholder
 
     - if with_employer && with_employer_address
