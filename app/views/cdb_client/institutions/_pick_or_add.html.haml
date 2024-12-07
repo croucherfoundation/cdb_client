@@ -62,7 +62,7 @@
               = f.label additional_field, "Position"
             - else
               = f.label additional_field
-          = f.text_field additional_field, placeholder: additional_field_placeholder
+          = f.text_field additional_field, placeholder: additional_field == :post ? "Position" : additional_field_placeholder
 
     - if with_employer && with_employer_address
       %p.address{data: {role: "other"}}
@@ -102,7 +102,7 @@
                 = f.label additional_field, "Position"
               - else
                 = f.label additional_field
-            = f.text_field additional_field, placeholder: additional_field_placeholder
+            = f.text_field additional_field, placeholder: additional_field == :post ? "Position" : additional_field_placeholder
 
     - if with_employer && with_employer_address
       %p.address{data: {role: "other"}}
