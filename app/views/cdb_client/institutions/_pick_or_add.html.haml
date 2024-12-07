@@ -6,6 +6,7 @@
 - with_employer_address ||= false
 - additional_field ||= false
 - with_labels ||= false
+- one_col ||= false
 - country_code_field ||= :country_code
 - institution_code_field ||= :institution_code
 - institution_name_field ||= :institution_name
@@ -27,39 +28,76 @@
   - country_options = Country.likely_for_selection
 - else
   - country_options = Country.for_selection
-
-%fieldset.institution_chooser{data: {role: "institution", required: required}}
-  %p{class: rowclass}
-    %span.col.first>
-      - if with_labels
-        = f.label country_code_field
-      = f.select country_code_field, country_options, {include_blank: t("placeholders.please_choose_country"), selected: country_code, disabled: "-"}, data: {key: country_code_field, role: 'country'}
-      
-    - select_cell_class = additional_field ? "col" : "col last"
-    %span{class: select_cell_class}>
-      - if with_labels
-        = f.label institution_code_field
-      %span{data: {role: "choose"}}
-        = f.select institution_code_field, Institution.for_selection(country_code), {include_blank: t("placeholders.please_choose_institution")}, {data: {key: institution_code_field}}
-      %span{data: {role: "add"}}
-        = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: ""
-      - if with_employer
-        %span{data: {role: "other"}}
-          = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}
-      %br
-      = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
-      = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}
-      - if with_employer
-        %span.or
-          = t :or
-        = link_to t(:other_employer), '#', class: 'note', data: {role: "showother"}
-
-    - if additional_field
-      %span.col.last>
+- unless one_col
+  %fieldset.institution_chooser{data: {role: "institution", required: required}}
+    %p{class: rowclass}
+      %span.col.first>
         - if with_labels
-          = f.label additional_field
-        = f.text_field additional_field, placeholder: additional_field_placeholder
+          = f.label country_code_field
+        = f.select country_code_field, country_options, {include_blank: t("placeholders.please_choose_country"), selected: country_code, disabled: "-"}, data: {key: country_code_field, role: 'country'}
+        
+      - select_cell_class = additional_field ? "col" : "col last"
+      %span{class: select_cell_class}>
+        - if with_labels
+          = f.label institution_code_field
+        %span{data: {role: "choose"}}
+          = f.select institution_code_field, Institution.for_selection(country_code), {include_blank: t("placeholders.please_choose_institution")}, {data: {key: institution_code_field}}
+        %span{data: {role: "add"}}
+          = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: ""
+        - if with_employer
+          %span{data: {role: "other"}}
+            = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}
+        %br
+        = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
+        = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}
+        - if with_employer
+          %span.or
+            = t :or
+          = link_to t(:other_employer), '#', class: 'note', data: {role: "showother"}
 
-  - if with_employer && with_employer_address
-    %p.address{data: {role: "other"}}
-      = f.text_area :employer_address, placeholder: employer_address_placeholder
+      - if additional_field
+        %span.col.last>
+          - if with_labels
+            = f.label additional_field
+          = f.text_field additional_field, placeholder: additional_field_placeholder
+
+    - if with_employer && with_employer_address
+      %p.address{data: {role: "other"}}
+        = f.text_area :employer_address, placeholder: employer_address_placeholder
+- else
+  %fieldset.institution_chooser{data: {role: "institution", required: required}}
+    %p.onecol.appl_form_onecol
+      %span.col.first>
+        - if with_labels
+          = f.label country_code_field, 'Country'
+        = f.select country_code_field, country_options, {include_blank: t("placeholders.please_choose_country"), selected: country_code, disabled: "-"}, data: {key: country_code_field, role: 'country'}
+    %p.onecol.appl_form_onecol    
+      - select_cell_class = additional_field ? "col" : "col last"
+      %span{class: select_cell_class}>
+        - if with_labels
+          = f.label institution_code_field, 'University'
+        %span{data: {role: "choose"}}
+          = f.select institution_code_field, Institution.for_selection(country_code), {include_blank: t("placeholders.please_choose_institution")}, {data: {key: institution_code_field}}
+        %span{data: {role: "add"}}
+          = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: ""
+        - if with_employer
+          %span{data: {role: "other"}}
+            = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}
+        %br
+        = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
+        = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}
+        - if with_employer
+          %span.or
+            = t :or
+          = link_to t(:other_employer), '#', class: 'note', data: {role: "showother"}
+
+      - if additional_field
+        %p.onecol.appl_form_onecol
+          %span.col.last>
+            - if with_labels
+              = f.label additional_field
+            = f.text_field additional_field, placeholder: additional_field_placeholder
+
+    - if with_employer && with_employer_address
+      %p.address{data: {role: "other"}}
+        = f.text_area :employer_address, placeholder: employer_address_placeholder
