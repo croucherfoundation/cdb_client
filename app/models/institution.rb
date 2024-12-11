@@ -50,7 +50,10 @@ class Institution
         lat: "",
         lng: "",
         london: false,
-        location_given: false
+        location_given: false,
+        url: "",
+        image: "",
+        is_partner: false
       })
     end
   end
