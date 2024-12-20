@@ -265,6 +265,7 @@
         this._other = this._container.find('[data-role="other"]');
         this._select = this._choose.find('select');
         this._or = this._container.find('span.or');
+        this._whitelistField = this._container.find('.whitelist_institute');
         this._url = (ref = this._select.attr('data-url')) != null ? ref : '/cdb/institutions';
         this._select.bind('refresh', this.restrict);
         this._select.bind('change', this.noteValue);
@@ -314,7 +315,12 @@
         } else {
           this._country_code = country_code;
           this._select.addClass('waiting');
-          return this._request = $.getJSON(this._url + "/" + country_code, this.receive);
+          if (this._whitelistField.length > 0 && this._whitelistField.val() == 'true') {
+            this._request = $.getJSON(`${this._url}/${country_code}`, { whitelist: true }, this.receive);
+          } else {
+            this._request = $.getJSON(`${this._url}/${country_code}`, this.receive);
+          }
+          return this._request
         }
       };
 

@@ -20,10 +20,14 @@ class Institution
       RequestStore.store[:institutions_by_code][code]
     end
 
-    def for_selection(country_code=nil, active_only=false)
+    def for_selection(country_code=nil, active_only=false, whitelisted=false)
       insts = preload
       if country_code.present?
         insts = insts.select {|inst| inst.country_code == country_code && (!active_only || inst.active?) }
+      end
+      if country_code == 'HKG' && whitelisted
+        whitelist_hk_university = ['cuhk', 'cityu', 'eduhk', 'hkbu', 'hkis', 'hkmu', 'hkpu', 'hkust', 'ln', 'hku']
+        insts = insts.select { |inst| whitelist_hk_university.include?(inst.code) }
       end
       insts.sort_by(&:name).map{|inst| [inst.name, inst.code] }
     end

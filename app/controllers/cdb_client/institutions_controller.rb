@@ -19,8 +19,9 @@ module CdbClient
     protected
   
     def get_institutions
-      @institutions = Institution.for_selection(params[:country_code])
-    end
+      whitelist = params[:whitelist] == 'true'
+      @institutions = Institution.for_selection(params[:country_code], false, whitelist)
+    end    
 
   end
 end
