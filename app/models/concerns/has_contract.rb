@@ -1,4 +1,4 @@
-# Consolidating the business of grant-having.
+# Consolidating the business of funding-greeements-having.
 
 module HasContract
   extend ActiveSupport::Concern
