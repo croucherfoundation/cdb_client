@@ -7,7 +7,6 @@ module HasInstitution
     belongs_to :institution
 
     def institution
-      # Institution.preloaded(institution_code) if institution_code.present?
       Institution.find(institution_code) if institution_code.present?
     end
 
@@ -16,7 +15,7 @@ module HasInstitution
       self.institution_code = code
     end
   end
-  
+
   def institution?
     institution_code.present? && institution.present?
   end
@@ -32,7 +31,7 @@ module HasInstitution
   def short_institution_or_employer
     institution? ? institution.short_name : employer
   end
-  
+
   def institution_name=(name)
     if name.present?
       ccode = respond_to?(:from_country_code) ? from_country_code : country_code

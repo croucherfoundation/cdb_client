@@ -7,7 +7,7 @@ module HasCountry
     belongs_to :country
 
     def country
-      Country.preloaded(country_code) if country_code.present?
+      Country.find(country_code) if country_code.present?
     end
 
     def country=(country)
