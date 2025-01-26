@@ -18,6 +18,7 @@ class Contract
       issued_by_uid: nil,
       csw_partner_id: nil,
       round_id: nil,
+      year: nil,
     }.merge(attributes))
   end
 
