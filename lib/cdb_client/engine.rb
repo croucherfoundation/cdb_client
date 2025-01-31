@@ -7,17 +7,15 @@ module CdbClient
       g.fixture_replacement :factory_girl, :dir => 'spec/factories'
     end
 
-    initializer :cdb_client_helper do |app|
-      ActiveSupport.on_load :action_controller do
-        helper CdbClientHelper
+    config.to_prepare do
+      Dir.glob(Rails.root + "app/helpers/*_helper.rb").each do |c|
+        require_dependency(c)
       end
     end
 
-    initializer :cdb_client_migrations do |app|
-      unless app.root.to_s.match root.to_s
-        config.paths["db/migrate"].expanded.each do |expanded_path|
-          app.config.paths["db/migrate"] << expanded_path
-        end
+    config.to_prepare do
+      Dir.glob(Rails.root.join("db/migrate/*.rb")).each do |migration|
+        require_dependency migration
       end
     end
 
