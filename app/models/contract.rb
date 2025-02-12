@@ -22,6 +22,14 @@ class Contract
     }.merge(attributes))
   end
 
+  def self.reindex(id)
+    begin
+      post "/api/contracts/#{id}/reindex"
+    rescue JSON::ParserError
+      nil
+    end
+  end
+
   def approved?
     approved_at.present?
   end
