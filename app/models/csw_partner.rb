@@ -14,7 +14,8 @@ class CswPartner
         lat: "",
         lng: "",
         url: "",
-        image: ""
+        image: "",
+        ugc_code: nil
       })
     end
    def find_by_code(code)
