@@ -34,7 +34,7 @@ module HasInstitution
 
   def institution_name=(name)
     if name.present?
-      ccode = respond_to?(:from_country_code) ? from_country_code : country_code
+      ccode = respond_to?(:from_country_code) && from_country_code.present? ? from_country_code : country_code
       if existing = Institution.where(name: name, country_code: ccode).first
         self.institution_code = existing.code
       else

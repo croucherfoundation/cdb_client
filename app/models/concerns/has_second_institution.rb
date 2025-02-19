@@ -19,7 +19,7 @@ module HasSecondInstitution
 
   def second_institution_name=(name)
     if name.present?
-      ccode = respond_to?(:from_country_code) ? from_country_code : country_code
+      ccode = respond_to?(:from_second_country_code) && from_second_country_code.present? ? from_second_country_code : second_country_code
       if existing = Institution.where(name: name, country_code: ccode).first
         self.second_institution_code = existing.code
       else
