@@ -128,4 +128,8 @@ class Institution
     }
   end
 
+  def get_scholar_count
+    code.present? ? Person.where(institution_code: code).count : 0
+  end
+
 end

@@ -46,7 +46,7 @@
         - if with_labels
           = f.label institution_code_field
         %span{data: {role: "choose"}}
-          = f.select institution_code_field, institution_selection, {include_blank: t("placeholders.please_choose_institution")}, {data: {key: institution_code_field}}
+          = f.select institution_code_field, institution_selection, {include_blank: t("placeholders.please_choose_institution")}, {data: {key: institution_code_field, select: 'select2'}}
         %span{data: {role: "add"}}
           = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: ""
         - if with_employer
