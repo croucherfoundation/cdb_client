@@ -49,6 +49,7 @@ class Institution
         code: "",
         abbreviation: "",
         ugc_code: "",
+        admin_code: "",
         country_code: "",
         address: "",
         lat: "",
