@@ -1,4 +1,4 @@
-class AwardTypeTermAndCondition 
+class AwardTypeTermAndCondition
   include Her::JsonApi::Model
   use_api CDB
   collection_path "/api/award_type_term_and_conditions"
@@ -7,15 +7,21 @@ class AwardTypeTermAndCondition
 
   class << self
     def new_with_defaults(attributes={})
-    AwardTypeTermAndCondition.new({
-      award_type_code: nil,
-      term_and_condition_id: nil,
-      custom_content: "",
-      custom_content_enable: false,
-      position: nil
+      AwardTypeTermAndCondition.new({
+        award_type_code: nil,
+        term_and_condition_id: nil,
+        custom_content: "",
+        custom_content_enable: false,
+        position: nil
 
-    }.merge(attributes))
-  end
+      }.merge(attributes))
+    end
+
+    def reposition(id, params={})
+      put "/api/award_type_term_and_conditions/#{id}/reposition", params
+    rescue JSON::ParserError
+      nil
+    end
   end
 
 end

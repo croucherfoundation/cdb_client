@@ -18,5 +18,11 @@ class AwardTypeStipendAllowance
         position: nil
       }.merge(attributes))
     end
+
+    def reposition(id, params={})
+      put "api/award_type_stipend_allowances/#{id}/reposition", params
+    rescue JSON::ParserError
+      nil
+    end
   end
 end
