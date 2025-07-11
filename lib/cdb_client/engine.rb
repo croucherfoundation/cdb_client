@@ -1,3 +1,5 @@
+require_relative "../../app/helpers/cdb_client_helper"
+
 module CdbClient
   class Engine < ::Rails::Engine
     isolate_namespace CdbClient
@@ -7,9 +9,9 @@ module CdbClient
       g.fixture_replacement :factory_girl, :dir => 'spec/factories'
     end
 
-    initializer :cdb_client_helper do |app|
+    initializer "cdb_client.integration" do
       ActiveSupport.on_load :action_controller do
-        helper CdbClientHelper
+        helper ::CdbClientHelper
       end
     end
 
