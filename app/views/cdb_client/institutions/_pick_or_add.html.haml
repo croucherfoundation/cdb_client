@@ -76,7 +76,7 @@
   %fieldset.institution_chooser{data: {role: "institution", required: required}}
     - if whitelist_institute
       = f.hidden_field 'whitelisted', value: true, class: 'whitelist_institute'
-    %p.onecol.appl_form_onecol.pb-7
+    %p.onecol.appl_form_onecol.pb-7 
       %span.col.first>
         - if with_labels
           = f.label country_code_field, 'Country'
