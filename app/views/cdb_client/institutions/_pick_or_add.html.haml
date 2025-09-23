@@ -76,12 +76,12 @@
   %fieldset.institution_chooser{data: {role: "institution", required: required}}
     - if whitelist_institute
       = f.hidden_field 'whitelisted', value: true, class: 'whitelist_institute'
-    %p.onecol.appl_form_onecol.pt-16#mb-22
+    %p.onecol.appl_form_onecol.pb-7
       %span.col.first>
         - if with_labels
           = f.label country_code_field, 'Country'
         = f.select country_code_field, country_options, {include_blank: t("placeholders.please_choose_country"), selected: country_code, disabled: "-"}, data: {key: country_code_field, role: 'country'}
-    %p.onecol.appl_form_onecol#mb-22    
+    %p.onecol.appl_form_onecol.pb-7    
       - select_cell_class = additional_field ? "col" : "col last"
       %span{class: select_cell_class}>
         - if with_labels
@@ -102,7 +102,7 @@
           = link_to t(:other_employer), '#', class: 'note', data: {role: "showother"}
 
       - if additional_field
-        %p.onecol.appl_form_onecol#mb-m9
+        %p.onecol.appl_form_onecol.mb-m9
           %span.col.last>
             - if with_labels
               - if additional_field == :post
