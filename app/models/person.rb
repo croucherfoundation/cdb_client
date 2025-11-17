@@ -90,7 +90,7 @@ class Person
     end
 
   end
-  
+
   def latest_award
     awards.sort_by(&:year).last
   end
@@ -225,6 +225,14 @@ class Person
     rescue JSON::ParserError
       nil
     end
+  end
+
+  # These actions are called from Dataroom to manage institution code changes
+  #
+  def self.update_institution(old_code, new_code)
+    post "/api/people/update_institution?old_code=#{old_code}&new_code=#{new_code}"
+  rescue JSON::ParserError
+    nil
   end
 
 end
