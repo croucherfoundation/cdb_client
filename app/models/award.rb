@@ -43,7 +43,10 @@ class Award
       expected_value: "",
       year: Date.today.year,
       scientific_tags: "",
-      admin_tags: ""
+      admin_tags: "",
+      field: "",
+      degree: "",
+      supervisors: []
     }.merge(attributes))
   end
 
