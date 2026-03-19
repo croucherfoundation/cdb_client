@@ -48,7 +48,8 @@ class Grant
         scientific_tags: "",
         admin_tags: "",
         parent_id: nil,
-        child_ids: []
+        child_ids: [],
+        record_code: nil
       }.merge(attributes))
     end
 

@@ -42,13 +42,13 @@ module HasDirectors
             if instance_variable_set(person_instance_var, Person.find(v['id']))
               instance_variable_get(person_instance_var).assign_attributes(v)
               instance_variable_get(person_instance_var).save
-              person_uids<<instance_variable_get(person_instance_var).uid
+              person_uids << instance_variable_get(person_instance_var).uid
             end
           else
             person = create_person(attributes[k])
             if person.present?
               instance_variable_set(person_instance_var, Person.find(person.uid))
-              person_uids<<instance_variable_get(person_instance_var).uid
+              person_uids << instance_variable_get(person_instance_var).uid
             end
           end
         end
@@ -57,23 +57,20 @@ module HasDirectors
       if attributes['id'].present? && instance_variable_set(person_instance_var, Person.find(attributes['id']))
         instance_variable_get(person_instance_var).assign_attributes(attributes)
         instance_variable_get(person_instance_var).save
-        person_uids<<instance_variable_get(person_instance_var).uid
+        person_uids << instance_variable_get(person_instance_var).uid
       else
         person = create_person(attributes)
         if person.present?
           instance_variable_set(person_instance_var, Person.find(person.uid))
-          person_uids<<instance_variable_get(person_instance_var).uid
+          person_uids << instance_variable_get(person_instance_var).uid
         end
       end
     end
 
-    self[uids_field] ||= []
-    if person_uids.length > 1
-      self[uids_field] << person_uids
-    else
-      self[uids_field] << instance_variable_get(person_instance_var).uid
-    end
-    self[uids_field].uniq!
+    # Use dynamic accessors because this model does not support []= style assignment.
+    current_uids = Array(send(uids_field))
+    current_uids.concat(person_uids.compact)
+    send("#{uids_field}=", current_uids.uniq)
   end
 
   def multiple_person_attributes?(attributes)
@@ -106,7 +103,7 @@ module HasDirectors
 
   def create_person(attributes)
     person = Person.new(title: attributes['title'], given_name: attributes['given_name'], family_name: attributes['family_name'], country_code: attributes['country_code'], institution_code: attributes['institution_code'], institution_name: attributes['institution_name'], post: attributes['post'])
-    person.save
+    person.save ? person : nil
   end
 
 end
