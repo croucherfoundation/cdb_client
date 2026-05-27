@@ -6,6 +6,10 @@ CdbClient::Engine.routes.draw do
   # Institution-pickers are repopulated when a country is chosen.
   get "/institutions/:country_code" => "institutions#index", :as => 'country_institutions', :defaults => {:format => :json}
   get "/institutions_suggestions" => "institutions#suggest", :as => 'institutions_suggestions', :defaults => {:format => :json}
+
+  # University typeahead search for university picker
+  get "/universities/search" => "universities#search", :as => 'universities_search', :defaults => {:format => :json}
+
   # Likewise timezones
   get "/tz/:country_code" => "countries#timezones", :as => 'country_timezones', :defaults => {:format => :json}
 

@@ -1,0 +1,22 @@
+-# University Picker - typeahead search field for universities
+-# Usage: = render "cdb_client/universities/picker", f: f, field_name: :institution_code
+-#
+-# Options:
+-#   f             - form builder
+-#   field_name    - the form field to store the selected university ID (default: :institution_code)
+-#   confirmed_name_field - hidden field for the confirmed name (default: :user_confirmed_name)
+-#   required      - whether the field is required (default: false)
+-#   placeholder   - placeholder text (default: "Search for a university...")
+-#   label         - label text (default: "University")
+
+- field_name ||= :institution_code
+- confirmed_name_field ||= :user_confirmed_name
+- required ||= false
+- placeholder ||= "Search for a university..."
+- label_text ||= "University"
+- label_class = required ? "required" : ""
+
+.university-picker-field
+  %label{class: label_class}= label_text
+  = f.text_field field_name, data: { role: "university-picker", search_url: cdb_client.universities_search_path }, placeholder: placeholder, class: "university-picker-input", required: required
+  = f.hidden_field confirmed_name_field, data: { role: "user-confirmed-name" }
