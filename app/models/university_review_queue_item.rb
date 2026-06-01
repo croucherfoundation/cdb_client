@@ -4,7 +4,11 @@ class UniversityReviewQueueItem
   use_api CDB
   collection_path "/api/university_review_queue"
 
-  belongs_to :application_university_entry
+  def application_university_entry
+    data = attributes[:application_university_entry]
+    return nil unless data.is_a?(Hash)
+    OpenStruct.new(data)
+  end
 
   class << self
     def pending
