@@ -6,6 +6,7 @@ class Institution
   primary_key :code
 
   belongs_to :country, foreign_key: :country_code
+  has_many :institution_aliases
 
   class << self
 

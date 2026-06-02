@@ -7,7 +7,7 @@ class ApplicationUniversityEntry
   include_root_in_json true
   parse_root_in_json false
 
-  belongs_to :university
+  belongs_to :institution, foreign_key: :institution_code, primary_key: :code
 
   class << self
     def for_application(application_id)
