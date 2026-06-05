@@ -280,6 +280,11 @@
         } else {
           this.showSelect();
         }
+        // Refresh institutions to load alias data for Select2 search
+        var initialCountry = this._country_chooser.val();
+        if (initialCountry) {
+          this._select.trigger('refresh', initialCountry);
+        }
       }
 
       InstitutionOrEmployer.prototype.removeInstitutionOption = function(e) {
@@ -331,10 +336,10 @@
       };
 
       InstitutionOrEmployer.prototype.setOptions = function(data) {
-        var code, i, institution_suggest_selection, len, name, pair, ref, reselectable;
+        var code, i, institution_suggest_selection, len, name, aliases, pair, ref, reselectable;
         this._request = null;
         if (data.length) {
-          this.appendOption("", "");
+          this.appendOption("", "", "");
           institution_suggest_selection = $('.institution_suggest_selection');
           if (institution_suggest_selection && institution_suggest_selection.next('.dropdown')) {
             institution_suggest_selection.next('.dropdown').empty();
@@ -342,23 +347,30 @@
           reselectable = [];
           for (i = 0, len = data.length; i < len; i++) {
             pair = data[i];
-            name = pair[0], code = pair[1];
+            name = pair[0], code = pair[1], aliases = pair[2] || "";
             if (name !== 'Hospital Authority' && name !== 'Open University of Hong Kong') {
-              this.appendOption(name, code);
+              this.appendOption(name, code, aliases);
             }
             if (this._previous_values.contains(code)) {
               reselectable.push(code);
             }
           }
           this._select.val((ref = reselectable[0]) != null ? ref : "");
+          if (this._select.data('select2')) {
+            this._select.trigger('change.select2');
+          }
           return this.showSelect();
         } else {
           return this.showAdd();
         }
       };
 
-      InstitutionOrEmployer.prototype.appendOption = function(name, code) {
-        return this._select.append($("<option />").val(code).text(name));
+      InstitutionOrEmployer.prototype.appendOption = function(name, code, aliases) {
+        var $opt = $("<option />").val(code).text(name);
+        if (aliases) {
+          $opt.attr('data-aliases', aliases);
+        }
+        return this._select.append($opt);
       };
 
       InstitutionOrEmployer.prototype.showAdd = function(e) {
