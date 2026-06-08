@@ -37,6 +37,8 @@ module HasInstitution
       ccode = respond_to?(:from_country_code) && from_country_code.present? ? from_country_code : country_code
       if existing = Institution.where(name: name, country_code: ccode).first
         self.institution_code = existing.code
+      elsif match = find_institution_by_alias(name, ccode)
+        self.institution_code = match.code
       else
         created = Institution.create(name: name, country_code: ccode)
         self.institution_code = created.code
@@ -62,6 +64,24 @@ module HasInstitution
 
   def geojson_location
     institution.geojson_location if institution?
+  end
+
+  private
+
+  def find_institution_by_alias(name, ccode)
+    params = { q: name, show: 1 }
+    params[:country_code] = ccode if ccode.present?
+    results = Institution.where(params)
+    return nil unless results.any?
+    match = results.first
+    match_name = match.name.to_s.downcase
+    query_name = name.downcase.strip
+    return match if match_name == query_name
+    return match if match.respond_to?(:abbreviation) && match.abbreviation.to_s.downcase == query_name
+    return match if match.respond_to?(:alias_names) && Array(match.alias_names).any? { |a| a.downcase == query_name }
+    nil
+  rescue StandardError
+    nil
   end
 
 end
