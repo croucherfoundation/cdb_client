@@ -24,15 +24,17 @@ module HasSecondInstitution
         self.second_institution_code = existing.code
       elsif match = find_second_institution_by_alias(name, ccode)
         self.second_institution_code = match.code
-      else
-        created = Institution.create(name: name, country_code: ccode)
-        self.second_institution_code = created.code
       end
+      @pending_second_institution_name = name if second_institution_code.blank?
     end
   end
 
   def second_institution_name
-    second_institution.name if second_institution?
+    if second_institution?
+      second_institution.name
+    else
+      @pending_second_institution_name
+    end
   end
 
   def second_institution_definite_name

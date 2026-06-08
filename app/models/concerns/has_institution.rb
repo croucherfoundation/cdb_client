@@ -39,15 +39,17 @@ module HasInstitution
         self.institution_code = existing.code
       elsif match = find_institution_by_alias(name, ccode)
         self.institution_code = match.code
-      else
-        created = Institution.create(name: name, country_code: ccode)
-        self.institution_code = created.code
       end
+      @pending_institution_name = name if institution_code.blank?
     end
   end
 
   def institution_name
-    institution.name if institution?
+    if institution?
+      institution.name
+    else
+      @pending_institution_name
+    end
   end
 
   def institution_definite_name
