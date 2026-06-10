@@ -18,6 +18,8 @@
 
 - institution_name_placeholder ||= t('placeholders.institution_name')
 - label_class = required ? "required" : ""
+- pending_field = institution_name_field.to_s.include?('second') ? :pending_second_institution_name : :pending_institution_name
+- pending_name = f.object.respond_to?(pending_field) ? f.object.read_attribute(pending_field) : nil
 - employer_name_field ||= :employer
 - employer_name_placeholder ||= t('placeholders.employer')
 - employer_address_placeholder ||= t('placeholders.employer_address')
@@ -48,7 +50,7 @@
         %span{data: {role: "choose"}}
           = f.select institution_code_field, institution_selection, {include_blank: t("placeholders.please_choose_institution")}, {data: {key: institution_code_field, select: 'select2'}}
         %span{data: {role: "add"}}
-          = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: ""
+          = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
         - if with_employer
           %span{data: {role: "other"}}
             = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}
@@ -89,7 +91,7 @@
         %span{data: {role: "choose"}}
           = f.select institution_code_field, institution_selection, {include_blank: t("placeholders.please_choose_institution")}, {data: {key: institution_code_field, select: 'select2'}}
         %span{data: {role: "add"}}
-          = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: ""
+          = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
         - if with_employer
           %span{data: {role: "other"}}
             = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}

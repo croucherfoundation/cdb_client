@@ -22,8 +22,12 @@ module HasSecondInstitution
       ccode = respond_to?(:from_second_country_code) && from_second_country_code.present? ? from_second_country_code : second_country_code
       if existing = Institution.where(name: name, country_code: ccode).first
         self.second_institution_code = existing.code
+        self.pending_second_institution_name = nil if respond_to?(:pending_second_institution_name=)
       elsif match = find_second_institution_by_alias(name, ccode)
         self.second_institution_code = match.code
+        self.pending_second_institution_name = nil if respond_to?(:pending_second_institution_name=)
+      else
+        self.pending_second_institution_name = name if respond_to?(:pending_second_institution_name=)
       end
       @pending_second_institution_name = name if second_institution_code.blank?
     end
@@ -33,7 +37,7 @@ module HasSecondInstitution
     if second_institution?
       second_institution.name
     else
-      @pending_second_institution_name
+      @pending_second_institution_name || (respond_to?(:pending_second_institution_name) && read_attribute(:pending_second_institution_name))
     end
   end
 

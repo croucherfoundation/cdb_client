@@ -14,12 +14,13 @@ class ApplicationUniversityEntry
       where(application_id: application_id).all
     end
 
-    def create_entry(application_id:, field_type:, user_entered_name:, user_confirmed_name: nil)
+    def create_entry(application_id:, field_type:, user_entered_name:, user_confirmed_name: nil, source_record_id: nil)
       create(
         application_id: application_id,
         field_type: field_type,
         user_entered_name: user_entered_name,
-        user_confirmed_name: user_confirmed_name || user_entered_name
+        user_confirmed_name: user_confirmed_name,
+        source_record_id: source_record_id
       )
     end
   end
