@@ -42,6 +42,7 @@ module HasInstitution
         self.institution_code = match.code
         self.pending_institution_name = nil if respond_to?(:pending_institution_name=)
       else
+        self.institution_code = nil
         self.pending_institution_name = name if respond_to?(:pending_institution_name=)
       end
       @pending_institution_name = name if institution_code.blank?
