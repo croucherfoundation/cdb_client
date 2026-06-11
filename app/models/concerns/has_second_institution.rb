@@ -3,6 +3,19 @@
 module HasSecondInstitution
   extend ActiveSupport::Concern
 
+  included do
+    # The picker submits a typed, unmatched name as "pending:<name>" in the
+    # second_institution_code field. Convert it to a name lookup so it resolves
+    # to a code or is stored as a pending name.
+    before_validation :normalize_pending_second_institution_code if respond_to?(:before_validation)
+  end
+
+  def normalize_pending_second_institution_code
+    if second_institution_code.to_s.start_with?('pending:')
+      self.second_institution_name = second_institution_code.to_s.sub(/\Apending:/, '')
+    end
+  end
+
   def second_institution
     # here we guess that it's probably going to be cheaper to get everything than to retrieve one at a time
     Institution.preloaded(second_institution_code) if second_institution_code.present?
@@ -15,14 +28,6 @@ module HasSecondInstitution
   def second_institution=(code)
     code = code.code if code.is_a? Institution
     self.second_institution_code = code
-  end
-
-  def second_institution_code=(value)
-    if value.present? && value.to_s.start_with?('pending:')
-      self.second_institution_name = value.sub('pending:', '')
-    else
-      super(value)
-    end
   end
 
   def second_institution_name=(name)

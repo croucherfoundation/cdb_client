@@ -251,6 +251,7 @@
         this.receive = bind(this.receive, this);
         this.restrict = bind(this.restrict, this);
         this.noteValue = bind(this.noteValue, this);
+        this.capturePendingOption = bind(this.capturePendingOption, this);
         this.removeInstitutionOption = bind(this.removeInstitutionOption, this);
         var ref;
         this._container = $(element);
@@ -275,6 +276,10 @@
         this._otherer.bind('click', this.showOther);
         this.noteValue();
         this.removeInstitutionOption();
+        // Capture any server-rendered pending (unverified) institution name BEFORE
+        // the show* helpers clear the add-input, so it can be re-applied to the
+        // dropdown after the country AJAX rebuild on reload.
+        this.capturePendingOption();
         if (this._other.find('input').val()) {
           this.showOther();
         } else if (this._add.find('input').val() && !(this._select.val() && this._select.val().indexOf('pending:') === 0)) {
@@ -301,17 +306,50 @@
       InstitutionOrEmployer.prototype.noteValue = function(e) {
         var value;
         value = this._select.val();
+        // A real institution was chosen: drop any pending fallback so it is not
+        // re-added on the next country rebuild.
+        if (value && value.indexOf('pending:') !== 0) {
+          this._pendingOption = null;
+        }
         return this._previous_values.push(value);
       };
 
+      // Reads the pending (unverified) institution name from the stable add-input
+      // (input.institution_suggest_selection), which the server renders with the
+      // pending name. Falls back to a pending value still present on the select.
+      InstitutionOrEmployer.prototype.capturePendingOption = function() {
+        var selectVal, pendingName;
+        selectVal = this._select.val();
+        pendingName = this._add.find('input').val();
+        console.log("Capturing pending institution option:", { selectVal, pendingName });
+        if (selectVal && selectVal.indexOf('pending:') === 0) {
+          this._pendingOption = { value: selectVal, text: this._select.find('option:selected').text() };
+        } else if (pendingName && pendingName.length) {
+          this._pendingOption = { value: 'pending:' + pendingName, text: pendingName + ' (unverified)' };
+        } else {
+          this._pendingOption = null;
+        }
+        if (this._pendingOption && !this._previous_values.contains(this._pendingOption.value)) {
+          this._previous_values.push(this._pendingOption.value);
+        }
+      };
+
       InstitutionOrEmployer.prototype.restrict = function(e, country_code) {
-        var data, ref;
+        var data, ref, currentVal;
         if (country_code === 'HKG') {
           this._adder.hide();
           this._or.hide();
         } else {
           this._adder.show();
           this._or.show();
+        }
+        // Preserve a pending (unverified) option across the rebuild. If the live
+        // select holds a freshly typed pending value, capture it; otherwise keep
+        // whatever pending option we already have (captured at construction). Do
+        // NOT null it here, or AJAX rebuild races would wipe it on reload.
+        currentVal = this._select.val();
+        if (currentVal && currentVal.indexOf('pending:') === 0) {
+          this._pendingOption = { value: currentVal, text: this._select.find('option:selected').text() };
         }
         this._select.empty();
         if ((ref = this._request) != null) {
@@ -340,6 +378,11 @@
       InstitutionOrEmployer.prototype.setOptions = function(data) {
         var code, i, institution_suggest_selection, len, name, aliases, pair, ref, reselectable;
         this._request = null;
+        // Prepend the pending (unverified) option to the data list so it is
+        // rebuilt and re-selected like any other institution on reload.
+        if (this._pendingOption) {
+          data = [[this._pendingOption.text, this._pendingOption.value, ""]].concat(data);
+        }
         if (data.length) {
           this.appendOption("", "", "");
           institution_suggest_selection = $('.institution_suggest_selection');
@@ -357,8 +400,12 @@
               reselectable.push(code);
             }
           }
-          this._select.val((ref = reselectable[0]) != null ? ref : "");
-          if (this._select.data('select2')) {
+          if (this._pendingOption) {
+            this._select.val(this._pendingOption.value);
+          } else {
+            this._select.val((ref = reselectable[0]) != null ? ref : "");
+          }
+          if (this._select.data('select2') || this._select.hasClass('select2-hidden-accessible')) {
             this._select.trigger('change.select2');
           }
           return this.showSelect();

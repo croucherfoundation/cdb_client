@@ -15,12 +15,15 @@ module HasInstitution
       self.institution_code = code
     end
 
-    def institution_code=(value)
-      if value.present? && value.to_s.start_with?('pending:')
-        self.institution_name = value.sub('pending:', '')
-      else
-        super(value)
-      end
+    # The institution picker (Select2 with tags) submits a typed, unmatched name
+    # as "pending:<name>" in the institution_code field. Convert it to a name
+    # lookup so it resolves to a code or is stored as a pending name.
+    before_validation :normalize_pending_institution_code if respond_to?(:before_validation)
+  end
+
+  def normalize_pending_institution_code
+    if institution_code.to_s.start_with?('pending:')
+      self.institution_name = institution_code.to_s.sub(/\Apending:/, '')
     end
   end
 
