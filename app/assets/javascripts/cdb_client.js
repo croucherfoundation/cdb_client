@@ -321,9 +321,13 @@
         var selectVal, pendingName;
         selectVal = this._select.val();
         pendingName = this._add.find('input').val();
-        console.log("Capturing pending institution option:", { selectVal, pendingName });
         if (selectVal && selectVal.indexOf('pending:') === 0) {
           this._pendingOption = { value: selectVal, text: this._select.find('option:selected').text() };
+        } else if (selectVal && selectVal.length) {
+          // A real institution is already selected (e.g. resolved by an admin):
+          // never treat a leftover add-input name as pending, or we would
+          // override the resolved selection on rebuild.
+          this._pendingOption = null;
         } else if (pendingName && pendingName.length) {
           this._pendingOption = { value: 'pending:' + pendingName, text: pendingName + ' (unverified)' };
         } else {
