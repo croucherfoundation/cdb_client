@@ -14,6 +14,14 @@ module HasInstitution
       code = code.code if code.is_a? Institution
       self.institution_code = code
     end
+
+    def institution_code=(value)
+      if value.present? && value.to_s.start_with?('pending:')
+        self.institution_name = value.sub('pending:', '')
+      else
+        super(value)
+      end
+    end
   end
 
   def institution?

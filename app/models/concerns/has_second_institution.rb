@@ -17,6 +17,14 @@ module HasSecondInstitution
     self.second_institution_code = code
   end
 
+  def second_institution_code=(value)
+    if value.present? && value.to_s.start_with?('pending:')
+      self.second_institution_name = value.sub('pending:', '')
+    else
+      super(value)
+    end
+  end
+
   def second_institution_name=(name)
     if name.present?
       ccode = respond_to?(:from_second_country_code) && from_second_country_code.present? ? from_second_country_code : second_country_code
@@ -27,6 +35,7 @@ module HasSecondInstitution
         self.second_institution_code = match.code
         self.pending_second_institution_name = nil if respond_to?(:pending_second_institution_name=)
       else
+        self.second_institution_code = nil
         self.pending_second_institution_name = name if respond_to?(:pending_second_institution_name=)
       end
       @pending_second_institution_name = name if second_institution_code.blank?

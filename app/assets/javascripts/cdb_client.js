@@ -277,7 +277,7 @@
         this.removeInstitutionOption();
         if (this._other.find('input').val()) {
           this.showOther();
-        } else if (this._add.find('input').val()) {
+        } else if (this._add.find('input').val() && !(this._select.val() && this._select.val().indexOf('pending:') === 0)) {
           this.showAdd();
         } else {
           this.showSelect();
