@@ -11,7 +11,7 @@ module HasSecondInstitution
   end
 
   def normalize_pending_second_institution_code
-    if second_institution_code.to_s.start_with?('pending:')
+    if respond_to?(:second_institution_code) && second_institution_code.to_s.start_with?('pending:')
       self.second_institution_name = second_institution_code.to_s.sub(/\Apending:/, '')
     end
   end

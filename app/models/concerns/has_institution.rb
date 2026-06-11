@@ -22,7 +22,7 @@ module HasInstitution
   end
 
   def normalize_pending_institution_code
-    if institution_code.to_s.start_with?('pending:')
+    if respond_to?(:institution_code) && institution_code.to_s.start_with?('pending:')
       self.institution_name = institution_code.to_s.sub(/\Apending:/, '')
     end
   end
