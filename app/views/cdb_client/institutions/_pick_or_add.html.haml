@@ -19,7 +19,7 @@
 - institution_name_placeholder ||= t('placeholders.institution_name')
 - label_class = required ? "required" : ""
 - pending_field = institution_name_field.to_s.include?('second') ? :pending_second_institution_name : :pending_institution_name
-- pending_name = f.object.respond_to?(pending_field) ? f.object.read_attribute(pending_field) : nil
+- pending_name = f.object.respond_to?(pending_field) ? f.object.send(pending_field) : nil
 - employer_name_field ||= :employer
 - employer_name_placeholder ||= t('placeholders.employer')
 - employer_address_placeholder ||= t('placeholders.employer_address')
