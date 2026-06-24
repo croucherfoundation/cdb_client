@@ -30,14 +30,14 @@ class Institution
         whitelist_hk_university = ['cuhk', 'cityu', 'eduhk', 'hkbu', 'hkis', 'hkmu', 'hkpu', 'hkust', 'ln', 'hku']
         insts = insts.select { |inst| whitelist_hk_university.include?(inst.code) }
       end
-      insts.sort_by(&:name).map{|inst| [inst.name, inst.code] }
+      insts.sort_by(&:name).map{|inst| [inst.name_with_location, inst.code] }
     end
     
     #NB this is a selection of likely partner institutions, not just everything in HK
     #
     def hk_for_selection
       insts = preload.select{|inst| inst.hk?}
-      insts.sort_by(&:name).map{|inst| [inst.name, inst.code] }
+      insts.sort_by(&:name).map{|inst| [inst.name_with_location, inst.code] }
     end
 
     def active_for_selection(country_code=nil)
