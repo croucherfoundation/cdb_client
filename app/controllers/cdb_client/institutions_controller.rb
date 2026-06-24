@@ -33,7 +33,7 @@ module CdbClient
         whitelist_hk_university = ['cuhk', 'cityu', 'eduhk', 'hkbu', 'hkis', 'hkmu', 'hkpu', 'hkust', 'ln', 'hku']
         insts = insts.select { |inst| whitelist_hk_university.include?(inst.code) }
       end
-      @institutions = insts.sort_by(&:name).map { |inst| [inst.name, inst.code, Array(inst.try(:alias_names)).join('|')] }
+      @institutions = insts.sort_by(&:name).map { |inst| [inst.name_with_location, inst.code, Array(inst.try(:alias_names)).join('|')] }
     end    
 
   end
