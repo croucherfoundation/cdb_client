@@ -1,7 +1,3 @@
--# Local override of cdb_client gem partial (Gemfile line 69).
--# Adds a `readonly` local: when true, the country & institution selects, the
--# institution-name input and the employer input are locked; hidden_fields are
--# emitted so disabled selects still submit their values. Toggle links are hidden.
 - institution ||= nil
 - only_likely_countries ||= false
 - default_country_code ||= nil
@@ -45,33 +41,52 @@
   - country_options = Country.likely_for_selection
 - else
   - country_options = Country.for_selection
+
+-# When locked, resolve full names through the same preload cache the dropdown
+-# uses, falling back to a label lookup, then to the raw code as a last resort.
+- if readonly
+  - country_obj   = country_code.present? ? Country.preloaded(country_code) : nil
+  - country_label = country_obj&.name
+  - country_label ||= (country_options.to_h.key(country_code) rescue nil)
+  - country_label = country_code.to_s if country_label.blank?
+  - inst_obj      = institution_code_value.present? ? Institution.preloaded(institution_code_value) : nil
+  - inst_label    = inst_obj&.name_with_location
+  - inst_label  ||= (institution_selection.to_h.key(institution_code_value) rescue nil)
+  - inst_label    = institution_code_value.to_s if inst_label.blank?
+  - employer_value = f.object.respond_to?(employer_name_field) ? f.object.send(employer_name_field) : nil
+
 - unless one_col
-  %fieldset.institution_chooser{class: (readonly ? 'readonly' : nil), data: {role: "institution", required: required}}
+  %fieldset.institution_chooser{class: (readonly ? 'readonly locked' : nil), data: {role: ("institution" unless readonly), required: required}}
     - if whitelist_institute
       = f.hidden_field 'whitelisted', value: true, class: 'whitelist_institute'
     %p{class: rowclass}
       %span.col.first>
         - if with_labels
           = f.label country_code_field
-        = f.select country_code_field, country_options, {include_blank: t("placeholders.please_choose_country"), selected: country_code, disabled: "-"}, data: {key: country_code_field, role: 'country'}, disabled: readonly
         - if readonly
+          = text_field_tag nil, country_label, readonly: true, class: 'locked', tabindex: -1
           = f.hidden_field country_code_field, value: country_code
+        - else
+          = f.select country_code_field, country_options, {include_blank: t("placeholders.please_choose_country"), selected: country_code, disabled: "-"}, data: {key: country_code_field, role: 'country'}
 
       - select_cell_class = additional_field ? "col" : "col last"
       %span{class: select_cell_class}>
         - if with_labels
           = f.label institution_code_field
-        %span{data: {role: "choose"}}
-          - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution")}
-          = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2'}, disabled: readonly}
-          - if readonly
-            = f.hidden_field institution_code_field, value: institution_code_value
-        %span{data: {role: "add"}}
-          = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s, readonly: readonly
-        - if with_employer
-          %span{data: {role: "other"}}
-            = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}, readonly: readonly
-        - unless readonly
+        - if readonly
+          = text_field_tag nil, inst_label, readonly: true, class: 'locked', tabindex: -1
+          = f.hidden_field institution_code_field, value: institution_code_value
+          - if with_employer && employer_value.present?
+            = f.text_field employer_name_field, readonly: true, class: 'locked', tabindex: -1
+        - else
+          %span{data: {role: "choose"}}
+            - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution")}
+            = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2'}}
+          %span{data: {role: "add"}}
+            = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
+          - if with_employer
+            %span{data: {role: "other"}}
+              = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}
           %br
           = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
           -# = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}
@@ -89,36 +104,44 @@
               = f.label additional_field
           = f.text_field additional_field, placeholder: additional_field == :post ? "Position" : additional_field_placeholder
 
-    - if with_employer && with_employer_address
+    - if with_employer && with_employer_address && !readonly
       %p.address{data: {role: "other"}}
         = f.text_area :employer_address, placeholder: employer_address_placeholder
+    - elsif with_employer && with_employer_address && readonly && f.object.respond_to?(:employer_address) && f.object.employer_address.present?
+      %p.address
+        = f.text_area :employer_address, readonly: true, class: 'locked', tabindex: -1
 - else
-  %fieldset.institution_chooser{class: (readonly ? 'readonly' : nil), data: {role: "institution", required: required}}
+  %fieldset.institution_chooser{class: (readonly ? 'readonly locked' : nil), data: {role: ("institution" unless readonly), required: required}}
     - if whitelist_institute
       = f.hidden_field 'whitelisted', value: true, class: 'whitelist_institute'
     %p.onecol.appl_form_onecol
       %span.col.first>
         - if with_labels
           = f.label country_code_field, 'Country'
-        = f.select country_code_field, country_options, {include_blank: t("placeholders.please_choose_country"), selected: country_code, disabled: "-"}, data: {key: country_code_field, role: 'country'}, disabled: readonly
         - if readonly
+          = text_field_tag nil, country_label, readonly: true, class: 'locked', tabindex: -1
           = f.hidden_field country_code_field, value: country_code
+        - else
+          = f.select country_code_field, country_options, {include_blank: t("placeholders.please_choose_country"), selected: country_code, disabled: "-"}, data: {key: country_code_field, role: 'country'}
     %p.onecol.appl_form_onecol
       - select_cell_class = additional_field ? "col" : "col last"
       %span{class: select_cell_class}>
         - if with_labels
           = f.label institution_code_field, 'University'
-        %span{data: {role: "choose"}}
-          - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution")}
-          = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2'}, disabled: readonly}
-          - if readonly
-            = f.hidden_field institution_code_field, value: institution_code_value
-        %span{data: {role: "add"}}
-          = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s, readonly: readonly
-        - if with_employer
-          %span{data: {role: "other"}}
-            = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}, readonly: readonly
-        - unless readonly
+        - if readonly
+          = text_field_tag nil, inst_label, readonly: true, class: 'locked', tabindex: -1
+          = f.hidden_field institution_code_field, value: institution_code_value
+          - if with_employer && employer_value.present?
+            = f.text_field employer_name_field, readonly: true, class: 'locked', tabindex: -1
+        - else
+          %span{data: {role: "choose"}}
+            - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution")}
+            = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2'}}
+          %span{data: {role: "add"}}
+            = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
+          - if with_employer
+            %span{data: {role: "other"}}
+              = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}
           %br
           = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
           -# = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}
@@ -137,6 +160,9 @@
                 = f.label additional_field
             = f.text_field additional_field, placeholder: additional_field == :post ? "Position" : additional_field_placeholder
 
-    - if with_employer && with_employer_address
+    - if with_employer && with_employer_address && !readonly
       %p.address{data: {role: "other"}}
         = f.text_area :employer_address, placeholder: employer_address_placeholder
+    - elsif with_employer && with_employer_address && readonly && f.object.respond_to?(:employer_address) && f.object.employer_address.present?
+      %p.address
+        = f.text_area :employer_address, readonly: true, class: 'locked', tabindex: -1
