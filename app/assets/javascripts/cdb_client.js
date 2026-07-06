@@ -339,7 +339,7 @@
       };
 
       InstitutionOrEmployer.prototype.restrict = function(e, country_code) {
-        var data, ref, currentVal;
+        var data, ref, currentVal, selectedCode, selectedText;
         if (country_code === 'HKG') {
           this._adder.hide();
           this._or.hide();
@@ -355,7 +355,17 @@
         if (currentVal && currentVal.indexOf('pending:') === 0) {
           this._pendingOption = { value: currentVal, text: this._select.find('option:selected').text() };
         }
+        selectedCode = currentVal;
+        selectedText = this._select.find('option:selected').text();
         this._select.empty();
+        // Keep showing the last-known selection while fresh options are loading.
+        if (selectedCode && selectedText) {
+          this.appendOption(selectedText, selectedCode, "");
+          this._select.val(selectedCode);
+          if (this._select.data('select2') || this._select.hasClass('select2-hidden-accessible')) {
+            this._select.trigger('change.select2');
+          }
+        }
         if ((ref = this._request) != null) {
           ref.abort();
         }
