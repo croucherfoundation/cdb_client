@@ -267,6 +267,7 @@
         this._select = this._choose.find('select');
         this._or = this._container.find('span.or');
         this._whitelistField = this._container.find('.whitelist_institute');
+        this._last_country_code = this._country_chooser.val();
         this._url = (ref = this._select.attr('data-url')) != null ? ref : '/cdb/institutions';
         this._select.bind('refresh', this.restrict);
         this._select.bind('change', this.noteValue);
@@ -339,7 +340,7 @@
       };
 
       InstitutionOrEmployer.prototype.restrict = function(e, country_code) {
-        var data, ref, currentVal, selectedCode, selectedText;
+        var data, ref, currentVal, selectedCode, selectedText, countryChanged;
         if (country_code === 'HKG') {
           this._adder.hide();
           this._or.hide();
@@ -347,6 +348,7 @@
           this._adder.show();
           this._or.show();
         }
+        countryChanged = this._last_country_code && this._last_country_code !== country_code;
         // Preserve a pending (unverified) option across the rebuild. If the live
         // select holds a freshly typed pending value, capture it; otherwise keep
         // whatever pending option we already have (captured at construction). Do
@@ -355,11 +357,19 @@
         if (currentVal && currentVal.indexOf('pending:') === 0) {
           this._pendingOption = { value: currentVal, text: this._select.find('option:selected').text() };
         }
+        if (countryChanged) {
+          // Country changed by user: clear stale institution selection and
+          // pending free-text so the new country options drive selection.
+          this._pendingOption = null;
+          this._previous_values = [];
+          this._add.find('input').val('');
+          currentVal = "";
+        }
         selectedCode = currentVal;
         selectedText = this._select.find('option:selected').text();
         this._select.empty();
         // Keep showing the last-known selection while fresh options are loading.
-        if (selectedCode && selectedText) {
+        if (!countryChanged && selectedCode && selectedText) {
           this.appendOption(selectedText, selectedCode, "");
           this._select.val(selectedCode);
           if (this._select.data('select2') || this._select.hasClass('select2-hidden-accessible')) {
@@ -370,9 +380,11 @@
           ref.abort();
         }
         if (data = this._cache[country_code]) {
+          this._last_country_code = country_code;
           return this.setOptions(data);
         } else {
           this._country_code = country_code;
+          this._last_country_code = country_code;
           this._select.addClass('waiting');
           if (this._whitelistField.length > 0 && this._whitelistField.val() == 'true') {
             this._request = $.getJSON(`${this._url}/${country_code}`, { whitelist: true }, this.receive);

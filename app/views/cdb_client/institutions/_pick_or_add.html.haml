@@ -31,7 +31,7 @@
 - institution_code_value = f.object.send(institution_code_field)
 -# Defensive: a value persisted as "pending:<name>" is an unresolved name, not a code.
 - if institution_code_value.to_s.start_with?('pending:')
-  - pending_name = institution_code_value.to_s.sub(/\Apending:/, '') if pending_name.blank?
+  - pending_name = institution_code_value.to_s.sub(/\Apending:/i, '') if pending_name.blank?
   - institution_code_value = nil
 - institution_selection = Institution.for_selection(country_code, false, whitelist_institute)
 - if pending_name.present? && institution_code_value.blank?
