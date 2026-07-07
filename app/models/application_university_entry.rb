@@ -23,5 +23,11 @@ class ApplicationUniversityEntry
         source_record_id: source_record_id
       )
     end
+
+    def update_entry(entry_id:, user_entered_name:)
+      entry = find(entry_id)
+      entry.assign_attributes(user_entered_name: user_entered_name)
+      entry.save
+    end
   end
 end
