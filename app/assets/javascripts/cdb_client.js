@@ -246,6 +246,7 @@
         this.showOther = bind(this.showOther, this);
         this.showSelect = bind(this.showSelect, this);
         this.showAdd = bind(this.showAdd, this);
+        this.showLoading = bind(this.showLoading, this);
         this.appendOption = bind(this.appendOption, this);
         this.setOptions = bind(this.setOptions, this);
         this.receive = bind(this.receive, this);
@@ -358,11 +359,11 @@
           this._pendingOption = { value: currentVal, text: this._select.find('option:selected').text() };
         }
         if (countryChanged) {
-          // Country changed by user: clear stale institution selection and
-          // pending free-text so the new country options drive selection.
+          // Country changed by user: clear stale institution selection so the
+          // new country options drive selection. The hidden add-input keeps its
+          // value (pending institution name) and is never cleared here.
           this._pendingOption = null;
           this._previous_values = [];
-          this._add.find('input').val('');
           currentVal = "";
         }
         selectedCode = currentVal;
@@ -385,7 +386,14 @@
         } else {
           this._country_code = country_code;
           this._last_country_code = country_code;
-          this._select.addClass('waiting');
+          // Keep the select visible while loading. On an actual country change,
+          // show a temporary disabled "Loading universities..." option; on an
+          // in-place refresh keep the last-known selection visible.
+          if (countryChanged) {
+            this.showLoading();
+          } else {
+            this._select.addClass('waiting');
+          }
           if (this._whitelistField.length > 0 && this._whitelistField.val() == 'true') {
             this._request = $.getJSON(`${this._url}/${country_code}`, { whitelist: true }, this.receive);
           } else {
@@ -397,13 +405,16 @@
 
       InstitutionOrEmployer.prototype.receive = function(data) {
         this._cache[this._country_code] = data;
-        this._select.removeClass('waiting');
+        this._select.removeClass('waiting').prop('disabled', false);
         return this.setOptions(data);
       };
 
       InstitutionOrEmployer.prototype.setOptions = function(data) {
         var code, i, institution_suggest_selection, len, name, aliases, pair, ref, reselectable;
         this._request = null;
+        // The request finished: always keep the select usable and never fall
+        // back to the free-text add input.
+        this._select.removeClass('waiting').prop('disabled', false).empty();
         // Prepend the pending (unverified) option to the data list so it is
         // rebuilt and re-selected like any other institution on reload.
         if (this._pendingOption) {
@@ -431,13 +442,16 @@
           } else {
             this._select.val((ref = reselectable[0]) != null ? ref : "");
           }
-          if (this._select.data('select2') || this._select.hasClass('select2-hidden-accessible')) {
-            this._select.trigger('change.select2');
-          }
-          return this.showSelect();
         } else {
-          return this.showAdd();
+          // No institutions returned: keep the select visible with a single
+          // disabled placeholder option instead of switching to the add input.
+          this._select.append($("<option />").val("").text("No universities available").prop('disabled', true));
+          this._select.val("");
         }
+        if (this._select.data('select2') || this._select.hasClass('select2-hidden-accessible')) {
+          this._select.trigger('change.select2');
+        }
+        return this.showSelect();
       };
 
       InstitutionOrEmployer.prototype.appendOption = function(name, code, aliases) {
@@ -448,21 +462,26 @@
         return this._select.append($opt);
       };
 
+      InstitutionOrEmployer.prototype.showLoading = function() {
+        // Keep the select visible but disabled while the AJAX request runs,
+        // showing a temporary placeholder option.
+        this.showSelect();
+        this._select.empty();
+        this.appendOption('Loading universities...', '', '');
+        this._select.val('');
+        this._select.addClass('waiting').prop('disabled', true);
+        if (this._select.data('select2') || this._select.hasClass('select2-hidden-accessible')) {
+          this._select.trigger('change.select2');
+        }
+      };
+
       InstitutionOrEmployer.prototype.showAdd = function(e) {
         if (e != null) {
           e.preventDefault();
         }
-        if (this._country_chooser.find(":selected").text() !== 'Hong Kong') {
-          this._other.find('input').val("");
-          this._choose.find('select').val("");
-          this._add.enable().show();
-          this._adder.hide();
-          this._other.hide();
-          this._otherer.show();
-          this._choose.hide();
-          this._chooser.show();
-          return this._otherer.before(this._or);
-        }
+        // The free-text institution input is intentionally disabled in this
+        // flow: always fall back to the select so the add input stays hidden.
+        return this.showSelect();
       };
 
       InstitutionOrEmployer.prototype.showSelect = function(e) {
@@ -470,11 +489,10 @@
           e.preventDefault();
         }
         this._other.find('input').val("");
-        this._add.find('input').val("");
+        // Keep the institution text input hidden at all times and never clear
+        // its value: it stores the pending institution name for submission.
         this._add.hide();
-        if (this._country_chooser.find(":selected").text() !== 'Hong Kong') {
-          this._adder.show();
-        }
+        this._adder.hide();
         this._other.hide();
         this._otherer.show();
         this._choose.enable().show();

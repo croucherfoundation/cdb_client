@@ -81,7 +81,7 @@
         - else
           %span{data: {role: "choose"}}
             - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution")}
-            = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2'}}
+            = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2', allow_tags: false}}
           %span{data: {role: "add"}}
             = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
           - if with_employer
@@ -136,7 +136,7 @@
         - else
           %span{data: {role: "choose"}}
             - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution")}
-            = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2'}}
+            = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2', allow_tags: false}}
           %span{data: {role: "add"}}
             = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
           - if with_employer

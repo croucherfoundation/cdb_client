@@ -28,6 +28,7 @@ class Award
       person_uid: nil,
       award_type_code: "",
       country_code: "",
+      second_country_code: "",
       institution_code: "",
       second_institution_code: "",
       institution_name: "",
