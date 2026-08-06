@@ -47,10 +47,13 @@ class Institution
     def new_with_defaults
       Institution.new({
         name: "",
+        name_ch: "",
         code: "",
         institution_type: "university",
         abbreviation: "",
+        short_name: "",
         ugc_code: "",
+        city: "",
         admin_code: "",
         country_code: "",
         address: "",
