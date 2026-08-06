@@ -48,6 +48,7 @@ class Institution
       Institution.new({
         name: "",
         code: "",
+        institution_type: "university",
         abbreviation: "",
         ugc_code: "",
         admin_code: "",
@@ -61,6 +62,30 @@ class Institution
         image: "",
         is_partner: false
       })
+    end
+
+    def duplicate_candidates(query, limit: 5)
+      return [] if query.blank?
+
+      token = ENV['UNIVERSITY_MATCHING_API_KEY'].presence || ENV['API_TOKEN'].presence
+
+      response = CDB.connection.get('/api/institutions/duplicate_candidates') do |req|
+        req.params['q'] = query
+        req.params['limit'] = limit
+        req.headers['Authorization'] = "Bearer #{token}" if token.present?
+      end
+
+      body = response.body
+      return body if body.is_a?(Array)
+      return JSON.parse(body) if body.is_a?(String)
+      if body.is_a?(Hash)
+        return body['duplicate_candidates'] || body[:duplicate_candidates] || body['data'] || []
+      end
+
+      Array(body)
+    rescue JSON::ParserError, Her::Errors::ParseError, Faraday::Error => e
+      Rails.logger.warn("[cdb_client] duplicate_candidates failed for #{query.inspect}: #{e.message}")
+      []
     end
   end
   
