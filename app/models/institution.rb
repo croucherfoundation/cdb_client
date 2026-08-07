@@ -72,9 +72,11 @@ class Institution
 
       token = ENV['UNIVERSITY_MATCHING_API_KEY'].presence || ENV['API_TOKEN'].presence
 
-      response = CDB.connection.get('/api/institutions/duplicate_candidates') do |req|
+      connection = Faraday.new(url: ENV['CORE_API_URL'])
+      response = connection.get('/api/institutions/duplicate_candidates') do |req|
         req.params['q'] = query
         req.params['limit'] = limit
+        req.headers['Accept'] = 'application/json'
         req.headers['Authorization'] = "Bearer #{token}" if token.present?
       end
 
