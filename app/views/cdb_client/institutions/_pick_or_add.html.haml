@@ -12,8 +12,11 @@
 - country_code_field ||= :country_code
 - institution_code_field ||= :institution_code
 - institution_name_field ||= :institution_name
+-# Optional preselection, used when another view already knows which institution should be chosen.
+- selected_institution_code ||= nil
+- selected_country_code ||= nil
 
-- country_code = f.object.send(country_code_field)
+- country_code = selected_country_code.presence || f.object.send(country_code_field)
 - country_code ||= institution.country_code if institution.present?
 - country_code ||= default_country_code
 
@@ -28,7 +31,7 @@
 
 - rowclass = additional_field ? "threecol" : "twocol unequal"
 
-- institution_code_value = f.object.send(institution_code_field)
+- institution_code_value = selected_institution_code.presence || f.object.send(institution_code_field)
 -# Defensive: a value persisted as "pending:<name>" is an unresolved name, not a code.
 - if institution_code_value.to_s.start_with?('pending:')
   - pending_name = institution_code_value.to_s.sub(/\Apending:/i, '') if pending_name.blank?
@@ -80,7 +83,7 @@
             = f.text_field employer_name_field, readonly: true, class: 'locked', tabindex: -1
         - else
           %span{data: {role: "choose"}}
-            - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution")}
+            - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution"), selected: institution_code_value}
             = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2', allow_tags: false}}
           %span{data: {role: "add"}}
             = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
@@ -135,7 +138,7 @@
             = f.text_field employer_name_field, readonly: true, class: 'locked', tabindex: -1
         - else
           %span{data: {role: "choose"}}
-            - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution")}
+            - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution"), selected: institution_code_value}
             = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2', allow_tags: false}}
           %span{data: {role: "add"}}
             = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
