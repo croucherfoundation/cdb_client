@@ -1,6 +1,8 @@
 class Institution
   include Her::JsonApi::Model
 
+  HK_UNIVERSITY_WHITELIST = %w[cuhk cityu eduhk hkbu hkis hkmu hkpu hkust ln hku].freeze
+
   use_api CDB
   collection_path "/api/institutions"
   primary_key :code
@@ -21,16 +23,25 @@ class Institution
       RequestStore.store[:institutions_by_code][code]
     end
 
-    def for_selection(country_code=nil, active_only=false, whitelisted=false)
+    def for_selection(country_code=nil, active_only=false, whitelisted=false, options={})
       insts = preload
+      exclude_codes = Array(options[:exclude_code]).compact
+      
       if country_code.present?
-        insts = insts.select {|inst| inst.country_code == country_code && (!active_only || inst.active?) }
+        insts = insts.select do |inst|
+          inst.country_code == country_code && (!active_only || inst.active?)
+        end
       end
+
+      if exclude_codes.present?
+        insts = insts.reject { |inst| exclude_codes.include?(inst.code) }
+      end
+
       if country_code == 'HKG' && whitelisted
-        whitelist_hk_university = ['cuhk', 'cityu', 'eduhk', 'hkbu', 'hkis', 'hkmu', 'hkpu', 'hkust', 'ln', 'hku']
-        insts = insts.select { |inst| whitelist_hk_university.include?(inst.code) }
+        insts = insts.select { |inst| HK_UNIVERSITY_WHITELIST.include?(inst.code) }
       end
-      insts.sort_by(&:name).map{|inst| [inst.name_with_location, inst.code] }
+
+      insts.sort_by(&:name).map { |inst| [inst.name_with_location, inst.code] }
     end
     
     #NB this is a selection of likely partner institutions, not just everything in HK

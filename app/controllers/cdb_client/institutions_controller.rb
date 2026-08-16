@@ -29,6 +29,10 @@ module CdbClient
       if params[:country_code].present?
         insts = insts.select { |inst| inst.country_code == params[:country_code] }
       end
+      if params[:exclude_code].present?
+        exclude_codes = Array(params[:exclude_code]).compact
+        insts = insts.reject { |inst| exclude_codes.include?(inst.code) }
+      end
       if params[:country_code] == 'HKG' && whitelist
         whitelist_hk_university = ['cuhk', 'cityu', 'eduhk', 'hkbu', 'hkis', 'hkmu', 'hkpu', 'hkust', 'ln', 'hku']
         insts = insts.select { |inst| whitelist_hk_university.include?(inst.code) }

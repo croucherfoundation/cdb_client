@@ -1,4 +1,5 @@
 - institution ||= nil
+- exclude_institution_code ||= nil
 - only_likely_countries ||= false
 - default_country_code ||= nil
 - required ||= false
@@ -36,7 +37,7 @@
 - if institution_code_value.to_s.start_with?('pending:')
   - pending_name = institution_code_value.to_s.sub(/\Apending:/i, '') if pending_name.blank?
   - institution_code_value = nil
-- institution_selection = Institution.for_selection(country_code, false, whitelist_institute)
+- institution_selection = Institution.for_selection(country_code, false, whitelist_institute, exclude_code: exclude_institution_code)
 - if pending_name.present? && institution_code_value.blank?
   - institution_selection = [["#{pending_name} (unverified)", "pending:#{pending_name}"]] + institution_selection
 
@@ -62,6 +63,7 @@
   %fieldset.institution_chooser{class: (readonly ? 'readonly locked' : nil), data: {role: ("institution" unless readonly), required: required}}
     - if whitelist_institute
       = f.hidden_field 'whitelisted', value: true, class: 'whitelist_institute'
+    = f.hidden_field 'exclude_institution_code', value: exclude_institution_code, class: 'exclude_institution_code'
     %p{class: rowclass}
       %span.col.first>
         - if with_labels
@@ -83,7 +85,7 @@
             = f.text_field employer_name_field, readonly: true, class: 'locked', tabindex: -1
         - else
           %span{data: {role: "choose"}}
-            - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution"), selected: institution_code_value}
+            - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution"), selected: exclude_institution_code == institution_code_value ? nil : institution_code_value}
             = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2', allow_tags: false}}
           %span{data: {role: "add"}}
             = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
@@ -117,6 +119,7 @@
   %fieldset.institution_chooser{class: (readonly ? 'readonly locked' : nil), data: {role: ("institution" unless readonly), required: required}}
     - if whitelist_institute
       = f.hidden_field 'whitelisted', value: true, class: 'whitelist_institute'
+    = f.hidden_field 'exclude_institution_code', value: exclude_institution_code, class: 'exclude_institution_code'
     %p.onecol.appl_form_onecol
       %span.col.first>
         - if with_labels
@@ -138,7 +141,7 @@
             = f.text_field employer_name_field, readonly: true, class: 'locked', tabindex: -1
         - else
           %span{data: {role: "choose"}}
-            - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution"), selected: institution_code_value}
+            - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution"), selected: exclude_institution_code == institution_code_value ? nil : institution_code_value}
             = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2', allow_tags: false}}
           %span{data: {role: "add"}}
             = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s

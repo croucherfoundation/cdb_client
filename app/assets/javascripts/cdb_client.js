@@ -268,6 +268,7 @@
         this._select = this._choose.find('select');
         this._or = this._container.find('span.or');
         this._whitelistField = this._container.find('.whitelist_institute');
+        this._exclude_code = this._container.find('.exclude_institution_code')?.val();
         this._last_country_code = this._country_chooser.val();
         this._url = (ref = this._select.attr('data-url')) != null ? ref : '/cdb/institutions';
         this._select.bind('refresh', this.restrict);
@@ -389,14 +390,19 @@
           // Keep the select visible while loading. On an actual country change,
           // show a temporary disabled "Loading universities..." option; on an
           // in-place refresh keep the last-known selection visible.
-          if (countryChanged) {
+          if (countryChanged || this._exclude_code) {
             this.showLoading();
           } else {
             this._select.addClass('waiting');
           }
+
           if (this._whitelistField.length > 0 && this._whitelistField.val() == 'true') {
             this._request = $.getJSON(`${this._url}/${country_code}`, { whitelist: true }, this.receive);
-          } else {
+          }
+          else if (this._exclude_code) {
+            this._request = $.getJSON(`${this._url}/${country_code}`, { exclude_code: this._exclude_code }, this.receive); 
+          }
+          else {
             this._request = $.getJSON(`${this._url}/${country_code}`, this.receive);
           }
           return this._request
