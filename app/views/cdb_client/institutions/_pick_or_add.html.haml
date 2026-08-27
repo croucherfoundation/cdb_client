@@ -59,6 +59,8 @@
   - inst_label    = institution_code_value.to_s if inst_label.blank?
   - employer_value = f.object.respond_to?(employer_name_field) ? f.object.send(employer_name_field) : nil
 
+- picker_control_locals = {f: f, with_labels: with_labels, readonly: readonly, inst_label: inst_label, institution_code_field: institution_code_field, institution_code_value: institution_code_value, with_employer: with_employer, employer_value: employer_value, employer_name_field: employer_name_field, pending_name: pending_name, exclude_institution_code: exclude_institution_code, institution_selection: institution_selection, institution_name_field: institution_name_field, institution_name_placeholder: institution_name_placeholder, employer_name_placeholder: employer_name_placeholder}
+
 - unless one_col
   %fieldset.institution_chooser{class: (readonly ? 'readonly locked' : nil), data: {role: ("institution" unless readonly), required: required}}
     - if whitelist_institute
@@ -76,29 +78,7 @@
 
       - select_cell_class = additional_field ? "col" : "col last"
       %span{class: select_cell_class}>
-        - if with_labels
-          = f.label institution_code_field
-        - if readonly
-          = text_field_tag nil, inst_label, readonly: true, class: 'locked', tabindex: -1
-          = f.hidden_field institution_code_field, value: institution_code_value
-          - if with_employer && employer_value.present?
-            = f.text_field employer_name_field, readonly: true, class: 'locked', tabindex: -1
-        - else
-          %span{data: {role: "choose"}}
-            - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution"), selected: exclude_institution_code == institution_code_value ? nil : institution_code_value}
-            = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2', allow_tags: false}}
-          %span{data: {role: "add"}}
-            = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
-          - if with_employer
-            %span{data: {role: "other"}}
-              = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}
-          %br
-          = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
-          -# = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}
-          - if with_employer
-            %span.or
-              = t :or
-            = link_to t(:other_employer), '#', class: 'note', data: {role: "showother"}
+        = render "cdb_client/institutions/picker_control", picker_control_locals.merge(label_text: nil)
 
       - if additional_field
         %span.col.last>
@@ -132,29 +112,7 @@
     %p.onecol.appl_form_onecol
       - select_cell_class = additional_field ? "col" : "col last"
       %span{class: select_cell_class}>
-        - if with_labels
-          = f.label institution_code_field, 'University'
-        - if readonly
-          = text_field_tag nil, inst_label, readonly: true, class: 'locked', tabindex: -1
-          = f.hidden_field institution_code_field, value: institution_code_value
-          - if with_employer && employer_value.present?
-            = f.text_field employer_name_field, readonly: true, class: 'locked', tabindex: -1
-        - else
-          %span{data: {role: "choose"}}
-            - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution"), selected: exclude_institution_code == institution_code_value ? nil : institution_code_value}
-            = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2', allow_tags: false}}
-          %span{data: {role: "add"}}
-            = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
-          - if with_employer
-            %span{data: {role: "other"}}
-              = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}
-          %br
-          = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
-          -# = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}
-          - if with_employer
-            %span.or
-              = t :or
-            = link_to t(:other_employer), '#', class: 'note', data: {role: "showother"}
+        = render "cdb_client/institutions/picker_control", picker_control_locals.merge(label_text: 'University')
 
       - if additional_field
         %p.onecol.appl_form_onecol

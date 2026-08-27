@@ -1,0 +1,26 @@
+- if with_labels
+  - if label_text
+    = f.label institution_code_field, label_text
+  - else
+    = f.label institution_code_field
+- if readonly
+  = text_field_tag nil, inst_label, readonly: true, class: 'locked', tabindex: -1
+  = f.hidden_field institution_code_field, value: institution_code_value
+  - if with_employer && employer_value.present?
+    = f.text_field employer_name_field, readonly: true, class: 'locked', tabindex: -1
+- else
+  %span{data: {role: "choose"}}
+    - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution"), selected: exclude_institution_code == institution_code_value ? nil : institution_code_value}
+    = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2', allow_tags: false}}
+  %span{data: {role: "add"}}
+    = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
+  - if with_employer
+    %span{data: {role: "other"}}
+      = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}
+  %br
+  = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
+  -# = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}
+  - if with_employer
+    %span.or
+      = t :or
+    = link_to t(:other_employer), '#', class: 'note', data: {role: "showother"}
