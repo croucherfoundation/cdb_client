@@ -12,8 +12,17 @@ class Institution
 
   class << self
 
-    def preload
-      RequestStore.store[:institutions] ||= self.all
+    def preload(force_reload: false)
+      if force_reload || RequestStore.store[:institutions].nil?
+        if defined?(Rails) && Rails.respond_to?(:cache) && Rails.cache
+          RequestStore.store[:institutions] = Rails.cache.fetch("cdb_client_institutions_all", expires_in: 30.minutes, force: force_reload) do
+            self.all.to_a
+          end
+        else
+          RequestStore.store[:institutions] = self.all.to_a
+        end
+      end
+      RequestStore.store[:institutions]
     end
 
     def preloaded(code)
