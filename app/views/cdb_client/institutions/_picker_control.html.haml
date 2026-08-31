@@ -20,7 +20,7 @@
     = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
   - if supports_pending_institution_type
     %span.pending-institution-type{data: {role: 'pending-institution-type'}, style: 'display: none'}
-      = f.label pending_institution_type_field, 'Institution type'
+      = f.label pending_institution_type_field, 'University type'
       = f.select pending_institution_type_field, options_for_select(institution_type_options, pending_institution_type.presence || 'university')
   - if with_employer
     %span{data: {role: "other"}}
