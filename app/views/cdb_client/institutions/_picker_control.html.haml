@@ -9,11 +9,19 @@
   - if with_employer && employer_value.present?
     = f.text_field employer_name_field, readonly: true, class: 'locked', tabindex: -1
 - else
+  - pending_institution_type_field = institution_code_field.to_s.include?('second') ? :pending_second_institution_type : :pending_institution_type
+  - supports_pending_institution_type = f.object.respond_to?(pending_institution_type_field)
+  - pending_institution_type = f.object.send(pending_institution_type_field) if supports_pending_institution_type
+  - institution_type_options = [['University or other degree-granting institution', 'university'], ['Research institute or research centre', 'research_institute'], ['Hospital or clinical/medical centre', 'hospital'], ['Government body or public agency', 'government_body'], ['Company (including startup)', 'company'], ['Non-profit, NGO or charitable foundation', 'non_profit'], ['Other', 'other']]
   %span{data: {role: "choose"}}
     - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution"), selected: exclude_institution_code == institution_code_value ? nil : institution_code_value}
     = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2', minimum_input_length: 2}}
   %span{data: {role: "add"}}
     = f.text_field institution_name_field, placeholder: institution_name_placeholder, suggestible: true, class: 'institution_suggest_selection', value: pending_name.to_s
+  - if supports_pending_institution_type
+    %span.pending-institution-type{data: {role: 'pending-institution-type'}, style: 'display: none'}
+      = f.label pending_institution_type_field, 'Institution type'
+      = f.select pending_institution_type_field, options_for_select(institution_type_options, pending_institution_type.presence || 'university')
   - if with_employer
     %span{data: {role: "other"}}
       = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}
