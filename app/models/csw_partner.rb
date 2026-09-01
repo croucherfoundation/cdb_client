@@ -10,6 +10,7 @@ class CswPartner
         code: "",
         abbreviation: "",
         country_code: "",
+        institution_code: "",
         address: "",
         lat: "",
         lng: "",
