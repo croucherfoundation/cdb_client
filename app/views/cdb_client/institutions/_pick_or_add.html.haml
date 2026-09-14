@@ -6,6 +6,7 @@
 - with_employer ||= false
 - with_employer_address ||= false
 - additional_field ||= false
+- additional_field_array ||= []
 - with_labels ||= false
 - one_col ||= false
 - whitelist_institute ||= false
@@ -88,6 +89,12 @@
             - else
               = f.label additional_field
           = f.text_field additional_field, placeholder: additional_field == :post ? "" : additional_field_placeholder
+      
+      - if additional_field_array.present?
+        - additional_field_array.each do |field|
+          %span.col.last>
+            = f.label field
+            = f.text_field field
 
     - if with_employer && with_employer_address && !readonly
       %p.address{data: {role: "other"}}
@@ -123,6 +130,13 @@
               - else
                 = f.label additional_field
             = f.text_field additional_field, placeholder: additional_field == :post ? "" : additional_field_placeholder
+
+      - if additional_field_array.present?
+        - additional_field_array.each do |field|
+          %p.onecol.appl_form_onecol
+            %span.col.last>
+              = f.label field
+              = f.text_field field
 
     - if with_employer && with_employer_address && !readonly
       %p.address{data: {role: "other"}}
