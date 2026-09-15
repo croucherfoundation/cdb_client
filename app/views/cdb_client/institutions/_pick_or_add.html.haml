@@ -70,12 +70,12 @@
     %p{class: rowclass}
       %span.col.first>
         - if with_labels
-          = f.label country_code_field
+          = f.label country_code_field, 'Country'
         - if readonly
           = text_field_tag nil, country_label, readonly: true, class: 'locked', tabindex: -1
           = f.hidden_field country_code_field, value: country_code
         - else
-          = f.select country_code_field, country_options, {include_blank: t("placeholders.please_choose_country"), selected: country_code, disabled: "-"}, data: {key: country_code_field, role: 'country'}
+          = f.select country_code_field, country_options, {include_blank: t("placeholders.please_choose_country"), selected: country_code, disabled: "-"}, data: {key: country_code_field, role: 'country', select: 'select2', minimum_input_length: 2}
 
       - select_cell_class = additional_field ? "col" : "col last"
       %span{class: select_cell_class}>
@@ -115,7 +115,7 @@
           = text_field_tag nil, country_label, readonly: true, class: 'locked', tabindex: -1
           = f.hidden_field country_code_field, value: country_code
         - else
-          = f.select country_code_field, country_options, {include_blank: t("placeholders.please_choose_country"), selected: country_code, disabled: "-"}, data: {key: country_code_field, role: 'country'}
+          = f.select country_code_field, country_options, {include_blank: t("placeholders.please_choose_country"), selected: country_code, disabled: "-"}, data: {key: country_code_field, role: 'country', select: 'select2', minimum_input_length: 2}
     %p.onecol.appl_form_onecol
       - select_cell_class = additional_field ? "col" : "col last"
       %span{class: select_cell_class}>
