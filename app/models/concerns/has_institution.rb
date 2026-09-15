@@ -44,20 +44,25 @@ module HasInstitution
   end
 
   def institution_name=(name)
-    if name.present?
-      ccode = respond_to?(:from_country_code) && from_country_code.present? ? from_country_code : country_code
-      if existing = Institution.where(name: name, country_code: ccode).first
-        self.institution_code = existing.code
-        self.pending_institution_name = nil if respond_to?(:pending_institution_name=)
-      elsif match = find_institution_by_alias(name, ccode)
-        self.institution_code = match.code
-        self.pending_institution_name = nil if respond_to?(:pending_institution_name=)
-      else
-        self.institution_code = nil
-        self.pending_institution_name = name if respond_to?(:pending_institution_name=)
-      end
-      @pending_institution_name = name if institution_code.blank?
+    name = name.to_s.strip
+    if name.blank?
+      self.pending_institution_name = nil if respond_to?(:pending_institution_name=)
+      @pending_institution_name = nil
+      return
     end
+
+    ccode = respond_to?(:from_country_code) && from_country_code.present? ? from_country_code : country_code
+    if existing = Institution.where(name: name, country_code: ccode).first
+      self.institution_code = existing.code
+      self.pending_institution_name = nil if respond_to?(:pending_institution_name=)
+    elsif match = find_institution_by_alias(name, ccode)
+      self.institution_code = match.code
+      self.pending_institution_name = nil if respond_to?(:pending_institution_name=)
+    else
+      self.institution_code = nil
+      self.pending_institution_name = name if respond_to?(:pending_institution_name=)
+    end
+    @pending_institution_name = name if institution_code.blank?
   end
 
   def institution_name
