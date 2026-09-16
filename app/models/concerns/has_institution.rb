@@ -19,11 +19,27 @@ module HasInstitution
     # as "pending:<name>" in the institution_code field. Convert it to a name
     # lookup so it resolves to a code or is stored as a pending name.
     before_validation :normalize_pending_institution_code if respond_to?(:before_validation)
+    before_validation :enforce_institution_employer_exclusivity if respond_to?(:before_validation)
   end
 
   def normalize_pending_institution_code
     if respond_to?(:institution_code) && institution_code.to_s.start_with?('pending:')
       self.institution_name = institution_code.to_s.sub(/\Apending:/, '')
+    end
+  end
+
+  # Keep institution and employer mutually exclusive.
+  # Institution (including pending institution name) takes precedence.
+  def enforce_institution_employer_exclusivity
+    if (respond_to?(:institution_code) && institution_code.present?) || 
+      (respond_to?(:pending_institution_name) && pending_institution_name.present?)
+      self.employer = nil if respond_to?(:employer=)
+      return
+    end
+
+    if respond_to?(:employer) && employer.present?
+      self.institution_code = nil if respond_to?(:institution_code=)
+      self.pending_institution_name = nil if respond_to?(:pending_institution_name=)
     end
   end
 

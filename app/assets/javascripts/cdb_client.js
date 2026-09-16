@@ -243,6 +243,7 @@
     };
     InstitutionOrEmployer = (function() {
       function InstitutionOrEmployer(element) {
+        this.updateLabel = bind(this.updateLabel, this);
         this.showOther = bind(this.showOther, this);
         this.showSelect = bind(this.showSelect, this);
         this.showAdd = bind(this.showAdd, this);
@@ -266,6 +267,10 @@
         this._otherer = this._container.find('[data-role="showother"]');
         this._other = this._container.find('[data-role="other"]');
         this._select = this._choose.find('select');
+        this._label = this._container.find('label.institution-employer-label');
+        this._institution_label = 'University';
+        this._employer_label = 'Employer';
+        this._mode = 'select';
         this._or = this._container.find('span.or');
         this._whitelistField = this._container.find('.whitelist_institute');
         this._exclude_code = this._container.find('.exclude_institution_code')?.val();
@@ -309,12 +314,28 @@
       InstitutionOrEmployer.prototype.noteValue = function(e) {
         var value;
         value = this._select.val();
+        if (e && value && value.length) {
+          this._other.find('input').val("");
+        }
         // A real institution was chosen: drop any pending fallback so it is not
         // re-added on the next country rebuild.
         if (value && value.indexOf('pending:') !== 0) {
           this._pendingOption = null;
         }
         return this._previous_values.push(value);
+      };
+
+      InstitutionOrEmployer.prototype.updateLabel = function(mode) {
+        if (!this._label.length) {
+          return;
+        }
+        if (mode === 'other') {
+          console.log('Updating label to employer mode');
+          this._label.text(this._employer_label);
+        } else {
+          console.log('Updating label to institution mode: ', this._institution_label);
+          this._label.text(this._institution_label);
+        }
       };
 
       // Reads the pending (unverified) institution name from the stable add-input
@@ -457,6 +478,9 @@
         if (this._select.data('select2') || this._select.hasClass('select2-hidden-accessible')) {
           this._select.trigger('change.select2');
         }
+        if (this._mode === 'other') {
+          return this.showOther();
+        }
         return this.showSelect();
       };
 
@@ -471,7 +495,9 @@
       InstitutionOrEmployer.prototype.showLoading = function() {
         // Keep the select visible but disabled while the AJAX request runs,
         // showing a temporary placeholder option.
-        this.showSelect();
+        if (this._mode !== 'other') {
+          this.showSelect();
+        }
         this._select.empty();
         this.appendOption('Loading universities...', '', '');
         this._select.val('');
@@ -494,6 +520,8 @@
         if (e != null) {
           e.preventDefault();
         }
+        this._mode = 'select';
+        this.updateLabel('select');
         this._other.find('input').val("");
         // Keep the institution text input hidden at all times and never clear
         // its value: it stores the pending institution name for submission.
@@ -510,6 +538,8 @@
         if (e != null) {
           e.preventDefault();
         }
+        this._mode = 'other';
+        this.updateLabel('other');
         this._add.find('input').val("");
         this._choose.find('select').val("");
         this._add.hide();

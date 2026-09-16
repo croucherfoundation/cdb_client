@@ -30,6 +30,7 @@
 - employer_name_placeholder ||= t('placeholders.employer')
 - employer_address_placeholder ||= t('placeholders.employer_address')
 - additional_field_placeholder ||= t("placeholders.#{additional_field}") if additional_field
+- employer_value = f.object.respond_to?(employer_name_field) ? f.object.send(employer_name_field) : nil
 
 - rowclass = additional_field ? "threecol" : "twocol unequal"
 
@@ -58,7 +59,6 @@
   - inst_label    = inst_obj&.name_with_location
   - inst_label  ||= (institution_selection.to_h.key(institution_code_value) rescue nil)
   - inst_label    = institution_code_value.to_s if inst_label.blank?
-  - employer_value = f.object.respond_to?(employer_name_field) ? f.object.send(employer_name_field) : nil
 
 - picker_control_locals = {f: f, with_labels: with_labels, readonly: readonly, inst_label: inst_label, institution_code_field: institution_code_field, institution_code_value: institution_code_value, with_employer: with_employer, employer_value: employer_value, employer_name_field: employer_name_field, pending_name: pending_name, exclude_institution_code: exclude_institution_code, institution_selection: institution_selection, institution_name_field: institution_name_field, institution_name_placeholder: institution_name_placeholder, employer_name_placeholder: employer_name_placeholder}
 

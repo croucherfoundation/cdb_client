@@ -1,8 +1,11 @@
+- show_employer_mode = with_employer && employer_value.present?
 - if with_labels
+  - label_field = show_employer_mode ? employer_name_field : institution_code_field
+  - effective_label_text = show_employer_mode ? 'Employer' : label_text
   - if label_text
-    = f.label institution_code_field, label_text
+    = f.label label_field, effective_label_text, class: 'institution-employer-label'
   - else
-    = f.label institution_code_field
+    = f.label label_field
 - if readonly
   = text_field_tag nil, inst_label, readonly: true, class: 'locked', tabindex: -1
   = f.hidden_field institution_code_field, value: institution_code_value
@@ -13,7 +16,7 @@
   - supports_pending_institution_type = f.object.respond_to?(pending_institution_type_field)
   - pending_institution_type = f.object.send(pending_institution_type_field) if supports_pending_institution_type
   - institution_type_options = [['University or other degree-granting institution', 'university'], ['Research institute or research centre', 'research_institute'], ['Hospital or clinical/medical centre', 'hospital'], ['Government body or public agency', 'government_body'], ['Company (including startup)', 'company'], ['Non-profit, NGO or charitable foundation', 'non_profit'], ['Other', 'other']]
-  %span{data: {role: "choose"}}
+  %span{data: {role: "choose"}, style: ('display: none' if show_employer_mode)}
     - select_opts = pending_name.present? && institution_code_value.blank? ? {selected: "pending:#{pending_name}"} : {include_blank: t("placeholders.please_choose_institution"), selected: exclude_institution_code == institution_code_value ? nil : institution_code_value}
     = f.select institution_code_field, institution_selection, select_opts, {data: {key: institution_code_field, select: 'select2', minimum_input_length: 2}}
   %span{data: {role: "add"}}
@@ -23,12 +26,12 @@
       = f.label pending_institution_type_field, 'University type'
       = f.select pending_institution_type_field, options_for_select(institution_type_options, pending_institution_type.presence || 'university')
   - if with_employer
-    %span{data: {role: "other"}}
+    %span{data: {role: "other"}, style: ('display: none' unless show_employer_mode)}
       = f.text_field employer_name_field, placeholder: employer_name_placeholder, data: {key: employer_name_field}
   %br
-  = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}
+  = link_to t(:choose_institution), '#', class: 'note', data: {role: "showchoose"}, style: ('display: none' unless show_employer_mode)
   -# = link_to t(:add_institution), '#', class: 'note', data: {role: "showadd"}
   - if with_employer
-    %span.or
+    %span.or{style: ('display: none' if show_employer_mode)}
       = t :or
-    = link_to t(:other_employer), '#', class: 'note', data: {role: "showother"}
+    = link_to t(:other_employer), '#', class: 'note', data: {role: "showother"}, style: ('display: none' if show_employer_mode)
