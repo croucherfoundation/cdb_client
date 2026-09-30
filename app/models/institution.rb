@@ -32,10 +32,25 @@ class Institution
       RequestStore.store[:institutions_by_code][code]
     end
 
+    def university_by_code(code)
+      return if code.blank?
+
+      preload.find do |institution|
+        institution.code == code && institution.institution_type == "university"
+      end
+    end
+
+    def for_university_selection
+      preload
+        .select { |institution| institution.institution_type == "university" }
+        .sort_by(&:name)
+        .map { |institution| { code: institution.code, name: institution.name } }
+    end
+
     def for_selection(country_code=nil, active_only=false, whitelisted=false, options={})
       insts = preload
       exclude_codes = Array(options[:exclude_code]).compact
-      
+
       if country_code.present?
         insts = insts.select do |inst|
           inst.country_code == country_code && (!active_only || inst.active?)
@@ -52,7 +67,7 @@ class Institution
 
       insts.sort_by(&:name).map { |inst| [inst.name_with_location, inst.code] }
     end
-    
+
     #NB this is a selection of likely partner institutions, not just everything in HK
     #
     def hk_for_selection
@@ -113,7 +128,7 @@ class Institution
       []
     end
   end
-  
+
   ## Output formatting
   #
   # The prepositionishness of names like 'University of Cambridge' requires us to prepend a 'the'
@@ -150,7 +165,7 @@ class Institution
   def in_london?
     !!london && country_code == "GBR"
   end
-  
+
   def image
     images[:standard] if images?
   end
@@ -172,7 +187,7 @@ class Institution
     string.gsub!(/\s+College/i, '')
     string
   end
-  
+
   def as_json_for_suggestion
     {
       code: id,
