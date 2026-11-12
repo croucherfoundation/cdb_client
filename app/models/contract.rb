@@ -34,6 +34,33 @@ class Contract
     approved_at.present?
   end
 
+  def self.csw_link_options(year:, session_token:, q: nil, page: 1)
+    csw_link_request(:get, "/api/csw_event_contract_links/options",
+      { year: year, q: q, page: page }, session_token)
+  end
+
+  def self.link_csw_event(event_id:, contract_id:, year:, session_token:, event_outline_id: nil)
+    csw_link_request(:put, "/api/csw_event_contract_links/#{event_id}",
+      { contract_id: contract_id, year: year, event_outline_id: event_outline_id }, session_token)
+  end
+
+  def self.csw_event_link(event_id:, session_token:)
+    csw_link_request(:get, "/api/csw_event_contract_links/#{event_id}", {}, session_token)
+  end
+
+  def self.csw_link_request(method, path, values, session_token)
+    return { status: 401, errors: ["Authentication required"] } if session_token.blank?
+
+    public_send("#{method}_raw", path, values.merge(
+      _headers: { "Authorization" => "Token token=#{session_token.to_json}" }
+    )) do |parsed, response|
+      { status: response.status, data: parsed[:data], meta: parsed[:metadata], errors: parsed[:errors] }
+    end
+  rescue JSON::ParserError, Her::Errors::ParseError, Faraday::Error
+    { status: 502, errors: ["Contract service unavailable"] }
+  end
+  private_class_method :csw_link_request
+
   def approve(user=nil)
     self.approved_at ||= Time.now
     self.approved_by_uid ||= user.uid if user
