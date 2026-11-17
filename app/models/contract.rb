@@ -48,6 +48,11 @@ class Contract
     csw_link_request(:get, "/api/csw_event_contract_links/#{event_id}", {}, session_token)
   end
 
+  def self.csw_contract_events(contract_id:, year:, session_token:, page: 1)
+    csw_link_request(:get, "/api/csw_event_contract_links/contracts/#{contract_id}/events",
+      { year: year, page: page }, session_token)
+  end
+
   def self.csw_link_request(method, path, values, session_token)
     return { status: 401, errors: ["Authentication required"] } if session_token.blank?
 
