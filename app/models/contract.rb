@@ -34,9 +34,9 @@ class Contract
     approved_at.present?
   end
 
-  def self.csw_link_options(year:, session_token:, q: nil, page: 1)
+  def self.csw_link_options(session_token:, q: nil, page: 1, year: nil)
     csw_link_request(:get, "/api/csw_event_contract_links/options",
-      { year: year, q: q, page: page }, session_token)
+      { q: q, page: page }, session_token)
   end
 
   def self.link_csw_event(event_id:, contract_id:, year:, session_token:, event_outline_id: nil)
@@ -48,9 +48,9 @@ class Contract
     csw_link_request(:get, "/api/csw_event_contract_links/#{event_id}", {}, session_token)
   end
 
-  def self.csw_contract_events(contract_id:, year:, session_token:, page: 1)
+  def self.csw_contract_events(contract_id:, session_token:, page: 1, year: nil)
     csw_link_request(:get, "/api/csw_event_contract_links/contracts/#{contract_id}/events",
-      { year: year, page: page }, session_token)
+      { page: page }, session_token)
   end
 
   def self.csw_link_request(method, path, values, session_token)
