@@ -39,9 +39,16 @@ class Contract
       { q: q, page: page }, session_token)
   end
 
-  def self.link_csw_event(event_id:, contract_id:, year:, session_token:, event_outline_id: nil)
+  def self.link_csw_event(event_id:, contract_id:, year:, session_token:, event_outline_id: nil, expected_revision: nil)
+    values = { contract_id: contract_id, year: year, event_outline_id: event_outline_id }
+    values[:expected_revision] = expected_revision unless expected_revision.nil?
     csw_link_request(:put, "/api/csw_event_contract_links/#{event_id}",
-      { contract_id: contract_id, year: year, event_outline_id: event_outline_id }, session_token)
+      values, session_token)
+  end
+
+  def self.unlink_csw_event(event_id:, contract_id:, year:, expected_revision:, session_token:, event_outline_id: nil)
+    csw_link_request(:delete, "/api/csw_event_contract_links/#{event_id}",
+      { contract_id: contract_id, event_outline_id: event_outline_id, year: year, expected_revision: expected_revision }, session_token)
   end
 
   def self.csw_event_link(event_id:, session_token:)
